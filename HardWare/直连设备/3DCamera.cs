@@ -203,6 +203,12 @@ namespace PcMainCtrl.HardWare
             }
         }
 
+        public void SetAlarmEvent(Action FrontAlarmEvent, Action BackAlarmEvent)
+        {
+            FrontModbus.AlarmEvent = FrontAlarmEvent;
+            BackModbus.AlarmEvent = BackAlarmEvent;
+        }
+
         /// <summary>
         /// 清除滑台报警
         /// </summary>

@@ -459,6 +459,19 @@ namespace PcMainCtrl.ViewModel
             {
                 testForm = new Form.TestForm()
                 {
+                    InitAct = () =>
+                    {
+                        light = null;
+                        pLC3DCamera = null;
+                        RgvModCtrlHelper.GetInstance().RgvModInfoEvent -= MyRgvModInfoEvent;
+                        Stm32ModCtrlHelper.GetInstance().Stm32ModInfoEvent -= MyStm32ModInfoEvent;
+                        RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;
+#if !plcModbus
+                        RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;
+                        NetworkRelayCtrlHelper.GetInstance().NetworkRelayModInfoEvent -= MyNetworkRelayModInfoEvent;
+#endif
+                        Init();
+                    },
                     SpeedCorrect = RgvSpeedCorrect,
                     Run = DoOneKeyStartCmdHandle,
                     Stop = DoOneKeyStopCmdHandle,
@@ -635,277 +648,7 @@ namespace PcMainCtrl.ViewModel
                 Ping1();
                 Ping2();
 #endif
-#if plcModbus
-                if (testForm.GetEnable(Form.EnableEnum.PLC))
-                {
-                    ModbusTCP.SetAddress13(Address13Type.Green, 0);
-                    PowerOn(Address12Type.RobotFrontMzPower,
-                            Address12Type.RobotBackMzPower,
-                            Address12Type.RobotMzLedPower,
-                            Address12Type.RobotXZPower
-                    );
-                    ModbusTCP.SetAddress13(Address13Type._3D, 1);
-                    AddLog("上电等待中...");
-                    ThreadSleep(15000);
-                    AddLog("电源上电完成");
-                    pLC3DCamera = new PLC3DCamera();
-                    pLC3DCamera.FrontAlarmEvent += () =>
-                    {
-                        if (pLC3DCamera.GetDriverAlarm(RobotName.Front))
-                        {
-                            AddLog("前滑台报警", 1);
-#if controlSocket
-                            PLCAlarm(RobotName.Front, SocketCmd.robot_driver_alarm);
-#endif
-                        }
-                        if (pLC3DCamera.GetPLCAlarm(RobotName.Front))
-                        {
-                            AddLog("前PLC报警", 1);
-#if controlSocket
-                            PLCAlarm(RobotName.Front, SocketCmd.robot_plc_alarm);
-#endif
-                        }
-                    };
-                    pLC3DCamera.BackAlarmEvent += () =>
-                    {
-                        if (pLC3DCamera.GetDriverAlarm(RobotName.Back))
-                        {
-                            AddLog("后滑台报警", 2);
-#if controlSocket
-                            PLCAlarm(RobotName.Back, SocketCmd.robot_driver_alarm);
-#endif
-                        }   
-                        if (pLC3DCamera.GetPLCAlarm(RobotName.Back))
-                        {
-                            AddLog("后PLC报警", 2);
-#if controlSocket
-                            PLCAlarm(RobotName.Back, SocketCmd.robot_plc_alarm);
-#endif
-                        }
-                    };
-                }
-#endif
-                AddLog("初始化相机...");
-                do
-                {
-#if newBasler
-                    if (cameraManager != null)
-                    {
-                        for (int i = 0; i < cameraManager.Cameras.Count; i++)
-                        {
-                            cameraManager.Cameras[i].Close();
-                        }
-                        cameraManager.Close();
-                    }
-#endif
-                    InitCameraMod();
-                    ThreadSleep(1000);
-#if newBasler 
-                } while (GetCameraState());
-#else
-                    AddLog("相机数量: " + CameraCtrlHelper.GetInstance().myCameraList.Count);
-                } while (CameraCtrlHelper.GetInstance().myCameraList.Count < 3);
-                CameraCtrlHelper.GetInstance().CameraImageEvent += Camera_CameraImageEvent;
-                CameraCtrlHelper.GetInstance().CameraErrorEvent += HomePageViewModel_CameraErrorEvent; 
-                Schedule.ScheduleManager.CameraTest(taskMainCameraModel.XzCamerainfoItem,
-                    taskMainCameraModel.FrontCamerainfoItem, taskMainCameraModel.BackCamerainfoItem);
-                ThreadSleep(2000); 
-#endif
-                CameraOpen();
-                AddLog("初始化光源...");
-                light = new LightManager(Properties.Settings.Default.Light)
-                {
-                    LinkLight = () =>
-                    {
-                        return testForm.GetEnable(Form.EnableEnum.光源);
-                    }
-                };
-#if controlLightPower
-                ThreadSleep(500);
-                light?.LightOn(Properties.Settings.Default.LightFrontHigh, true);
-                ThreadSleep(500);
-                light?.LightOn(Properties.Settings.Default.LightFrontHigh, false);
-#endif
-#if plcModbus
-                if (testForm.GetEnable(Form.EnableEnum.PLC))
-                {
-                    light.PowerOn();
-                }
-#endif
-                AddLog("光源初始化完成");
-#if !test
-#if initRGV
-                if (testForm.GetEnable(Form.EnableEnum.RGV))
-                {
-                    AddLog("初始化Rgv...");
-                    RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
-                    InitRgvMod();
-                    AddLog("Rgv初始化完成");
-                }
-#endif
-                if (testForm.GetEnable(Form.EnableEnum.Stm32))
-                {
-                    AddLog("初始化Stm32...");
-                    Stm32ModCtrlHelper.GetInstance().Stm32ModInfoEvent += MyStm32ModInfoEvent;
-                    InitStm32Mod();
-                    AddLog("Stm32初始化完成"); 
-                }
-#endif
-                if (!RobotModCtrlHelper.isServer)
-                {
-                    AddLog("初始化机械臂...");
-#if plcModbus
-                    if (testForm.GetEnable(Form.EnableEnum.PLC))
-                    {
-                        ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
-                        ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0);
-                        ThreadSleep(3000);
-                        ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 1);
-                        ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 1);
-                        ThreadSleep(3000);
-                        ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
-                        ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0); 
-                    }
-#else
-                    RobotModCtrlHelper.GetInstance().RobotModInfoEvent += MyRobotModInfoEvent;
-                    InitRobotMod(); 
-#endif
-                    AddLog("机械臂初始化完成");
-                }
-#if initRobot
-                AddLog("初始化继电器...");
-#if plcModbus
-                if (testForm.GetEnable(Form.EnableEnum.PLC))
-                {
-                    ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
-                    ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0);
-                    ThreadSleep(3000);
-                    ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 1);
-                    ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 1);
-                    ThreadSleep(3000);
-                    ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
-                    ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0); 
-                }
-#else
-                NetworkRelayCtrlHelper.GetInstance().NetworkRelayModInfoEvent += MyNetworkRelayModInfoEvent;
-                InitRelayMod();
-#endif
-                AddLog("继电器初始化完成");
-
-                if (RobotModCtrlHelper.isServer)
-                {
-                    AddLog("初始化机械臂...");
-                    RobotModCtrlHelper.GetInstance().RobotModInfoEvent += MyRobotModInfoEvent;
-                    InitRobotMod();
-                    AddLog("机械臂初始化完成");
-                }
-                while (true)
-                {
-                    if ((testForm.GetEnable(Form.EnableEnum.前机械臂) ? RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.FrontRobotConnStat : true) &&
-                        (testForm.GetEnable(Form.EnableEnum.后机械臂) ? RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.BackRobotConnStat : true))
-                    {
-                        AddLog("延迟等到机械臂复位动作完成，等待3秒...");
-                        ThreadSleep(3000);
-
-                        DoRobotCmdBackZeroHandle("1");
-                        DoRobotCmdBackZeroHandle("2");
-                        break;
-                    }
-
-                    AddLog("等待机械臂复位【前臂：" + RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.FrontRobotConnStat +
-                           "】【后臂：" + RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.BackRobotConnStat + "】");
-                    ThreadSleep(1000);
-                }
-
-                WaitRobotEnding();
-#endif
-#if init3dCamera
-                if (testForm.GetEnable(Form.EnableEnum.三维相机))
-                {
-                    AddLog("初始化3D扫描仪...");
-                    try
-                    {
-                        cognexManager.Create(Properties.Settings.Default.VppPath);
-                        cognexManager.GetResultEvent += (string[] value, CognexLib.JobName jobName) =>
-                        {
-                            int logType = 0;
-                            if (jobName == CognexLib.JobName.CogJob1)
-                            {
-                                logType = 1;
-                                AddLog(JsonConvert.SerializeObject(value), logType);
-                                AddLog($"前3D算法编号: {front3dID} 部件编号: {shotFrontID}", logType);
-                                if (front3dID > -1)
-                                {
-                                    AddLog($"前3D数据上传参数：{value[front3dID]}, {shotFrontID}, 0", logType);
-                                    UploadData(value[front3dID],
-                                        testForm.GetEnable(Form.EnableEnum.异步) ?
-#if shotImageProcess
-                                    shotFrontID
-#else
-                                    frontData[frontMzIndex].OnlyID
-#endif
-                                    : mzCameraDataList[mzIndex].FrontComponentId
-                                        , 0);
-                                }
-#if shotImageProcess
-                                shotFrontID = "";
-                                shotFrontOutTime = -10000;
-#endif
-                            }
-                            else
-                            {
-                                logType = 2;
-                                AddLog(JsonConvert.SerializeObject(value), logType);
-                                AddLog($"后3D算法编号: {back3dID} 部件编号: {shotBackID}", logType);
-                                if (back3dID > -1)
-                                {
-                                    AddLog($"后3D数据上传参数：{value[back3dID]}, {shotBackID}, 1", logType);
-                                    UploadData(value[back3dID],
-                                        testForm.GetEnable(Form.EnableEnum.异步) ?
-#if shotImageProcess
-                                    shotBackID
-#else
-                                    backData[backMzIndex].OnlyID
-#endif
-                                    : mzCameraDataList[mzIndex].BackComponentId
-                                        , 1);
-                                }
-#if shotImageProcess
-                                shotBackID = "";
-                                shotBackOutTime = -10000;
-#endif
-                            }
-                        };
-                        _3dInitComplete = true;
-                        AddLog("3D扫描仪初始化完成");
-                    }
-                    catch (Exception e)
-                    {
-                        AddLog("3D扫描仪初始化失败：" + e.Message, -1);
-                    } 
-                }
-#endif
-#if initPointCamera
-                try
-                {
-                    AddLog("初始化点云相机");
-                    DkamHelper.Instance.Addlog = AddLog;
-                    DkamHelper.Instance.ReLinkCameraFaid = DepthRelinkFaid;
-                InitDeptCamera:
-                    DkamHelper.Instance.FindCamera();
-                    if (!DkamHelper.Instance.Init(Properties.Settings.Default.PointCamera, true, true))
-                    {
-                        ThreadSleep(1000);
-                        AddLog("重新初始化点云相机");
-                        goto InitDeptCamera;
-                    }
-                    AddLog("初始化点云相机完成");
-                }
-                catch (Exception e)
-                {
-                    AddLog("初始化点云相机失败: " + e.Message, -1);
-                }
-#endif
+                Init();
 
                 //设备状态
                 UserInfo.myDeviceStat = UserEntity.key_DEVICE_INIT;
@@ -990,6 +733,282 @@ namespace PcMainCtrl.ViewModel
                     }
                 } while (true);
             }); 
+#endif
+        }
+
+        private void Init()
+        {
+#if plcModbus
+            if (testForm.GetEnable(Form.EnableEnum.PLC))
+            {
+                ModbusTCP.SetAddress13(Address13Type.Green, 0);
+                PowerOn(Address12Type.RobotFrontMzPower,
+                        Address12Type.RobotBackMzPower,
+                        Address12Type.RobotMzLedPower,
+                        Address12Type.RobotXZPower
+                );
+                ModbusTCP.SetAddress13(Address13Type._3D, 1);
+                AddLog("上电等待中...");
+                ThreadSleep(15000);
+                AddLog("电源上电完成");
+                pLC3DCamera = new PLC3DCamera();
+                pLC3DCamera.SetAlarmEvent(() =>
+                {
+                    if (pLC3DCamera.GetDriverAlarm(RobotName.Front))
+                    {
+                        AddLog("前滑台报警", 1);
+#if controlSocket
+                        PLCAlarm(RobotName.Front, SocketCmd.robot_driver_alarm);
+#endif
+                    }
+                    if (pLC3DCamera.GetPLCAlarm(RobotName.Front))
+                    {
+                        AddLog("前PLC报警", 1);
+#if controlSocket
+                        PLCAlarm(RobotName.Front, SocketCmd.robot_plc_alarm);
+#endif
+                    }
+                }, () =>
+                {
+                    if (pLC3DCamera.GetDriverAlarm(RobotName.Back))
+                    {
+                        AddLog("后滑台报警", 2);
+#if controlSocket
+                        PLCAlarm(RobotName.Back, SocketCmd.robot_driver_alarm);
+#endif
+                    }
+                    if (pLC3DCamera.GetPLCAlarm(RobotName.Back))
+                    {
+                        AddLog("后PLC报警", 2);
+#if controlSocket
+                        PLCAlarm(RobotName.Back, SocketCmd.robot_plc_alarm);
+#endif
+                    }
+                });
+            }
+#endif
+            AddLog("初始化相机...");
+            do
+            {
+#if newBasler
+                if (cameraManager != null)
+                {
+                    for (int i = 0; i < cameraManager.Cameras.Count; i++)
+                    {
+                        cameraManager.Cameras[i].Close();
+                    }
+                    cameraManager.Close();
+                }
+#endif
+                InitCameraMod();
+                ThreadSleep(1000);
+#if newBasler
+            } while (GetCameraState());
+#else
+                AddLog("相机数量: " + CameraCtrlHelper.GetInstance().myCameraList.Count);
+            } while (CameraCtrlHelper.GetInstance().myCameraList.Count < 3);
+            CameraCtrlHelper.GetInstance().CameraImageEvent += Camera_CameraImageEvent;
+            CameraCtrlHelper.GetInstance().CameraErrorEvent += HomePageViewModel_CameraErrorEvent; 
+            Schedule.ScheduleManager.CameraTest(taskMainCameraModel.XzCamerainfoItem,
+                taskMainCameraModel.FrontCamerainfoItem, taskMainCameraModel.BackCamerainfoItem);
+            ThreadSleep(2000); 
+#endif
+            CameraOpen();
+            AddLog("相机初始化完成");
+
+            AddLog("初始化光源...");
+            light = new LightManager(Properties.Settings.Default.Light)
+            {
+                LinkLight = () =>
+                {
+                    return testForm.GetEnable(Form.EnableEnum.光源);
+                }
+            };
+#if controlLightPower
+            ThreadSleep(500);
+            light.LightOn(Properties.Settings.Default.LightFrontHigh, true);
+            ThreadSleep(500);
+            light.LightOn(Properties.Settings.Default.LightFrontHigh, false);
+#endif
+#if plcModbus
+            if (testForm.GetEnable(Form.EnableEnum.PLC))
+            {
+                light.PowerOn();
+            }
+#endif
+            AddLog("光源初始化完成");
+#if !test
+#if initRGV
+            if (testForm.GetEnable(Form.EnableEnum.RGV))
+            {
+                AddLog("初始化Rgv...");
+                RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
+                InitRgvMod();
+                AddLog("Rgv初始化完成");
+            }
+#endif
+            if (testForm.GetEnable(Form.EnableEnum.Stm32))
+            {
+                AddLog("初始化Stm32...");
+                Stm32ModCtrlHelper.GetInstance().Stm32ModInfoEvent += MyStm32ModInfoEvent;
+                InitStm32Mod();
+                AddLog("Stm32初始化完成");
+            }
+#endif
+            if (!RobotModCtrlHelper.isServer)
+            {
+                AddLog("初始化机械臂...");
+#if plcModbus
+                if (testForm.GetEnable(Form.EnableEnum.PLC))
+                {
+                    ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
+                    ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0);
+                    ThreadSleep(3000);
+                    ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 1);
+                    ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 1);
+                    ThreadSleep(3000);
+                    ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
+                    ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0);
+                }
+#else
+                RobotModCtrlHelper.GetInstance().RobotModInfoEvent += MyRobotModInfoEvent;
+                InitRobotMod(); 
+#endif
+                AddLog("机械臂初始化完成");
+            }
+#if initRobot
+            AddLog("初始化继电器...");
+#if plcModbus
+            if (testForm.GetEnable(Form.EnableEnum.PLC))
+            {
+                ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
+                ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0);
+                ThreadSleep(3000);
+                ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 1);
+                ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 1);
+                ThreadSleep(3000);
+                ModbusTCP.SetAddress12(Address12Type.FrontRobotStart, 0);
+                ModbusTCP.SetAddress12(Address12Type.BackRobotStart, 0);
+            }
+#else
+            NetworkRelayCtrlHelper.GetInstance().NetworkRelayModInfoEvent += MyNetworkRelayModInfoEvent;
+            InitRelayMod();
+#endif
+            AddLog("继电器初始化完成");
+
+            if (RobotModCtrlHelper.isServer)
+            {
+                AddLog("初始化机械臂...");
+                RobotModCtrlHelper.GetInstance().RobotModInfoEvent += MyRobotModInfoEvent;
+                InitRobotMod();
+                AddLog("机械臂初始化完成");
+            }
+            while (true)
+            {
+                if ((testForm.GetEnable(Form.EnableEnum.前机械臂) ? RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.FrontRobotConnStat : true) &&
+                    (testForm.GetEnable(Form.EnableEnum.后机械臂) ? RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.BackRobotConnStat : true))
+                {
+                    AddLog("延迟等到机械臂复位动作完成，等待3秒...");
+                    ThreadSleep(3000);
+
+                    DoRobotCmdBackZeroHandle("1");
+                    DoRobotCmdBackZeroHandle("2");
+                    break;
+                }
+
+                AddLog("等待机械臂复位【前臂：" + RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.FrontRobotConnStat +
+                       "】【后臂：" + RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.BackRobotConnStat + "】");
+                ThreadSleep(1000);
+            }
+
+            WaitRobotEnding();
+#endif
+#if init3dCamera
+            if (testForm.GetEnable(Form.EnableEnum.三维相机))
+            {
+                AddLog("初始化3D扫描仪...");
+                try
+                {
+                    cognexManager.Create(Properties.Settings.Default.VppPath);
+                    cognexManager.GetResultEvent = (string[] value, CognexLib.JobName jobName) =>
+                    {
+                        int logType = 0;
+                        if (jobName == CognexLib.JobName.CogJob1)
+                        {
+                            logType = 1;
+                            AddLog(JsonConvert.SerializeObject(value), logType);
+                            AddLog($"前3D算法编号: {front3dID} 部件编号: {shotFrontID}", logType);
+                            if (front3dID > -1)
+                            {
+                                AddLog($"前3D数据上传参数：{value[front3dID]}, {shotFrontID}, 0", logType);
+                                UploadData(value[front3dID],
+                                    testForm.GetEnable(Form.EnableEnum.异步) ?
+#if shotImageProcess
+                                    shotFrontID
+#else
+                                    frontData[frontMzIndex].OnlyID
+#endif
+                                    : mzCameraDataList[mzIndex].FrontComponentId
+                                    , 0);
+                            }
+#if shotImageProcess
+                            shotFrontID = "";
+                            shotFrontOutTime = -10000;
+#endif
+                        }
+                        else
+                        {
+                            logType = 2;
+                            AddLog(JsonConvert.SerializeObject(value), logType);
+                            AddLog($"后3D算法编号: {back3dID} 部件编号: {shotBackID}", logType);
+                            if (back3dID > -1)
+                            {
+                                AddLog($"后3D数据上传参数：{value[back3dID]}, {shotBackID}, 1", logType);
+                                UploadData(value[back3dID],
+                                    testForm.GetEnable(Form.EnableEnum.异步) ?
+#if shotImageProcess
+                                    shotBackID
+#else
+                                    backData[backMzIndex].OnlyID
+#endif
+                                    : mzCameraDataList[mzIndex].BackComponentId
+                                    , 1);
+                            }
+#if shotImageProcess
+                            shotBackID = "";
+                            shotBackOutTime = -10000;
+#endif
+                        }
+                    };
+                    _3dInitComplete = true;
+                    AddLog("3D扫描仪初始化完成");
+                }
+                catch (Exception e)
+                {
+                    AddLog("3D扫描仪初始化失败：" + e.Message, -1);
+                }
+            }
+#endif
+#if initPointCamera
+            try
+            {
+                AddLog("初始化点云相机");
+                DkamHelper.Instance.Addlog = AddLog;
+                DkamHelper.Instance.ReLinkCameraFaid = DepthRelinkFaid;
+            InitDeptCamera:
+                DkamHelper.Instance.FindCamera();
+                if (!DkamHelper.Instance.Init(Properties.Settings.Default.PointCamera, true, true))
+                {
+                    ThreadSleep(1000);
+                    AddLog("重新初始化点云相机");
+                    goto InitDeptCamera;
+                }
+                AddLog("初始化点云相机完成");
+            }
+            catch (Exception e)
+            {
+                AddLog("初始化点云相机失败: " + e.Message, -1);
+            }
 #endif
         }
 
@@ -4389,6 +4408,16 @@ namespace PcMainCtrl.ViewModel
             if (!RgvModCtrlHelper.GetInstance().IsEnable)
             {
                 AddLog("RGV未完成连接");
+                return false;
+            }
+            if (!ModbusTCP.IsLink)
+            {
+                AddLog("PLC未成功连接");
+                return false;
+            }
+            if (light == null || !light.IsLink)
+            {
+                AddLog("光源未连接");
                 return false;
             }
             AddLog("自检完成");

@@ -21,6 +21,8 @@ namespace PcMainCtrl.HardWare
         private SerialPort serialPort;
         private object lockObj = new object();
 
+        public bool IsLink { get { return serialPort.IsOpen; } }
+
         public bool IsReceived { get; private set; }
 
         public Func<bool> LinkLight { private get; set; }

@@ -35,15 +35,15 @@ namespace CognexLib
         /// <summary>
         /// 获取图片事件
         /// </summary>
-        public event Action<Bitmap, JobName> GetImageEvent;
+        public Action<Bitmap, JobName> GetImageEvent;
         /// <summary>
         /// 获取结果事件
         /// </summary>
-        public event Action<string[], JobName> GetResultEvent;
+        public Action<string[], JobName> GetResultEvent;
         /// <summary>
         /// 停止事件
         /// </summary>
-        public event Action StopEvent;
+        public Action StopEvent;
 
         public void Create(string vppPath)
         {

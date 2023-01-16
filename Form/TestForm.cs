@@ -65,6 +65,7 @@ namespace PcMainCtrl.Form
         private Dictionary<string, List<string>> modeSn = new Dictionary<string, List<string>>(); 
         #endregion
 
+        public Action InitAct { private get; set; }
         public Action SpeedCorrect { private get; set; }
         public Action<object, Action> Run { private get; set; }
         public Action<object> Stop { private get; set; }
@@ -837,7 +838,13 @@ namespace PcMainCtrl.Form
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Inspect?.Invoke();
+            if (Inspect != null && !Inspect())
+            {
+                if (MessageBox.Show("是否重新初始化硬件设备？", "提示", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    InitAct?.Invoke();
+                }
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
