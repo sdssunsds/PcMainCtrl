@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="PcMainCtrl.View.DeviceManagerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PcMainCtrl.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="1000">
+    <!--窗口控制按钮-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--RadioButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="NavButtonStyle" TargetType="RadioButton">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border Background="Transparent" Name="back">
+                                        <ContentControl Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,20,10,20" FontSize="20"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="back" Property="Background" Value="#44FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!--左侧设备菜单-->
+        <Border Background="DarkBlue" Grid.Row="0" Grid.Column="0">
+            <Border.Effect>
+                <DropShadowEffect Color="Gray" ShadowDepth="0" BlurRadius="5" Opacity="0.3" Direction="0"/>
+            </Border.Effect>
+            <StackPanel  Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,5">
+                <RadioButton Name="Stm32CtrlBtn" Content="声光单元控制" Style="{StaticResource NavButtonStyle}" IsChecked="True"
+                             Command="{Binding DevManagerChangedCommand}"
+                             CommandParameter="DeviceStm32CtrlView"/>
+                <RadioButton Name="RgvCtrlBtn" Content="RGV单元控制"  Style="{StaticResource NavButtonStyle}"
+                             Command="{Binding DevManagerChangedCommand}"
+                             CommandParameter="DeviceRgvCtrlView"/>
+                <RadioButton Name="RobotCtrlBtn" Content="机械臂单元控制"  Style="{StaticResource NavButtonStyle}"
+                             Command="{Binding DevManagerChangedCommand}"
+                             CommandParameter="DeviceRobotCtrlView"/>
+                <RadioButton Name="CameraCtrlBtn" Content="相机单元控制"  Style="{StaticResource NavButtonStyle}"
+                             Command="{Binding DevManagerChangedCommand}"
+                             CommandParameter="DeviceCameraCtrlView"/>
+                <RadioButton Name="GpioCtrlBtn" Content="继电器单元控制" Style="{StaticResource NavButtonStyle}"   
+                             Command="{Binding DevManagerChangedCommand}"
+                             CommandParameter="DeviceRelayCtrlView"/>                
+                <RadioButton Name="ScannerCtrlBtn" Content="扫描仪单元控制" Style="{StaticResource NavButtonStyle}"/>
+            </StackPanel>
+        </Border>
+
+        <!--右侧设备菜单-->
+        <ContentControl  Grid.Row="0" Grid.Column="1" Content="{Binding DeviceManagerContent}"/>
+
+        <!--底部Log输出菜单-->
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="[--操作日志实时监控:--]" Foreground="#3F4C5D" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="18" Margin="5,0"/>
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Margin="0,30,0,0">
+            <Border Background="Azure" >
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" ShadowDepth="0" BlurRadius="5" Opacity="0.3" Direction="0"/>
+                </Border.Effect>
+                <Label Content="{Binding Log}"/>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

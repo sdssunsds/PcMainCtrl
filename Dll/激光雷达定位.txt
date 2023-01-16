@@ -1,0 +1,8 @@
+文件名称：lplocation.exe
+参数：
+初始化输入参数：-i
+定位输入参数：-l mappath point writepath
+mappath 地图的路径
+point z1或z2
+writepath 结果书写的路径以及文件名
+结果书写格式：就是简单的double转化的string

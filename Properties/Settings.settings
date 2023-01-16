@@ -1,0 +1,162 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PcMainCtrl.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ImageProportion" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2048</Value>
+    </Setting>
+    <Setting Name="OrcImageProportion" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4096</Value>
+    </Setting>
+    <Setting Name="SaveImageType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">image/jpeg</Value>
+    </Setting>
+    <Setting Name="FtpIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.102</Value>
+    </Setting>
+    <Setting Name="FtpPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">21</Value>
+    </Setting>
+    <Setting Name="FtpUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">robot</Value>
+    </Setting>
+    <Setting Name="FtpPwd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">robot</Value>
+    </Setting>
+    <Setting Name="HttpServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8080</Value>
+    </Setting>
+    <Setting Name="HttpBufferSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4096</Value>
+    </Setting>
+    <Setting Name="RgvIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.254</Value>
+    </Setting>
+    <Setting Name="RgvPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8899</Value>
+    </Setting>
+    <Setting Name="RobotIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.191</Value>
+    </Setting>
+    <Setting Name="RobotPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7000</Value>
+    </Setting>
+    <Setting Name="RobotFrontIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.170</Value>
+    </Setting>
+    <Setting Name="RobotBackIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.171</Value>
+    </Setting>
+    <Setting Name="Stm32Com" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM6</Value>
+    </Setting>
+    <Setting Name="Stm32BaudRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">115200</Value>
+    </Setting>
+    <Setting Name="Stm32Parity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Stm32DataBits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="Stm32StopBits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="RelayIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.191</Value>
+    </Setting>
+    <Setting Name="RelayPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6000</Value>
+    </Setting>
+    <Setting Name="RobotIO1_Wait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="RobotIO2_Wait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="RobotIO3_Wait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="RobotIO4_Wait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="TrainMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">380AL</Value>
+    </Setting>
+    <Setting Name="TrainSn" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2572</Value>
+    </Setting>
+    <Setting Name="CheckingSpeed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="RobotFrontPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="RobotBackPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="VppPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E:\DoNet\Vpp\Test.vpp</Value>
+    </Setting>
+    <Setting Name="CameraWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4096</Value>
+    </Setting>
+    <Setting Name="CameraHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2260</Value>
+    </Setting>
+    <Setting Name="CameraExposureTime" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">46</Value>
+    </Setting>
+    <Setting Name="RobotPointXZ" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="LaserPositioning" Type="System.String" Scope="User">
+      <Value Profile="(Default)">com5</Value>
+    </Setting>
+    <Setting Name="ModbusTcp" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.194</Value>
+    </Setting>
+    <Setting Name="Light" Type="System.String" Scope="User">
+      <Value Profile="(Default)">com3</Value>
+    </Setting>
+    <Setting Name="LightFrontHigh" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="LightBackHigh" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="RobotID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">00000001</Value>
+    </Setting>
+    <Setting Name="ServicePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:8002/</Value>
+    </Setting>
+    <Setting Name="ServerIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">101.35.202.172</Value>
+    </Setting>
+    <Setting Name="ServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10010</Value>
+    </Setting>
+    <Setting Name="ServerHardInternal" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="UploadDataServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://101.35.202.172/api</Value>
+    </Setting>
+    <Setting Name="ReCheckHead" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6000</Value>
+    </Setting>
+    <Setting Name="LidarType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">S2</Value>
+    </Setting>
+    <Setting Name="RgvSpeedTolerance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="PointCamera" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.2.187</Value>
+    </Setting>
+    <Setting Name="PointCameraXZ" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

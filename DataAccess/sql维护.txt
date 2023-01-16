@@ -1,0 +1,123 @@
+//------------------------------------------------------------------------------------------------------
+//1.创建测试数据库表 robot_test
+use robot_data;  
+go 
+Create Table RobotTestDataTable
+(
+	id Int IDENTITY(1,1) Primary key, 
+	discrption varchar(100) Not NULL, 
+	 
+	front_robot_devid varchar(8) Not NULL,  	
+	front_robot_enable varchar(8) Not NULL, 
+	front_robot_j1 varchar(50) Not NULL,  	
+	front_robot_j2 varchar(50) Not NULL, 
+	front_robot_j3 varchar(50) Not NULL,  	
+	front_robot_j4 varchar(50) Not NULL, 
+	front_robot_j5 varchar(50) Not NULL,  	
+	front_robot_j6 varchar(50) Not NULL, 
+
+	back_robot_devid varchar(8) Not NULL,  	
+	back_robot_enable varchar(8) Not NULL,
+	back_robot_j1 varchar(50) Not NULL,  	
+	back_robot_j2 varchar(50) Not NULL, 
+	back_robot_j3 varchar(50) Not NULL,  	
+	back_robot_j4 varchar(50) Not NULL, 
+	back_robot_j5 varchar(50) Not NULL,  	
+	back_robot_j6 varchar(50) Not NULL, 	  	 
+)
+
+//插入数据
+insert into RobotTestDataTable
+(id ,discrption ,front_robot_devid, front_robot_enable,front_robot_j1, front_robot_j2, front_robot_j3, front_robot_j4, front_robot_j5, front_robot_j6,back_robot_devid, back_robot_enable,back_robot_j1, back_robot_j2, back_robot_j3, back_robot_j4, back_robot_j5, back_robot_j6) 
+VALUES 
+(2,'测试数据','1','1','1.00','2.00','3.00','4.00','5.00','6.00','2','1','1.00','2.00','3.00','4.00','5.00','6.00')
+
+//------------------------------------------------------------------------------------------------------
+//2.创建测试数据库表 xz_camera_data
+use robot_data;  
+go 
+Create Table New_XzCameraDataTable
+(
+	id Int IDENTITY(0,1) Primary key, 
+	 
+	train_mode varchar(50) Not NULL,  	
+	train_sn varchar(50) Not NULL, 
+	
+	carriage_id Int Not NULL,  	
+	carriage_type Int Not NULL, 
+	
+	rgv_devid Int Not NULL,  	
+	rgv_enable Int Not NULL, 
+	rgv_min_distance Int Not NULL,  
+	rgv_max_distance Int Not NULL,  
+		
+	min_high Int Not NULL, 
+	max_high Int Not NULL, 
+
+	ir1 Int Not NULL,  	
+	ir2 Int Not NULL,
+	ir3 Int Not NULL,  	
+	ir4 Int Not NULL,   	 
+)
+
+//插入数据
+insert into RobotTestDataTable
+(id ,discrption ,front_robot_devid, front_robot_enable,front_robot_j1, front_robot_j2, front_robot_j3, front_robot_j4, front_robot_j5, front_robot_j6,back_robot_devid, back_robot_enable,back_robot_j1, back_robot_j2, back_robot_j3, back_robot_j4, back_robot_j5, back_robot_j6) 
+VALUES 
+(2,'测试数据','1','1','1.00','2.00','3.00','4.00','5.00','6.00','2','1','1.00','2.00','3.00','4.00','5.00','6.00')
+
+//------------------------------------------------------------------------------------------------------
+//3.创建测试数据库表 mz_camera_data
+use robot_data;  
+go 
+Create Table MzCameraDataTable
+(
+	id Int IDENTITY(0,1) Primary key, 
+	 
+	train_mode varchar(50) Not NULL,  	
+	train_sn varchar(50) Not NULL, 
+	
+	rgv_devid Int Not NULL,  	
+	rgv_enable Int Not NULL, 
+	rgv_distance Int Not NULL,  
+		
+	front_robot_devid Int Not NULL,  	
+	front_robot_enable Int Not NULL,  
+	front_robot_j1 varchar(50) Not NULL,  	
+	front_robot_j2 varchar(50) Not NULL, 
+	front_robot_j3 varchar(50) Not NULL,  	
+	front_robot_j4 varchar(50) Not NULL, 
+	front_robot_j5 varchar(50) Not NULL,  	
+	front_robot_j6 varchar(50) Not NULL, 
+	front_camera_devid Int Not NULL,   
+	front_camera_enable Int Not NULL,  
+	front_component_id varchar(50) Not NULL, 
+	front_component_type varchar(50) Not NULL, 
+
+	back_robot_devid Int Not NULL,  	
+	back_robot_enable Int Not NULL,
+	back_robot_j1 varchar(50) Not NULL,  	
+	back_robot_j2 varchar(50) Not NULL, 
+	back_robot_j3 varchar(50) Not NULL,  	
+	back_robot_j4 varchar(50) Not NULL, 
+	back_robot_j5 varchar(50) Not NULL,  	
+	back_robot_j6 varchar(50) Not NULL, 
+	back_camera_devid Int Not NULL,   
+	back_camera_enable Int Not NULL,  
+	back_component_id varchar(50) Not NULL, 
+	back_component_type varchar(50) Not NULL,  	 
+)
+
+//修改数据
+use robot_data;  
+go 
+update MzCameraDataTable
+set	front_robot_enable=1, front_camera_enable=1,back_robot_enable=1, back_camera_enable=1
+where id=0
+
+//删掉数据
+use robot_data
+go
+delete
+from New_XzCameraDataTable
+where id=7

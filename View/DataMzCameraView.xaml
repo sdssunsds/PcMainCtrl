@@ -1,0 +1,398 @@
+﻿<UserControl x:Class="PcMainCtrl.View.DataMzCameraView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PcMainCtrl.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <!--窗口控制按钮-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--RadioButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="NavButtonStyle" TargetType="RadioButton">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border Background="Transparent" Name="back">
+                                        <ContentControl Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20,10,20" FontSize="20"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="back" Property="Background" Value="#44FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+                <!--CmdButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="CmdButtonStyle" TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Blue" CornerRadius="5" Margin="10,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Brown" CornerRadius="5" Margin="10,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+                <!--CmdButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="CmdSmallButtonStyle" TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Goldenrod" CornerRadius="5" Margin="10,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Brown" CornerRadius="5" Margin="10,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>                
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  Width="250"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="250"/>
+        </Grid.RowDefinitions>
+
+        <!--存储操作面板-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="部件属性信息" Foreground="#3F4C5D" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" Margin="20,10"/>
+        <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Background="White" CornerRadius="5" Margin="20,30,0,0">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10">
+                    <Label Content="[车组车型:]" FontSize="14" Foreground="DarkCyan"/>
+                    <Label Content="[车组序号:]" FontSize="14" Foreground="DarkCyan"/>
+                    <Label Content="[Rgv车头距离:]" FontSize="14" Foreground="Brown"/>
+                    <Label Content="[Rgv行驶距离:]"  FontSize="14" Foreground="Brown"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10">
+                    <TextBox Name="TrainModel" Text="{Binding dataMzCameraModel.TrainMode}" FontSize="14" Foreground="Black"  Margin="10,3" />
+                    <TextBox Name="TrainSn" Text="{Binding dataMzCameraModel.TrainSn}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                    <TextBox Name="RgvHeadDistance" Text="{Binding dataMzCameraModel.RgvCurrentHeadDistacnce}" FontSize="14" Foreground="Brown"  Margin="10,3"/>
+                    <TextBox Name="RgvRunDistance" Text="{Binding dataMzCameraModel.RgvCurrentRunDistacnce, Mode=TwoWay}" FontSize="14" Foreground="Brown"  Margin="10,3"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"  >
+                    <Border.Effect>
+                        <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+                    </Border.Effect>
+                    <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">-->
+                        <Grid ScrollViewer.CanContentScroll="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <WrapPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button Content="连接RGV" Style="{StaticResource CmdButtonStyle }"                         
+                                        Command="{Binding RgvModConnectCmd}"/>
+                                <Button Content="断开RGV" Style="{StaticResource CmdButtonStyle }" 
+                                        Command="{Binding RgvModDisConnectCmd}"/>
+                                <Button Content="正向运动" Style="{StaticResource CmdButtonStyle }" 
+                                        Command="{Binding RgvForwardMotorCmd}"/>
+                                <Button Content="反向运动" Style="{StaticResource CmdButtonStyle }" 
+                                        Command="{Binding RgvBackMotorCmd}"/>
+                                <Button Content="正常停止" Style="{StaticResource CmdButtonStyle }" 
+                                        Command="{Binding RgvNormalStopCmd}"/>
+                                <Button Content="清除报警" Style="{StaticResource CmdButtonStyle }" 
+                                        Command="{Binding RgvClearAlarmCmd}"/>
+                                <Button Content="车头检测" Style="{StaticResource CmdButtonStyle }" 
+                                        Command="{Binding RgvCheckHeadCmd}"/>
+                            </WrapPanel>
+                            <!--<Grid.RowDefinitions>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
+                                <RowDefinition Height="45"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Content="连接RGV" Style="{StaticResource CmdButtonStyle }" Grid.Row="0"
+                                    Command="{Binding RgvModConnectCmd}"/>
+                            <Button Content="断开RGV" Style="{StaticResource CmdButtonStyle }" Grid.Row="1"
+                                    Command="{Binding RgvModDisConnectCmd}"/>
+                            <Button Content="正向运动" Style="{StaticResource CmdButtonStyle }" Grid.Row="2"
+                                    Command="{Binding RgvForwardMotorCmd}"/>
+                            <Button Content="反向运动" Style="{StaticResource CmdButtonStyle }" Grid.Row="3"
+                                    Command="{Binding RgvBackMotorCmd}"/>
+                            <Button Content="正常停止" Style="{StaticResource CmdButtonStyle }" Grid.Row="4"
+                                    Command="{Binding RgvNormalStopCmd}"/>
+                            <Button Content="清除报警" Style="{StaticResource CmdButtonStyle }" Grid.Row="5"
+                                    Command="{Binding RgvClearAlarmCmd}"/>
+                            <Button Content="车头检测" Style="{StaticResource CmdButtonStyle }" Grid.Row="6"
+                                    Command="{Binding RgvCheckHeadCmd}"/>-->
+                        </Grid>
+                    <!--</ScrollViewer>-->
+                </Border>
+            </Grid>
+        </Border>
+
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="设备属性信息" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="14" Margin="40,10"/>
+        <Grid Grid.Row="0"  Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="20,30,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.0*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!--左侧工具按钮-->
+            <Grid Grid.Column="0" Background="White"  Margin="20,5,0,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.2*"/>
+                    <RowDefinition Height="0.6*"/>
+                    <RowDefinition Height="0.4*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.2*"/>
+                    <RowDefinition Height="0.4*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="网络继电器服务器" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="13"/>
+                <WrapPanel Grid.Row="1"   Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Label Content="[服务器信息:   ]"   VerticalAlignment="Center" FontSize="13" Foreground="DarkCyan"/>
+                    <TextBlock Margin="5,5" VerticalAlignment="Center" FontSize="13" Foreground="Brown"
+                               Text="{Binding ModRelayWorkMsg}" />
+                </WrapPanel>
+                <WrapPanel Grid.Row="2"   Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Label Content="[数据处理结果:   ]"   VerticalAlignment="Center" FontSize="13" Foreground="DarkCyan"/>
+                    <TextBlock Margin="5,5" VerticalAlignment="Center" FontSize="13" Foreground="Brown"
+                               Text="{Binding dataMzCameraModel.RelayRspMsg}" />
+                </WrapPanel>
+                <WrapPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button Content="创建服务器" Style="{StaticResource CmdButtonStyle}"
+                            Command="{Binding CreatNetworkRelayServer}"/>
+                    <Button Content="关闭服务器" Style="{StaticResource CmdButtonStyle}"
+                            Command="{Binding CloseNetworkRelayServer}"/>
+                    <Button Content="前一键恢复" Style="{StaticResource CmdButtonStyle}"
+                            Command="{Binding FrontRobotResetCtrl_Cmd}"/>
+                    <Button Content="后一键恢复" Style="{StaticResource CmdButtonStyle}"
+                            Command="{Binding BackRobotResetCtrl_Cmd}"/>
+                </WrapPanel>
+
+                <TextBlock Grid.Row="4" Text="机械臂控制服务器" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="13"/>
+                <WrapPanel Grid.Row="5"   Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Label Content="[服务器信息:   ]"   VerticalAlignment="Center" FontSize="13" Foreground="DarkCyan"/>
+                    <TextBlock Margin="5,5" VerticalAlignment="Center" FontSize="13" Foreground="Brown"
+                               Text="{Binding ModRobotWorkMsg}" />
+                </WrapPanel>
+                <WrapPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button  Content="创建服务器" Style="{StaticResource CmdButtonStyle}"
+                                Command="{Binding CreatRobotServer}"/>
+                    <Button Content="关闭服务器" Style="{StaticResource CmdButtonStyle}"
+                                Command="{Binding CloseRobotServer}"/>
+                    <Button  Content="查询前Robot" Style="{StaticResource CmdButtonStyle}"
+                                Command="{Binding RobotCmdGetStat}" 
+                                CommandParameter="1"/>
+                    <Button  Content="查询后Robot" Style="{StaticResource CmdButtonStyle}"
+                                Command="{Binding RobotCmdGetStat}" 
+                                CommandParameter="2"/>
+                </WrapPanel>
+            </Grid>
+             
+            <!--左侧机械臂操作面板-->
+            <Border Grid.Column="1" Background="White" CornerRadius="5" Margin="20,0,0,0">
+                <Border.Effect>
+                    <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,5">
+                        <Label Content="[左臂处理结果:]" FontSize="15" Foreground="DarkCyan"/>
+                        <Label Content="{Binding dataMzCameraModel.FrontRobotMsg}"  FontSize="14" Foreground="Brown"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.RowSpan="2"  Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10">
+                        <Label Content="[j1:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j2:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j3:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j4:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j5:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j6:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[运动使能:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="[拍照使能:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="[部件ID:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="[部件类别:]" FontSize="14" Foreground="Brown"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10">
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_J1}" FontSize="14" Foreground="Black"  Margin="10,3" />
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_J2}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_J3}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_J4}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_J5}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_J6}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontRobot_Enable}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontCamera_Enable}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontComponentId}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.FrontComponentType}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--右侧机械臂操作面板-->
+            <Border Grid.Column="2" Background="White" CornerRadius="5" Margin="0,0,20,0">
+                <Border.Effect>
+                    <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,5">
+                        <Label Content="[右臂处理结果:]" FontSize="15" Foreground="DarkCyan"/>
+                        <Label Content="{Binding dataMzCameraModel.BackRobotMsg}"  FontSize="14" Foreground="Brown"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10">
+                        <Label Content="[j1:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j2:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j3:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j4:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j5:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[j6:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="[运动使能:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="[拍照使能:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="[部件ID:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="[部件类别:]" FontSize="14" Foreground="Brown"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.RowSpan="2"  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10">
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_J1}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_J2}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_J3}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_J4}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_J5}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_J6}" FontSize="14" Foreground="Black"  Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackRobot_Enable}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackCamera_Enable}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackComponentId}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                        <TextBox Text="{Binding dataMzCameraModel.BackComponentType}" FontSize="14" Foreground="Black" Margin="10,3"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--下方数据面板-->
+        <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Text="数据库点位录入数据" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="15" Margin="20,4.8,20,0"/>
+        <StackPanel Grid.Row="3" Grid.Column="1"   Grid.ColumnSpan="2" Orientation="Horizontal"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,0">
+            <Button Content="数据查询" Style="{StaticResource CmdSmallButtonStyle}" Margin="0,0,30,0" 
+                    Command="{Binding MzCameraDataListQuery}"/>
+            <Button Content="数据存入" Style="{StaticResource CmdSmallButtonStyle}"
+                    Command="{Binding MzCameraDataListSave}"/>
+            <Button Content="点位插零"   Style="{StaticResource CmdSmallButtonStyle}" Margin="0,0,30,0"
+                    Command="{Binding MzCameraDataListSetZero}"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="3" Grid.ColumnSpan="3" Grid.Column="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"   Margin="20,29.8,20,4.6">
+            <DataGrid IsReadOnly="True" ItemsSource="{Binding mzCameraDataList}"  AutoGenerateColumns="false" SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="索引" Width="60" Binding="{Binding DataLine_Index}"/>
+
+                    <DataGridTextColumn Header="train-model" Width="80" Binding="{Binding TrainModel}"/>
+                    <DataGridTextColumn Header="train-sn" Width="80" Binding="{Binding TrainSn}"/>
+                                   
+                    <!--RGV设备动作-->
+                    <DataGridTextColumn Header="rgv-devid" Width="80" Binding="{Binding Rgv_Id}"/>
+                    <DataGridTextColumn Header="rgv-enable" Width="80" Binding="{Binding Rgv_Enable}"/>
+                    <DataGridTextColumn Header="rgv-distance" Width="100" Binding="{Binding Rgv_Distance}"/>
+
+                    <!--FrontRobot设备动作-->
+                    <DataGridTextColumn Header="robot-devid" Width="80" Binding="{Binding FrontRobot_Id}"/>
+                    <DataGridTextColumn Header="robot-enable" Width="80" Binding="{Binding FrontRobot_Enable}"/>
+                    <DataGridTextColumn Header="j1" Width="50" Binding="{Binding FrontRobot_J1}"/>
+                    <DataGridTextColumn Header="j2" Width="50" Binding="{Binding FrontRobot_J2}"/>
+                    <DataGridTextColumn Header="j3" Width="50" Binding="{Binding FrontRobot_J3}"/>
+                    <DataGridTextColumn Header="j4" Width="50" Binding="{Binding FrontRobot_J4}"/>
+                    <DataGridTextColumn Header="j5" Width="50" Binding="{Binding FrontRobot_J5}"/>
+                    <DataGridTextColumn Header="j6" Width="50" Binding="{Binding FrontRobot_J6}"/>
+
+                    <DataGridTextColumn Header="camera-devid" Width="70" Binding="{Binding FrontCamera_Id}"/>
+                    <DataGridTextColumn Header="camera-enable" Width="60" Binding="{Binding FrontCamera_Enable}"/>
+                    <DataGridTextColumn Header="component-id" Width="100" Binding="{Binding FrontComponentId}"/>
+                    <DataGridTextColumn Header="component-type" Width="110" Binding="{Binding FrontComponentType}"/>
+                    
+                    <!--BackRobot设备动作-->
+                    <DataGridCheckBoxColumn Header="robot-devid" Width="80" Binding="{Binding BackRobot_Id}"/>
+                    <DataGridCheckBoxColumn Header="robot-enable" Width="80" Binding="{Binding BackRobot_Enable}"/>
+                    <DataGridCheckBoxColumn Header="j1" Width="50" Binding="{Binding BackRobot_J1}"/>
+                    <DataGridCheckBoxColumn Header="j2" Width="50" Binding="{Binding BackRobot_J2}"/>
+                    <DataGridCheckBoxColumn Header="j3" Width="50" Binding="{Binding BackRobot_J3}"/>
+                    <DataGridCheckBoxColumn Header="j4" Width="50" Binding="{Binding BackRobot_J4}"/>
+                    <DataGridCheckBoxColumn Header="j5" Width="50" Binding="{Binding BackRobot_J5}"/>
+                    <DataGridCheckBoxColumn Header="j6" Width="50" Binding="{Binding BackRobot_J6}"/>
+
+                    <DataGridCheckBoxColumn Header="camera-devid" Width="70" Binding="{Binding BackCamera_Id}"/>
+                    <DataGridCheckBoxColumn Header="camera-enable" Width="60" Binding="{Binding BackCamera_Enable}"/>
+                    <DataGridCheckBoxColumn Header="component-id" Width="100" Binding="{Binding BackComponentId}"/>
+                    <DataGridCheckBoxColumn Header="component-type" Width="110" Binding="{Binding BackComponentType}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

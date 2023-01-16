@@ -1,0 +1,186 @@
+﻿<UserControl x:Class="PcMainCtrl.View.HomePageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PcMainCtrl.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="1000">
+    <!--Cmd控制按钮-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--CmdButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="CmdButtonStyle" TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Blue" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5,5,5"  FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Gray" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5,5,5"  FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Brown" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5,5,5"  FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+                <!--WindowControlButton的样式资源-->
+                <ResourceDictionary Source="../Assets/Styles/DefaultStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <!--窗体布局划分-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--区域：操作面板-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="[控制面板:]" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="15"  Margin="20,5,20,5"/>
+        <Border Grid.Row="0" Grid.Column="0" Background="White" CornerRadius="5" Margin="20,30,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Button Content="任务启动"  Style="{StaticResource CmdButtonStyle}" FontWeight="Bold" IsEnabled="{Binding IsStartEnable}"
+                    Command="{Binding OneKeyStartCmd}"/>
+        </Border>
+        <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Background="White" CornerRadius="5" Margin="20,5,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <StackPanel   Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,5,5,5">
+                <Button Name="TaskStopBtn" Content="任务结束" Style="{StaticResource CmdButtonStyle }" IsEnabled="{Binding IsEndEnable}"
+                         Command="{Binding OneKeyStopCmd}" Height="75"/>
+                <Button Name="ForwardMotorBtn" Content="正向运动" Style="{StaticResource CmdButtonStyle }" IsEnabled="{Binding IsRgvMoved}"
+                         Command="{Binding RgvForwardMotorCmd}" Height="75"/>
+                <Button Name="BackMotorBtn" Content="反向运动" Style="{StaticResource CmdButtonStyle }" IsEnabled="{Binding IsRgvMoved}"
+                         Command="{Binding RgvBackMotorCmd}" Height="75"/>
+                <Button Name="NormalStopBtn" Content="正常停止" Style="{StaticResource CmdButtonStyle }" 
+                         Command="{Binding RgvNormalStopCmd}" Height="75"/>
+            </StackPanel>
+        </Border>
+
+        <!--区域：信息面板-->
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="[信息面板:]" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="15" Margin="20,5,20,5"/>
+        <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Background="White" CornerRadius="5" Margin="20,30,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="0" >
+                    <Label Content="执行流程:" FontSize="16" Foreground="Brown"/>
+                    <Label Content="{Binding Job}"  FontSize="16" Foreground="Brown" Width="Auto"  Margin="0,30,0,10" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1">
+                    <Label Content="RGV状态:" FontSize="16" Foreground="DarkCyan"/>
+                    <Label Content="{Binding RgvState}"  FontSize="16" Foreground="Brown" Width="Auto" Margin="80,30,0,10" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2">
+                    <Label Content="RGV车速:" FontSize="16" Foreground="DarkCyan"/>
+                    <Label Content="{Binding RgvSpeed}" FontSize="16"  Width="Auto" Margin="80,30,0,10" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="3">
+                    <Label Content="RGV位置:" FontSize="16" Foreground="DarkCyan"/>
+                    <Label Content="{Binding RgvDistacnce}" FontSize="16"  Width="Auto" Margin="80,30,0,10" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="4">
+                    <Label Content="RGV电量:" FontSize="16" Foreground="DarkCyan"/>
+                    <Label Content="{Binding RgvElectricity}" FontSize="16"  Width="Auto" Margin="80,30,0,10" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="5">
+                    <Label Content="车头位置:" FontSize="16" Foreground="DarkCyan"/>
+                    <Label Content="{Binding TrainHeadDistance}" FontSize="16"  Width="Auto" Margin="80,30,0,10" HorizontalAlignment="Left"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--区域：报警面板-->
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="[报警面板:]" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="15" Margin="20,5,20,5"/>
+        <Border Grid.Row="0" Grid.Column="2" Background="White" CornerRadius="5" Margin="20,30,20,25.4" Grid.ColumnSpan="2">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,5,5,5">
+                <Button Name="ClearAlarmBtn" Content="清除RGV报警" Style="{StaticResource CmdButtonStyle }" IsEnabled="{Binding IsAlarm}"
+                         Command="{Binding RgvClearAlarmCmd}" Height="85"/>
+                <Button Name="FrontRelinkShotBtn" Content="重连拍照(前)" Style="{StaticResource CmdButtonStyle }" IsEnabled="{Binding IsFrontRelinkShot}"
+                         Command="{Binding FrontRelinkShotCmd}"/>
+                <Button Name="BackRelinkShotBtn" Content="重连拍照(后)" Style="{StaticResource CmdButtonStyle }" IsEnabled="{Binding IsBackRelinkShot}"
+                         Command="{Binding BackRelinkShotCmd}"/>
+                <Button x:Name="FrontClearAlarmBtn" Content="清除PLC报警(前)" Style="{StaticResource CmdButtonStyle}" IsEnabled="{Binding IsFrontPLCAlarm}"
+                    Command="{Binding FrontClearPLCAlarmCmd}"/>
+                <Button x:Name="BackClearAlarmBtn" Content="清除PLC报警(后)" Style="{StaticResource CmdButtonStyle}" IsEnabled="{Binding IsBackPLCAlarm}"
+                    Command="{Binding BackClearPLCAlarmCmd}"/>
+            </StackPanel>
+        </Border>
+
+        <!--区域：线阵相机-->
+        <TextBlock Grid.Column="2" Text="线阵相机面板" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="15" Margin="20,135,20,0" Grid.RowSpan="2"/>
+        <Border Grid.Column="2" Grid.ColumnSpan="2" Background="White" CornerRadius="5" Margin="20,9.6,20,4.8" Grid.Row="1" Grid.RowSpan="2">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Border Margin="10,10" Background="LightGray">
+                <Image Name="img3" Height="Auto" Width="Auto" Source="{Binding Path=GrabImg, Converter={StaticResource ImageSourceConverter}}"/>
+            </Border>
+        </Border>
+
+        <!--区域:底部Log输出菜单-->
+        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="[操作流程实时监控:]" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="15" Margin="20,5,20,5"/>
+        <ScrollViewer Grid.Row="3" Grid.ColumnSpan="4" Margin="20,30,5,5">
+            <Border Background="Azure">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" ShadowDepth="0" BlurRadius="5" Opacity="0.3" Direction="0"/>
+                </Border.Effect>
+                <Label Content="{Binding Log}"/>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,0 +1,11 @@
+﻿入口：
+	CameraManager manager = new CameraManager();
+初始化：
+	manager.Initialise();
+相机对象：
+	manager.Cameras
+相机对象初始化：
+	camera.Initialise();
+
+单个相机对象：
+	ICamera 或者 BaslerCamera

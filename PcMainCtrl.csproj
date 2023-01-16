@@ -1,0 +1,569 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E61C9BF7-A822-456B-8AA6-7FC82A93635D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>PcMainCtrl</RootNamespace>
+    <AssemblyName>PcMainCtrl</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Basler.Pylon, Version=1.1.0.0, Culture=neutral, PublicKeyToken=e389355f398382ab, processorArchitecture=x86" />
+    <Reference Include="GW">
+      <HintPath>Dll\GW.dll</HintPath>
+    </Reference>
+    <Reference Include="HslCommunication">
+      <HintPath>Dll\HslCommunication.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.1.9, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>packages\SharpZipLib.1.3.1\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PLC.Lib">
+      <HintPath>Dll\PLC.Lib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Common\GlobalValues.cs" />
+    <Compile Include="Common\ThreadManager.cs" />
+    <Compile Include="Common\TimeConsumingCalculation.cs" />
+    <Compile Include="Connected Services\ServiceReference1\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\StringToImageConverter.cs" />
+    <Compile Include="DataAccess\DataEntity\UserEntity.cs" />
+    <Compile Include="DataAccess\LocalDataBase.cs" />
+    <Compile Include="Form\CameraForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\CameraForm.Designer.cs">
+      <DependentUpon>CameraForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SaveRobotPoint.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Form\SaveRobotPoint.Designer.cs">
+      <DependentUpon>SaveRobotPoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SaveRobotPointForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SaveRobotPointForm.Designer.cs">
+      <DependentUpon>SaveRobotPointForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\TestMzPoint.xaml.cs">
+      <DependentUpon>TestMzPoint.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FtpClient\FtpHelper.cs" />
+    <Compile Include="HardWare\BaslerCamera\CameraCtrlHelper.cs" />
+    <Compile Include="HardWare\BaslerCamera\CameraDataHelper.cs" />
+    <Compile Include="HardWare\BaslerCamera\CameraModel.cs" />
+    <Compile Include="HardWare\HardwareHelper.cs" />
+    <Compile Include="HardWare\IPower.cs" />
+    <Compile Include="HardWare\NetworkRelay\NetworkRelayCtrlHelper.cs" />
+    <Compile Include="HardWare\NetworkRelay\NetworkRelayCtrlProtocol.cs" />
+    <Compile Include="HardWare\Stm32\Stm32ModCtrlHelper.cs" />
+    <Compile Include="HardWare\Stm32\Stm32ModCtrlProtocol.cs" />
+    <Compile Include="HardWare\Rgv\RgvModCtrlHelper.cs" />
+    <Compile Include="HardWare\Rgv\RgvModCtrlProtocol.cs" />
+    <Compile Include="HardWare\Robot\RobotModCtrlHelper.cs" />
+    <Compile Include="HardWare\Robot\RobotModCtrlProtocol.cs" />
+    <Compile Include="HardWare\直连设备\3DCamera.cs" />
+    <Compile Include="HardWare\直连设备\LightManager.cs" />
+    <Compile Include="HardWare\直连设备\ModbusTCP.cs" />
+    <Compile Include="HardWare\直连设备\SerialPortManager.cs" />
+    <Compile Include="HttpServer\HttpServerHelper.cs" />
+    <Compile Include="HttpServer\HttpServerProtocol.cs" />
+    <Compile Include="Model\DataMzCameraModel.cs" />
+    <Compile Include="Model\DataXzCameraModel.cs" />
+    <Compile Include="Model\DeviceCameraCtrlModel.cs" />
+    <Compile Include="Model\DeviceRelayCtrlModel.cs" />
+    <Compile Include="Model\DeviceRgvCtrlModel.cs" />
+    <Compile Include="Model\DeviceRobotCtrlModel.cs" />
+    <Compile Include="Model\DeviceStm32CtrlModel.cs" />
+    <Compile Include="Model\FtpClientManagerModel.cs" />
+    <Compile Include="Model\HomePageModel.cs" />
+    <Compile Include="Model\PartsType.cs" />
+    <Compile Include="Model\TaskMzCameraModel.cs" />
+    <Compile Include="Model\TaskXzCameraModel.cs" />
+    <Compile Include="Network\Network.cs" />
+    <Compile Include="Network\SocketCmd.cs" />
+    <Compile Include="Schedule\HomePage.cs" />
+    <Compile Include="Schedule\ScheduleManager.cs" />
+    <Compile Include="ViewModel\DataManagerViewModel.cs" />
+    <Compile Include="ViewModel\DataMzCameraViewModel.cs" />
+    <Compile Include="ViewModel\DataXzCameraViewModel.cs" />
+    <Compile Include="ViewModel\DeviceCameraCtrlViewModel.cs" />
+    <Compile Include="ViewModel\DeviceManagerViewModel.cs" />
+    <Compile Include="ViewModel\DeviceRelayCtrlViewModel.cs" />
+    <Compile Include="ViewModel\DeviceRgvCtrlViewModel.cs" />
+    <Compile Include="ViewModel\DeviceRobotCtrlViewModel.cs" />
+    <Compile Include="ViewModel\DeviceStm32CtrlViewModel.cs" />
+    <Compile Include="ViewModel\FtpClientManagerViewModel.cs" />
+    <Compile Include="ViewModel\HomePageViewModel.cs" />
+    <Compile Include="ViewModel\LogViewModel.cs" />
+    <Compile Include="ViewModel\TaskManagerViewModel.cs" />
+    <Compile Include="ViewModel\TaskMzCameraViewModel.cs" />
+    <Compile Include="ViewModel\TaskXzCameraViewModel.cs" />
+    <Compile Include="View\DataManagerView.xaml.cs">
+      <DependentUpon>DataManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DataMzCameraView.xaml.cs">
+      <DependentUpon>DataMzCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DataXzCameraView.xaml.cs">
+      <DependentUpon>DataXzCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceCameraCtrlView.xaml.cs">
+      <DependentUpon>DeviceCameraCtrlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceManagerView.xaml.cs">
+      <DependentUpon>DeviceManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceRelayCtrlView.xaml.cs">
+      <DependentUpon>DeviceRelayCtrlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceRgvCtrlView.xaml.cs">
+      <DependentUpon>DeviceRgvCtrlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceRobotCtrlView.xaml.cs">
+      <DependentUpon>DeviceRobotCtrlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceStm32CtrlView.xaml.cs">
+      <DependentUpon>DeviceStm32CtrlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FtpClientManagerView.xaml.cs">
+      <DependentUpon>FtpClientManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HomePageView.xaml.cs">
+      <DependentUpon>HomePageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HttpServerManagerView.xaml.cs">
+      <DependentUpon>HttpServerManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TaskManagerView.xaml.cs">
+      <DependentUpon>TaskManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TaskMzCameraView.xaml.cs">
+      <DependentUpon>TaskMzCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TaskXzCameraView.xaml.cs">
+      <DependentUpon>TaskXzCameraView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Assets\Styles\DefaultStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Form\TestMzPoint.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataMzCameraView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataXzCameraView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceCameraCtrlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceRelayCtrlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceRgvCtrlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceRobotCtrlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceStm32CtrlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FtpClientManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\HttpServerManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\CommandBase.cs" />
+    <Compile Include="Common\NotifyBase.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="View\MainView.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="View\HomePageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TaskManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TaskMzCameraView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TaskXzCameraView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Form\CameraForm.resx">
+      <DependentUpon>CameraForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SaveRobotPoint.resx">
+      <DependentUpon>SaveRobotPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SaveRobotPointForm.resx">
+      <DependentUpon>SaveRobotPointForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="config.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Config\log4net.config" />
+    <None Include="Config\log4net.unix.config" />
+    <Resource Include="Assets\Fonts\iconfont.ttf" />
+    <None Include="Connected Services\ServiceReference1\PicService.wsdl" />
+    <None Include="Connected Services\ServiceReference1\PicService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\ServiceReference1\PicService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\ServiceReference1\PicService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <EmbeddedResource Include="LpLoc.lib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="boost_atomic-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_atomic-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_chrono-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_chrono-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_date_time-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_date_time-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_filesystem-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_filesystem-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_locale-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_locale-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_random-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_random-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_regex-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_regex-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_system-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_system-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_thread-vc141-mt-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="boost_thread-vc141-mt-gd-1_56.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="libcurl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="libcurl_debug.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="libeay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LpLoc.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_core-vc141-mt-2.8.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_core-vc141-mt-gd-2.8.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_deps_base64-vc141-mt-gd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_deps_base64-vc141-mt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_deps_jsoncpp-vc141-mt-gd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_deps_jsoncpp-vc141-mt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_deps_rlelib-vc141-mt-gd.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_deps_rlelib-vc141-mt.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_robotplatforms_rpslamware-vc141-mt-2.8.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rpos_robotplatforms_rpslamware-vc141-mt-gd-2.8.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ssleay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Images\Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DataAccess\sql维护.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="BaslerLib\BaslerLib.csproj">
+      <Project>{72378425-c9dc-47b1-b326-7cb59391dee6}</Project>
+      <Name>BaslerLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="CognexLib\CognexLib.csproj">
+      <Project>{5FA18955-425E-4CAC-A9B0-2CF864BDFEE3}</Project>
+      <Name>CognexLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="Dkam\Dkam.csproj">
+      <Project>{bcfc3f92-a6a3-4b0a-ab93-a96901fe7db7}</Project>
+      <Name>Dkam</Name>
+    </ProjectReference>
+    <ProjectReference Include="LidarLib\LidarLib.csproj">
+      <Project>{b81fa4a5-6876-47d2-a816-348a7726c410}</Project>
+      <Name>LidarLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\ServiceReference1\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\ServiceReference1\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\ServiceReference1\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\ServiceReference1\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CppLibDll.h">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

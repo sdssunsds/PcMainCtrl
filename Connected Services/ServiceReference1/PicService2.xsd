@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8001/PicService?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:element name="AddLog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="log" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="type" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddLogResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLocation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="picName1" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="picName2" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="picName3" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="state" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetLocationResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetLocationResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Upload3DData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="parsIndex" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="robot" type="xs:int" />
+        <xs:element minOccurs="0" name="data" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Upload3DDataResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="picIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="dataIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="dataLength" type="xs:int" />
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="imgData" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImageResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImage2">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="picIndex" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="dataIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="dataLength" type="xs:int" />
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="imgData" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImage2Response">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImage3">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="picName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="dataIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="dataLength" type="xs:int" />
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="imgData" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadImage3Response">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadComplete">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="number" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadCompleteResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadPictrue">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="parsIndex" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="robot" type="xs:int" />
+        <xs:element minOccurs="0" name="dataIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="dataLength" type="xs:int" />
+        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="imgData" nillable="true" type="xs:base64Binary" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadPictrueResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UploadPictrueResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadParameter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="kc" nillable="true" type="q1:ArrayOffloat" />
+        <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="kk" nillable="true" type="q2:ArrayOffloat" />
+        <xs:element minOccurs="0" name="robotID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UploadParameterResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

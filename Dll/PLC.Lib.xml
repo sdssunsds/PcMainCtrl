@@ -1,0 +1,2518 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PLC.Lib</name>
+    </assembly>
+    <members>
+        <member name="T:PLC.PLCManager">
+            <summary>
+            PLC管理类
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetLogixTcp(System.String,System.Int32,System.Byte)">
+            <summary>
+            获取Logix Tcp对象
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="slot">Slot</param>
+        </member>
+        <member name="T:PLC.PLCManager.Logix_Tcp">
+            <summary>
+            Logix Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Logix_Tcp.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Logix_Tcp.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Logix_Tcp.#ctor">
+            <summary>
+            创建一个新的Logix Tcp对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Logix_Tcp.Open(System.String,System.Int32,System.Byte)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="slot">Slot</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Logix_Tcp.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Logix_Tcp.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMC3EBinary(System.String,System.Int32)">
+            <summary>
+            获取MC-3E对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.MC_3E_Binary">
+            <summary>
+            基恩士 MC-3E (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_3E_Binary.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_3E_Binary.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Binary.#ctor">
+            <summary>
+            创建一个新的MC-3E对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Binary.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Binary.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Binary.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMC3EAscii(System.String,System.Int32)">
+            <summary>
+            获取MC-3E对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.MC_3E_Ascii">
+            <summary>
+            基恩士 MC-3E (Ascii)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_3E_Ascii.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_3E_Ascii.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Ascii.#ctor">
+            <summary>
+            创建一个新的MC-3E对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Ascii.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Ascii.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_3E_Ascii.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetNanoASCII(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity)">
+            <summary>
+            获取Nano对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+        </member>
+        <member name="T:PLC.PLCManager.Nano_ASCII">
+            <summary>
+            基恩士 Nano(ASCII)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Nano_ASCII.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Nano_ASCII.#ctor">
+            <summary>
+            创建一个新的Nano对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Nano_ASCII.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Nano_ASCII.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Nano_ASCII.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreateKeyencePLC(PLC.Keyence_PLC)">
+            <summary>
+            创建基恩士PLC列表
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetKeyencePLC(PLC.Keyence_PLC)">
+            <summary>
+            获取基恩士PLC列表
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetXGBFastEnet(System.String,System.Int32,System.Byte)">
+            <summary>
+            获取XGB Fast Enet对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.XGB_Fast_Enet">
+            <summary>
+            LSIS XGB Fast Enet
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.XGB_Fast_Enet.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.XGB_Fast_Enet.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Fast_Enet.#ctor">
+            <summary>
+            创建一个新的XGB Fast Enet对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Fast_Enet.Open(System.String,System.Int32,System.Byte)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="slot">Slot</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Fast_Enet.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Fast_Enet.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetXGBCnet(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.Byte,System.IO.Ports.Parity)">
+            <summary>
+            获取XGB Cnet对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="station">站号</param>
+            <param name="parity">奇偶</param>
+        </member>
+        <member name="T:PLC.PLCManager.XGB_Cnet">
+            <summary>
+            LSIS XGB Cnet
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.XGB_Cnet.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Cnet.#ctor">
+            <summary>
+            创建一个新的XGB Cnet对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Cnet.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.Byte,System.IO.Ports.Parity)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="station">站号</param>
+            <param name="parity">奇偶</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Cnet.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.XGB_Cnet.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetLSisVirtualServer(System.Int32)">
+            <summary>
+            获取LSis Virtual Server对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.LSis_Virtual_Server">
+            <summary>
+            LSis Virtual Server
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.LSis_Virtual_Server.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.LSis_Virtual_Server.OnlineCount">
+            <summary>
+            在线客户端数量
+            </summary>
+        </member>
+        <member name="E:PLC.PLCManager.LSis_Virtual_Server.DataReceived">
+            <summary>
+            接收数据时的事件
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.LSis_Virtual_Server.#ctor">
+            <summary>
+            创建一个新的LSis Virtual Server对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.LSis_Virtual_Server.Open(System.Int32)">
+            <summary>
+            打开服务
+            </summary>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.LSis_Virtual_Server.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.LSis_Virtual_Server.LintClient(System.String,System.Int32,System.String)">
+            <summary>
+            连接客户端
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="dtu">唯一ID</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.LSis_Virtual_Server.Close">
+            <summary>
+            关闭服务
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreateLISIPLC(PLC.LSIS_PLC)">
+            <summary>
+            创建LSIS的PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetLISIPLC(PLC.LSIS_PLC)">
+            <summary>
+            获取LSIS的PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMCBinary(System.String,System.Int32)">
+            <summary>
+            获取MC Binary对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.MC_Binary">
+            <summary>
+            三菱 MC (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_Binary.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_Binary.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Binary.#ctor">
+            <summary>
+            创建一个新的MC Binary对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Binary.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Binary.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Binary.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMCAscii(System.String,System.Int32)">
+            <summary>
+            获取MC Ascii对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.MC_Ascii">
+            <summary>
+            三菱 MC (Ascii)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_Ascii.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.MC_Ascii.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Ascii.#ctor">
+            <summary>
+            创建一个新的MC Ascii对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Ascii.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Ascii.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.MC_Ascii.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetA1EBinary(System.String,System.Int32)">
+            <summary>
+            获取A-1E Binary对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.A_1E_Binary">
+            <summary>
+            三菱 A-1E (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.A_1E_Binary.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.A_1E_Binary.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.A_1E_Binary.#ctor">
+            <summary>
+            创建一个新的A-1E Binary对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.A_1E_Binary.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.A_1E_Binary.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.A_1E_Binary.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetFxSerial(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity)">
+            <summary>
+            获取Fx Serial对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+        </member>
+        <member name="T:PLC.PLCManager.Fx_Serial">
+            <summary>
+            三菱 Fx Serial
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Fx_Serial.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Serial.#ctor">
+            <summary>
+            创建一个新的Fx Serial对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Serial.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Serial.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Serial.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetFxLinks(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            获取Fx Serial对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <param name="station">站号</param>
+            <param name="waittingTime">超时</param>
+            <param name="sumCheck">和校验</param>
+        </member>
+        <member name="T:PLC.PLCManager.Fx_Links">
+            <summary>
+            三菱 Fx Links【485】
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Fx_Links.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Links.#ctor">
+            <summary>
+            创建一个新的Fx Links对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Links.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <param name="station">站号</param>
+            <param name="waittingTime">超时</param>
+            <param name="sumCheck">和校验</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Links.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fx_Links.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetA3C(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte)">
+            <summary>
+            获取A-3C对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <param name="station">站号</param>
+        </member>
+        <member name="T:PLC.PLCManager.A_3C">
+            <summary>
+            三菱 A-3C (format1)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.A_3C.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.A_3C.#ctor">
+            <summary>
+            创建一个新的A-3C对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.A_3C.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <param name="station">站号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.A_3C.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.A_3C.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMcVirtualServer(System.Int32)">
+            <summary>
+            获取Mc Virtual Server对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.Mc_Virtual_Server">
+            <summary>
+            三菱 Mc Virtual Server
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Mc_Virtual_Server.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.Mc_Virtual_Server.OnlineCount">
+            <summary>
+            在线客户端数量
+            </summary>
+        </member>
+        <member name="E:PLC.PLCManager.Mc_Virtual_Server.DataReceived">
+            <summary>
+            接收数据时的事件
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Mc_Virtual_Server.#ctor">
+            <summary>
+            创建一个新的Mc Virtual Server对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Mc_Virtual_Server.Open(System.Int32)">
+            <summary>
+            打开服务
+            </summary>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Mc_Virtual_Server.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Mc_Virtual_Server.LintClient(System.String,System.Int32,System.String)">
+            <summary>
+            连接客户端
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="dtu">唯一ID</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Mc_Virtual_Server.Close">
+            <summary>
+            关闭服务
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreateMelsecPLC(PLC.Melsec_PLC)">
+            <summary>
+            创建三菱PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMelsecPLC(PLC.Melsec_PLC)">
+            <summary>
+            获取三菱PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetModbusTcp(System.String,System.Int32,System.Byte,System.Boolean,System.Boolean,HslCommunication.Core.DataFormat)">
+            <summary>
+            获取Modbus Tcp对象
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="dataFormat">数据解析格式</param>
+        </member>
+        <member name="T:PLC.PLCManager.Modbus_Tcp">
+            <summary>
+            Modbus Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Tcp.IsDispersedMode">
+            <summary>
+            是否离散读取bool值
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Tcp.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Tcp.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Tcp.#ctor">
+            <summary>
+            创建一个新的Modbus Tcp对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Tcp.Open(System.String,System.Int32,System.Byte,System.Boolean,System.Boolean,HslCommunication.Core.DataFormat)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="dataFormat">数据解析格式</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Tcp.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Tcp.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetDifferentModbusTcp(System.String,System.Int32,System.Byte,System.Boolean,System.String)">
+            <summary>
+            获取异形 Modbus Tcp对象
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="connectId">当前连接的唯一号</param>
+        </member>
+        <member name="T:PLC.PLCManager.D_Modbus_Tcp">
+            <summary>
+            异形 Modbus Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.D_Modbus_Tcp.IsDispersedMode">
+            <summary>
+            是否离散读取bool值
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.D_Modbus_Tcp.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.D_Modbus_Tcp.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="E:PLC.PLCManager.D_Modbus_Tcp.LinkEvent">
+            <summary>
+            连接事件
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.D_Modbus_Tcp.#ctor">
+            <summary>
+            创建一个新的异形 Modbus Tcp对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.D_Modbus_Tcp.Open(System.String,System.Int32,System.Byte,System.Boolean,System.String)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="connectId">当前连接的唯一号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.D_Modbus_Tcp.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.D_Modbus_Tcp.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetModbusRtu(System.String,System.Int32,System.Int32,System.Byte,System.Boolean,System.Boolean,System.IO.Ports.StopBits,System.IO.Ports.Parity,HslCommunication.Core.DataFormat)">
+            <summary>
+            获取Modbus Rtu对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">每个字节的标准数据位长度</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="stopBits">每个字节的标准数据停止位数</param>
+            <param name="parity">奇偶</param>
+            <param name="dataFormat">数据解析格式</param>
+        </member>
+        <member name="T:PLC.PLCManager.Modbus_Rtu">
+            <summary>
+            Modbus Rtu
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Rtu.IsDispersedMode">
+            <summary>
+            是否离散读取bool值
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Rtu.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Rtu.#ctor">
+            <summary>
+            创建一个新的Modbus Rtu对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Rtu.Open(System.String,System.Int32,System.Int32,System.Byte,System.Boolean,System.Boolean,System.IO.Ports.StopBits,System.IO.Ports.Parity,HslCommunication.Core.DataFormat)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">每个字节的标准数据位长度</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="stopBits">每个字节的标准数据停止位数</param>
+            <param name="parity">奇偶</param>
+            <param name="dataFormat">数据解析格式</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Rtu.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Rtu.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetModbusAscii(System.String,System.Int32,System.Int32,System.Byte,System.Boolean,System.Boolean,System.IO.Ports.StopBits,System.IO.Ports.Parity,HslCommunication.Core.DataFormat)">
+            <summary>
+            获取Modbus Ascii对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">每个字节的标准数据位长度</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="stopBits">每个字节的标准数据停止位数</param>
+            <param name="parity">奇偶</param>
+            <param name="dataFormat">数据解析格式</param>
+        </member>
+        <member name="T:PLC.PLCManager.Modbus_Ascii">
+            <summary>
+            Modbus Ascii
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Ascii.IsDispersedMode">
+            <summary>
+            是否离散读取bool值
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Ascii.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Ascii.#ctor">
+            <summary>
+            创建一个新的Modbus Ascii对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Ascii.Open(System.String,System.Int32,System.Int32,System.Byte,System.Boolean,System.Boolean,System.IO.Ports.StopBits,System.IO.Ports.Parity,HslCommunication.Core.DataFormat)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">每个字节的标准数据位长度</param>
+            <param name="station">站号</param>
+            <param name="isStartWithZero">地址是否从0开始</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="stopBits">每个字节的标准数据停止位数</param>
+            <param name="parity">奇偶</param>
+            <param name="dataFormat">数据解析格式</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Ascii.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Ascii.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetModbusServer(System.Int32,System.Boolean,HslCommunication.Core.DataFormat)">
+            <summary>
+            获取Modbus Server对象
+            </summary>
+            <param name="port">端口号</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="dataFormat">数据解析格式</param>
+        </member>
+        <member name="T:PLC.PLCManager.Modbus_Server">
+            <summary>
+            Modbus Server
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Server.IsDispersedMode">
+            <summary>
+            是否离散读取bool值
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Modbus_Server.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="E:PLC.PLCManager.Modbus_Server.LogEvent">
+            <summary>
+            日志事件
+            </summary>
+        </member>
+        <member name="E:PLC.PLCManager.Modbus_Server.DataReceived">
+            <summary>
+            消息事件
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.#ctor">
+            <summary>
+            创建一个新的Modbus Server对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.Open(System.Int32,System.Boolean,HslCommunication.Core.DataFormat)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="port">端口号</param>
+            <param name="isStringReverse">是否字符串反转</param>
+            <param name="dataFormat">数据解析格式</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.LintClient(System.String,System.Int32,System.String)">
+            <summary>
+            连接客户端
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="dtu">唯一ID</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.StartCom(System.String,System.Int32)">
+            <summary>
+            启动串口
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <returns>返回是否启动成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Modbus_Server.CloseCom">
+            <summary>
+            关闭串口
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreateModbusPLC(PLC.Modbus_PLC)">
+            <summary>
+            创建Modbus PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetModbusPLC(PLC.Modbus_PLC)">
+            <summary>
+            获取Modbus PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetFinsTcp(System.String,System.Int32,System.Byte,System.Byte,HslCommunication.Core.DataFormat)">
+            <summary>
+            获取Fins Tcp对象
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="SA1">本机网络号（上位机IP节点地址：如192.168.1.10，则节点地址为10）</param>
+            <param name="DA2">PLC单元号（IP段）</param>
+            <param name="dataFormat">数据解析格式</param>
+        </member>
+        <member name="T:PLC.PLCManager.Fins_Tcp">
+            <summary>
+            欧姆龙 Fins Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Fins_Tcp.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Fins_Tcp.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Tcp.#ctor">
+            <summary>
+            创建一个新的Fins Tcp对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Tcp.Open(System.String,System.Int32,System.Byte,System.Byte,HslCommunication.Core.DataFormat)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="SA1">本机网络号（上位机IP节点地址：如192.168.1.10，则节点地址为10）</param>
+            <param name="DA2">PLC单元号（IP段）</param>
+            <param name="dataFormat">数据解析格式</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Tcp.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Tcp.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetFinsHostLink(System.String,System.Int32,System.Int32,System.Byte,System.Byte,System.Byte,System.Byte,HslCommunication.Core.DataFormat,System.IO.Ports.StopBits,System.IO.Ports.Parity)">
+            <summary>
+            获取Fins HostLink对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">每个字节的标准数据位长度</param>
+            <param name="Station">站号</param>
+            <param name="SID">标识号</param>
+            <param name="SA2">本机网络号（上位机IP节点地址：如192.168.1.10，则节点地址为10）</param>
+            <param name="DA2">PLC单元号（IP段）</param>
+            <param name="dataFormat">数据解析格式</param>
+            <param name="stopBits">每个字节的标准停止位数</param>
+            <param name="parity">奇偶</param>
+        </member>
+        <member name="T:PLC.PLCManager.Fins_HostLink">
+            <summary>
+            欧姆龙 Fins HostLink
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Fins_HostLink.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_HostLink.#ctor">
+            <summary>
+            创建一个新的Fins HostLink对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_HostLink.Open(System.String,System.Int32,System.Int32,System.Byte,System.Byte,System.Byte,System.Byte,HslCommunication.Core.DataFormat,System.IO.Ports.StopBits,System.IO.Ports.Parity)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">每个字节的标准数据位长度</param>
+            <param name="Station">站号</param>
+            <param name="SID">标识号</param>
+            <param name="SA2">本机网络号（上位机IP节点地址：如192.168.1.10，则节点地址为10）</param>
+            <param name="DA2">PLC单元号（IP段）</param>
+            <param name="dataFormat">数据解析格式</param>
+            <param name="stopBits">每个字节的标准停止位数</param>
+            <param name="parity">奇偶</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_HostLink.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_HostLink.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetFinsUdp(System.String,System.Int32,System.Byte,HslCommunication.Core.DataFormat)">
+            <summary>
+            获取Fins Udp对象
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="SA1">本机网络号（上位机IP节点地址：如192.168.1.10，则节点地址为10）</param>
+            <param name="dataFormat">数据解析格式</param>
+        </member>
+        <member name="T:PLC.PLCManager.Fins_Udp">
+            <summary>
+            欧姆龙 Fins Udp
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Fins_Udp.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Udp.#ctor">
+            <summary>
+            创建一个新的Fins Udp对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Udp.Open(System.String,System.Int32,System.Byte,HslCommunication.Core.DataFormat)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="SA1">本机网络号（上位机IP节点地址：如192.168.1.10，则节点地址为10）</param>>
+            <param name="dataFormat">数据解析格式</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Udp.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Fins_Udp.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreateOmronPLC(PLC.Omron_PLC)">
+            <summary>
+            创建欧姆龙PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetOmronPLC(PLC.Omron_PLC)">
+            <summary>
+            获取欧姆龙PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetMewtocol(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte)">
+            <summary>
+            获取Mewtocol对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="station">站号</param>
+            <param name="parity">奇偶</param>
+        </member>
+        <member name="T:PLC.PLCManager.Mewtocol">
+            <summary>
+            松下 Mewtocol
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Mewtocol.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Mewtocol.#ctor">
+            <summary>
+            创建一个新的Mewtocol对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Mewtocol.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="station">站号</param>
+            <param name="parity">奇偶</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Mewtocol.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Mewtocol.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetPanasonicMC3EBinary(System.String,System.Int32)">
+            <summary>
+            获取MC-3E对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.Panasonic_MC_3E_Binary">
+            <summary>
+            松下 MC-3E (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Panasonic_MC_3E_Binary.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.Panasonic_MC_3E_Binary.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Panasonic_MC_3E_Binary.#ctor">
+            <summary>
+            创建一个新的MC-3E对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Panasonic_MC_3E_Binary.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.Panasonic_MC_3E_Binary.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.Panasonic_MC_3E_Binary.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreatePanasonicPLC(PLC.Panasonic_PLC)">
+            <summary>
+            创建松下PLC列表
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetPanasonicPLC(PLC.Panasonic_PLC)">
+            <summary>
+            获取松下PLC列表
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.ReadResultRender``1(HslCommunication.OperateResult{``0})">
+            <summary>
+            统一的读取数据
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.WriteResultRender(System.Func{HslCommunication.OperateResult})">
+            <summary>
+            统一的数据写入
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.PLC_Parent">
+            <summary>
+            PLC父类
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.Address">
+            <summary>
+            指令、地址
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.BoolValue">
+            <summary>
+            获取或设置PLC的bool值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.ByteValue">
+            <summary>
+            获取或设置PLC的byte值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.SByteValue">
+            <summary>
+            获取或设置PLC的sbyte值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.IntValue">
+            <summary>
+            获取或设置PLC的int值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.UIntValue">
+            <summary>
+            获取或设置PLC的uint值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.ShortValue">
+            <summary>
+            获取或设置PLC的short值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.UShortValue">
+            <summary>
+            获取或设置PLC的ushort值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.LongValue">
+            <summary>
+            获取或设置PLC的long值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.ULongValue">
+            <summary>
+            获取或设置PLC的ulong值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.FloatValue">
+            <summary>
+            获取或设置PLC的float值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.DoubleValue">
+            <summary>
+            获取或设置PLC的double值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.DecimalValue">
+            <summary>
+            获取或设置PLC的decimal值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.CharValue">
+            <summary>
+            获取或设置PLC的char值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.StringValue">
+            <summary>
+            获取或设置PLC的string值
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.PLC_Parent.DateTimeValue">
+            <summary>
+            获取或设置PLC的DateTime值
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.PLC_Parent.ConvertSByte(System.Byte)">
+            <summary>
+            将byte转为sbyte
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.PLC_Parent.ConvertByte(System.SByte)">
+            <summary>
+            将sbyte转为byte
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.PLC_Parent.GetOpenPara(System.String[],System.String[])">
+            <summary>
+            获取打开连接时需要的参数，根据动态参数生成足够的参数
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.SiemensPLCParent">
+            <summary>
+            西门子PLC父类
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.SiemensPLCParent.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.SiemensPLCParent.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.SiemensPLCParent.#ctor(HslCommunication.Profinet.Siemens.SiemensPLCS)">
+            <summary>
+            创建一个新的s7-1200对象
+            </summary>
+            <param name="siemensPLCSelected">西门子PLC类型</param>
+        </member>
+        <member name="M:PLC.PLCManager.SiemensPLCParent.Open(System.String,System.Byte,System.Byte)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="rack">机架号</param>
+            <param name="slot">槽号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.SiemensPLCParent.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.SiemensPLCParent.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS71200(System.String,System.Byte,System.Byte)">
+            <summary>
+            获取s7-1200对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7_1200">
+            <summary>
+            西门子 s7-1200
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7_1200.#ctor">
+            <summary>
+            创建一个新的s7-1200对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS71500(System.String,System.Byte,System.Byte)">
+            <summary>
+            获取s7-1500对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7_1500">
+            <summary>
+            西门子 s7-1500
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7_1500.#ctor">
+            <summary>
+            创建一个新的s7-1500对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS7200(System.String,System.Byte,System.Byte)">
+            <summary>
+            获取s7-200对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7_200">
+            <summary>
+            西门子 s7-200
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7_200.#ctor">
+            <summary>
+            创建一个新的s7-200对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS7200Smart(System.String,System.Byte,System.Byte)">
+            <summary>
+            获取s7-200Smart对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7_200Smart">
+            <summary>
+            西门子 s7-200Smart
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7_200Smart.#ctor">
+            <summary>
+            创建一个新的s7-200Smart对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS7300(System.String,System.Byte,System.Byte)">
+            <summary>
+            获取s7-300对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7_300">
+            <summary>
+            西门子 s7-300
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7_300.#ctor">
+            <summary>
+            创建一个新的s7-300对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS7400(System.String,System.Byte,System.Byte)">
+            <summary>
+            获取s7-400对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7_400">
+            <summary>
+            西门子 s7-400
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7_400.#ctor">
+            <summary>
+            创建一个新的s7-400对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetFetchWrite(System.String,System.Int32)">
+            <summary>
+            获取Fetch/Write对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.FetchWrite">
+            <summary>
+            西门子 Fetch/Write
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.FetchWrite.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.FetchWrite.ReadStringEncoding">
+            <summary>
+            读取字符串的编码
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.FetchWrite.#ctor">
+            <summary>
+            创建一个新的Fetch/Write对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.FetchWrite.Open(System.String,System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.FetchWrite.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.FetchWrite.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetPPI(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte)">
+            <summary>
+            获取PPI对象
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <param name="station">站号</param>
+        </member>
+        <member name="T:PLC.PLCManager.PPI">
+            <summary>
+            西门子 PPI
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.PPI.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.PPI.#ctor">
+            <summary>
+            创建一个新的PPI对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.PPI.Open(System.String,System.Int32,System.Int32,System.IO.Ports.StopBits,System.IO.Ports.Parity,System.Byte)">
+            <summary>
+            打开COM
+            </summary>
+            <param name="com">COM地址</param>
+            <param name="baudRate">波特率</param>
+            <param name="dataBits">数据位</param>
+            <param name="stopBits">停止位</param>
+            <param name="parity">奇偶</param>
+            <param name="station">站号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.PPI.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.PPI.Close">
+            <summary>
+            断开COM
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetS7VirtualServer(System.Int32)">
+            <summary>
+            获取S7 Virtual Server对象
+            </summary>
+        </member>
+        <member name="T:PLC.PLCManager.S7VirtualServer">
+            <summary>
+            西门子 S7 Virtual Server
+            </summary>
+        </member>
+        <member name="F:PLC.PLCManager.S7VirtualServer.ReadStringLength">
+            <summary>
+            读取字符串的长度
+            </summary>
+        </member>
+        <member name="P:PLC.PLCManager.S7VirtualServer.OnlineCount">
+            <summary>
+            在线客户端数量
+            </summary>
+        </member>
+        <member name="E:PLC.PLCManager.S7VirtualServer.DataReceived">
+            <summary>
+            接收数据时的事件
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7VirtualServer.#ctor">
+            <summary>
+            创建一个新的S7 Virtual Server对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7VirtualServer.Open(System.Int32)">
+            <summary>
+            打开PLC
+            </summary>
+            <param name="port">端口号</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.S7VirtualServer.Open(System.String[])">
+            <summary>
+            打开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.S7VirtualServer.LintClient(System.String,System.Int32,System.String)">
+            <summary>
+            连接客户端
+            </summary>
+            <param name="ip">IP地址</param>
+            <param name="port">端口号</param>
+            <param name="dtu">唯一ID</param>
+            <returns>返回是否连接成功</returns>
+        </member>
+        <member name="M:PLC.PLCManager.S7VirtualServer.Close">
+            <summary>
+            断开PLC
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.CreateSiemensPLC(PLC.Siemens_PLC)">
+            <summary>
+            创建西门子PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCManager.GetSiemensPLC(PLC.Siemens_PLC)">
+            <summary>
+            获取西门子PLC对象
+            </summary>
+        </member>
+        <member name="T:PLC.IPLC">
+            <summary>
+            PLC接口
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.Address">
+            <summary>
+            指令、地址
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.BoolValue">
+            <summary>
+            获取或设置PLC的bool值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.ByteValue">
+            <summary>
+            获取或设置PLC的byte值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.SByteValue">
+            <summary>
+            获取或设置PLC的sbyte值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.IntValue">
+            <summary>
+            获取或设置PLC的int值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.UIntValue">
+            <summary>
+            获取或设置PLC的uint值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.ShortValue">
+            <summary>
+            获取或设置PLC的short值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.UShortValue">
+            <summary>
+            获取或设置PLC的ushort值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.LongValue">
+            <summary>
+            获取或设置PLC的long值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.ULongValue">
+            <summary>
+            获取或设置PLC的ulong值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.FloatValue">
+            <summary>
+            获取或设置PLC的float值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.DoubleValue">
+            <summary>
+            获取或设置PLC的double值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.DecimalValue">
+            <summary>
+            获取或设置PLC的decimal值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.CharValue">
+            <summary>
+            获取或设置PLC的char值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.StringValue">
+            <summary>
+            获取或设置PLC的string值
+            </summary>
+        </member>
+        <member name="P:PLC.IPLC.DateTimeValue">
+            <summary>
+            获取或设置PLC的DateTime值
+            </summary>
+        </member>
+        <member name="M:PLC.IPLC.SetBoolValue(System.Boolean)">
+            <summary>
+            设置bool值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetBoolValue(System.String,System.Boolean)">
+            <summary>
+            设置bool值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetByteValue(System.Byte)">
+            <summary>
+            设置byte值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetByteValue(System.String,System.Byte)">
+            <summary>
+            设置byte值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetSByteValue(System.SByte)">
+            <summary>
+            设置sbyte值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetSByteValue(System.String,System.SByte)">
+            <summary>
+            设置sbyte值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetIntValue(System.Int32)">
+            <summary>
+            设置int值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetIntValue(System.String,System.Int32)">
+            <summary>
+            设置int值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetUIntValue(System.UInt32)">
+            <summary>
+            设置uint值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetUIntValue(System.String,System.UInt32)">
+            <summary>
+            设置uint值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetShortValue(System.Int16)">
+            <summary>
+            设置short值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetShortValue(System.String,System.Int16)">
+            <summary>
+            设置short值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetUShortValue(System.UInt16)">
+            <summary>
+            设置ushort值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetUShortValue(System.String,System.UInt16)">
+            <summary>
+            设置ushort值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetLongValue(System.Int64)">
+            <summary>
+            设置long值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetLongValue(System.String,System.Int64)">
+            <summary>
+            设置long值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetULongValue(System.UInt64)">
+            <summary>
+            设置ulong值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetULongValue(System.String,System.UInt64)">
+            <summary>
+            设置ulong值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetFloatValue(System.Single)">
+            <summary>
+            设置float值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetFloatValue(System.String,System.Single)">
+            <summary>
+            设置float值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetDoubleValue(System.Double)">
+            <summary>
+            设置double值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetDoubleValue(System.String,System.Double)">
+            <summary>
+            设置double值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetStringValue(System.String)">
+            <summary>
+            设置string值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.SetStringValue(System.String,System.String)">
+            <summary>
+            设置string值
+            </summary>
+            <param name="address">指令、地址</param>
+            <param name="value">值</param>
+        </member>
+        <member name="M:PLC.IPLC.GetBoolValue">
+            <summary>
+            获取bool值
+            </summary>
+            <returns>返回bool值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetBoolValue(System.String)">
+            <summary>
+            获取bool值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回bool值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetByteValue">
+            <summary>
+            获取byte值
+            </summary>
+            <returns>返回byte值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetByteValue(System.String)">
+            <summary>
+            获取byte值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回byte值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetSByteValue">
+            <summary>
+            获取sbyte值
+            </summary>
+            <returns>返回sbyte值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetSByteValue(System.String)">
+            <summary>
+            获取sbyte值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回sbyte值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetIntValue">
+            <summary>
+            获取int值
+            </summary>
+            <returns>返回int值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetIntValue(System.String)">
+            <summary>
+            获取int值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回int值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetUIntValue">
+            <summary>
+            获取uint值
+            </summary>
+            <returns>返回uint值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetUIntValue(System.String)">
+            <summary>
+            获取uint值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回uint值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetShortValue">
+            <summary>
+            获取short值
+            </summary>
+            <returns>返回short值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetShortValue(System.String)">
+            <summary>
+            获取short值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回short值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetUShortValue">
+            <summary>
+            获取ushort值
+            </summary>
+            <returns>返回ushort值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetUShortValue(System.String)">
+            <summary>
+            获取ushort值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回ushort值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetLongValue">
+            <summary>
+            获取long值
+            </summary>
+            <returns>返回long值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetLongValue(System.String)">
+            <summary>
+            获取long值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回long值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetULongValue">
+            <summary>
+            获取ulong值
+            </summary>
+            <returns>返回ulong值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetULongValue(System.String)">
+            <summary>
+            获取ulong值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回ulong值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetFloatValue">
+            <summary>
+            获取float值
+            </summary>
+            <returns>返回float值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetFloatValue(System.String)">
+            <summary>
+            获取float值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回float值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetDoubleValue">
+            <summary>
+            获取double值
+            </summary>
+            <returns>返回double值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetDoubleValue(System.String)">
+            <summary>
+            获取double值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回double值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetStringValue">
+            <summary>
+            获取string值
+            </summary>
+            <returns>返回string值</returns>
+        </member>
+        <member name="M:PLC.IPLC.GetStringValue(System.String)">
+            <summary>
+            获取string值
+            </summary>
+            <param name="address">指令、地址</param>
+            <returns>返回string值</returns>
+        </member>
+        <member name="T:PLC.IConnect">
+            <summary>
+            连接接口
+            </summary>
+        </member>
+        <member name="M:PLC.IConnect.Close">
+            <summary>
+            关闭连接
+            </summary>
+        </member>
+        <member name="M:PLC.IConnect.Open(System.String[])">
+            <summary>
+            打开连接
+            </summary>
+            <param name="paras">连接参数</param>
+        </member>
+        <member name="T:PLC.Keyence_PLC">
+            <summary>
+            基恩士PLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.Keyence_PLC.MC_3E_Ascii">
+            <summary>
+            基恩士 MC-3E (Ascii)
+            </summary>
+        </member>
+        <member name="F:PLC.Keyence_PLC.MC_3E_Binary">
+            <summary>
+            基恩士 MC-3E (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.Keyence_PLC.Nano_ASCII">
+            <summary>
+            基恩士 Nano(ASCII)
+            </summary>
+        </member>
+        <member name="T:PLC.LightManager">
+            <summary>
+            光源控制
+            </summary>
+        </member>
+        <member name="P:PLC.LightManager.Baud">
+            <summary>
+            串口频率
+            </summary>
+        </member>
+        <member name="P:PLC.LightManager.Com">
+            <summary>
+            串口名称
+            </summary>
+        </member>
+        <member name="E:PLC.LightManager.LogMsgEvent">
+            <summary>
+            日志信息事件
+            </summary>
+        </member>
+        <member name="M:PLC.LightManager.InitLight">
+            <summary>
+            初始化光源控制器
+            </summary>
+        </member>
+        <member name="M:PLC.LightManager.LightClose">
+            <summary>
+            断开光源控制器
+            </summary>
+        </member>
+        <member name="M:PLC.LightManager.LightOn(System.Byte[])">
+            <summary>
+            打开光源
+            </summary>
+        </member>
+        <member name="M:PLC.LightManager.LightOff">
+            <summary>
+            关闭光源
+            </summary>
+        </member>
+        <member name="T:PLC.LightHelper">
+            <summary>
+            光源控制类
+            </summary>
+        </member>
+        <member name="P:PLC.LightHelper.Baud">
+            <summary>
+            光源频率
+            </summary>
+        </member>
+        <member name="P:PLC.LightHelper.Com">
+            <summary>
+            光源串口号
+            </summary>
+        </member>
+        <member name="T:PLC.LSIS_PLC">
+            <summary>
+            传感器LSIS的PLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.LSIS_PLC.XGB_Fast_Enet">
+            <summary>
+            LSIS XGB Fast Enet
+            </summary>
+        </member>
+        <member name="F:PLC.LSIS_PLC.XGB_Cnet">
+            <summary>
+            LSIS XGB Cnet
+            </summary>
+        </member>
+        <member name="F:PLC.LSIS_PLC.LSis_Virtual_Server">
+            <summary>
+            LSis Virtual Server
+            </summary>
+        </member>
+        <member name="T:PLC.Melsec_PLC">
+            <summary>
+            三菱PLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.MC_Binary">
+            <summary>
+            三菱 MC (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.MC_Ascii">
+            <summary>
+            三菱 MC (Ascii)
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.A_1E_Binary">
+            <summary>
+            三菱 A-1E (Binary)
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.Fx_Serial">
+            <summary>
+            三菱 Fx Serial
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.Fx_Links">
+            <summary>
+            三菱 Fx Links【485】
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.A_3C">
+            <summary>
+            三菱 A-3C (format1)
+            </summary>
+        </member>
+        <member name="F:PLC.Melsec_PLC.Mc_Virtual_Server">
+            <summary>
+            三菱 Mc Virtual Server
+            </summary>
+        </member>
+        <member name="T:PLC.Modbus_PLC">
+            <summary>
+            ModbusPLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.Modbus_PLC.Modbus_Tcp">
+            <summary>
+            Modbus Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.Modbus_PLC.D_Modbus_Tcp">
+            <summary>
+            异形 Modbus Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.Modbus_PLC.Modbus_Rtu">
+            <summary>
+            Modbus Rtu
+            </summary>
+        </member>
+        <member name="F:PLC.Modbus_PLC.Modbus_Ascii">
+            <summary>
+            Modbus Ascii
+            </summary>
+        </member>
+        <member name="F:PLC.Modbus_PLC.Modbus_Server">
+            <summary>
+            Modbus Server
+            </summary>
+        </member>
+        <member name="T:PLC.Omron_PLC">
+            <summary>
+            欧姆龙PLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.Omron_PLC.Fins_Tcp">
+            <summary>
+            欧姆龙 Fins Tcp
+            </summary>
+        </member>
+        <member name="F:PLC.Omron_PLC.Fins_HostLink">
+            <summary>
+            欧姆龙 Fins HostLink
+            </summary>
+        </member>
+        <member name="F:PLC.Omron_PLC.Fins_Udp">
+            <summary>
+            欧姆龙 Fins Udp
+            </summary>
+        </member>
+        <member name="T:PLC.Panasonic_PLC">
+            <summary>
+            松下PLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.Panasonic_PLC.Mewtocol">
+            <summary>
+            松下 Mewtocol
+            </summary>
+        </member>
+        <member name="F:PLC.Panasonic_PLC.MC_3E_Binary">
+            <summary>
+            松下 MC-3E (Binary)
+            </summary>
+        </member>
+        <member name="T:PLC.PLCMath">
+            <summary>
+            PLC计算类
+            </summary>
+        </member>
+        <member name="P:PLC.PLCMath.IPLC">
+            <summary>
+            获取PLC接口对象
+            </summary>
+        </member>
+        <member name="P:PLC.PLCMath.PLC">
+            <summary>
+            获取PLC父类对象
+            </summary>
+        </member>
+        <member name="F:PLC.PLCMath.Plus">
+            <summary>
+            其他类型加运算委托
+            </summary>
+        </member>
+        <member name="F:PLC.PLCMath.Reduce">
+            <summary>
+            其他类型减运算委托
+            </summary>
+        </member>
+        <member name="F:PLC.PLCMath.Ride">
+            <summary>
+            其他类型乘运算委托
+            </summary>
+        </member>
+        <member name="F:PLC.PLCMath.Except">
+            <summary>
+            其他类型除运算委托
+            </summary>
+        </member>
+        <member name="F:PLC.PLCMath.More">
+            <summary>
+            其他类型余运算委托
+            </summary>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.PLCManager.PLC_Parent)">
+            <summary>
+            根据PLC指令实体构造计算对象
+            </summary>
+            <param name="plc">PLC指令实体</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor">
+            <summary>
+            创建其他PLC对象
+            </summary>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.Melsec_PLC)">
+            <summary>
+            创建三菱PLC对象
+            </summary>
+            <param name="plc">三菱PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.Siemens_PLC)">
+            <summary>
+            创建西门子PLC对象
+            </summary>
+            <param name="plc">西门子PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.Modbus_PLC)">
+            <summary>
+            创建协议PLC对象
+            </summary>
+            <param name="plc">协议PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.Omron_PLC)">
+            <summary>
+            创建欧姆龙PLC对象
+            </summary>
+            <param name="plc">欧姆龙PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.LSIS_PLC)">
+            <summary>
+            创建传感器PLC对象
+            </summary>
+            <param name="plc">传感器PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.Panasonic_PLC)">
+            <summary>
+            创建松下PLC对象
+            </summary>
+            <param name="plc">松下PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.#ctor(PLC.Keyence_PLC)">
+            <summary>
+            创建基恩士PLC对象
+            </summary>
+            <param name="plc">基恩士PLC</param>
+        </member>
+        <member name="M:PLC.PLCMath.Close">
+            <summary>
+            关闭连接
+            </summary>
+        </member>
+        <member name="M:PLC.PLCMath.Open(System.String[])">
+            <summary>
+            打开连接
+            </summary>
+            <param name="paras">连接参数</param>
+        </member>
+        <member name="T:PLC.Shock485">
+            <summary>
+            调频控制器带通信 485 控制器
+            </summary>
+        </member>
+        <member name="P:PLC.Shock485.IsOpened">
+            <summary>
+            是否已经打开串口
+            </summary>
+        </member>
+        <member name="P:PLC.Shock485.Baud">
+            <summary>
+            串口频率
+            </summary>
+        </member>
+        <member name="P:PLC.Shock485.Com">
+            <summary>
+            串口名称
+            </summary>
+        </member>
+        <member name="E:PLC.Shock485.LogMsgEvent">
+            <summary>
+            日志信息事件
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.InitShock">
+            <summary>
+            初始化震动器
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.ReadHz">
+            <summary>
+            读频率
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.ReadVoltage">
+            <summary>
+            读电压
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.WriteHz(System.Int32)">
+            <summary>
+            写频率
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.WriteVoltage(System.Int32)">
+            <summary>
+            写电压
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.ShockStart">
+            <summary>
+            启动震动
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.ShockStop">
+            <summary>
+            停止震动
+            </summary>
+        </member>
+        <member name="M:PLC.Shock485.ShockClose">
+            <summary>
+            关闭震动器
+            </summary>
+        </member>
+        <member name="T:PLC.Siemens_PLC">
+            <summary>
+            西门子PLC列表
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7_200">
+            <summary>
+            西门子 s7-200
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7_200Smart">
+            <summary>
+            西门子 s7-200Smart
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7_300">
+            <summary>
+            西门子 s7-300
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7_400">
+            <summary>
+            西门子 s7-400
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7_1200">
+            <summary>
+            西门子 s7-1200
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7_1500">
+            <summary>
+            西门子 s7-1500
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.FetchWrite">
+            <summary>
+            西门子 Fetch/Write
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.PPI">
+            <summary>
+            西门子 PPI
+            </summary>
+        </member>
+        <member name="F:PLC.Siemens_PLC.S7VirtualServer">
+            <summary>
+            西门子 S7 Virtual Server
+            </summary>
+        </member>
+    </members>
+</doc>

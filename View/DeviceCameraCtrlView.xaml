@@ -1,0 +1,127 @@
+﻿<UserControl x:Class="PcMainCtrl.View.DeviceCameraCtrlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PcMainCtrl.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <!--Cmd控制按钮-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--CmdButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="CmdButtonStyle" TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Blue" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5,5,5"  FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Brown" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="5,5,5,5"  FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+                <!--WindowControlButton的样式资源-->
+                <ResourceDictionary Source="../Assets/Styles/DefaultStyle.xaml" />                
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <!--左侧设备菜单-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="[Camera设备树--]" Foreground="#3F4C5D" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Margin="5,0"/>
+        <Border Grid.Row="0" Grid.Column="0" Background="White" CornerRadius="5" Margin="5,20,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <ListView Name="lv_camera" ItemsSource="{Binding CameraItemList}" SelectionChanged="lv_camera_SelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn DisplayMemberBinding="{Binding CameraFriendlyName}"/>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Border>
+
+        <!--左侧参数设置菜单-->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="[Camera命令操作--]" Foreground="#3F4C5D" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Margin="5,0"/>
+        <Border Grid.Row="1" Grid.Column="0" Background="White" CornerRadius="5" Margin="5,20,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <WrapPanel  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,10">
+                <Button Content="搜索相机" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_Scan}"/>
+                <Button Content="关闭相机" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_Destroy}"/>                
+                <Button Content="单张抓拍" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_OneShot}"/>
+                <Button Content="连续抓拍" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_ContinuousShot}"/>
+                <Button Content="停止抓拍" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_Stop}"/>
+                <Button Content="线阵拼图" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_Join}"/>
+                <Button Content="图片压缩" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding CameraCmd_Compress}"/>
+            </WrapPanel>
+        </Border>
+
+        <!--右侧参数设置菜单-->
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="[面阵相机1--]" Foreground="#3F4C5D" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Margin="5,0"/>
+        <Border Grid.Row="0" Grid.Column="1" Background="LightGray" Margin="5,20,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Image Name="img1" Height="Auto" Width="Auto" Source="{Binding Path=GrabImg1,Converter={StaticResource ImageSourceConverter}}"/>
+        </Border>
+
+        <!--右侧参数设置菜单-->
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="[面阵相机2--]" Foreground="#3F4C5D" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Margin="5,0"/>
+        <Border Grid.Row="0" Grid.Column="2" Background="LightGray" Margin="5,20,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Image Name="img2" Height="Auto" Width="Auto" Source="{Binding Path=GrabImg2,Converter={StaticResource ImageSourceConverter}}"/>
+        </Border>
+
+        <!--右侧参数设置菜单-->
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="[线阵相机--]" Foreground="#3F4C5D" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Margin="5,0"/>
+        <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="LightGray" Margin="5,20,5,5">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Image Name="img3" Height="Auto" Width="Auto" Source="{Binding Path=GrabImg3,Converter={StaticResource ImageSourceConverter}}"/>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,106 @@
+﻿<Window x:Class="PcMainCtrl.View.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PcMainCtrl"
+        mc:Ignorable="d"
+        Title="动车组故障检测机器人-V1.2版本" Height="800" Width="1250"
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" FontSize="12"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}">
+
+    <!--窗口控制按钮-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--WindowControlButton的样式资源-->
+                <ResourceDictionary Source="../Assets/Styles/DefaultStyle.xaml" />
+                <!--RadioButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="NavButtonStyle" TargetType="RadioButton">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border Background="Transparent" CornerRadius="8" Name="back">
+                                        <ContentControl Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,4" FontSize="28"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="back" Property="Background" Value="#44FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!--窗口布局-->
+    <Border Margin="5" Background="#F7F9FA" CornerRadius="5" Name="layout">
+        <!--窗口边框阴影-->
+        <Border.Effect>
+            <DropShadowEffect Color="Gray" ShadowDepth="0" BlurRadius="5" Opacity="0.3" Direction="0"/>
+        </Border.Effect>
+        <Grid>
+            <!--窗体边框-->
+            <Border Background="#007DFA" Height="180" VerticalAlignment="Top" CornerRadius="5,5,0,0" MouseLeftButtonDown="Border_MouseLeftButtonDown"/>
+
+            <!--窗体最小、最大、关闭按钮-->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="开关" Click="BtnTest_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="面阵" Click="BtnCreate_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="LOG" Click="BtnSet_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xe7e6;" Click="BtnMin_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xe694;" Click="BtnMax_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xe653;" Click="BtnClose_Click"/>
+            </StackPanel>
+
+            <!--窗体布局-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!--窗体Logo区域-->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="10,10">
+                    <Image Source="../Assets/Images/Logo.png" Width="60" Height="60"/>
+                    <StackPanel Margin="15,0,0,0">
+                        <TextBlock Text="动车组故障检测机器人-Ver1.2" Foreground="White" FontSize="30"/>
+                        <TextBlock Text="Train Robot for fault detection " Foreground="Aquamarine" FontSize="18"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!--窗体导航栏-->
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0">
+                    <RadioButton Content="工作首页" Style="{StaticResource NavButtonStyle}" IsChecked="True"
+                                 Command="{Binding NavChangedCommand}"
+                                 CommandParameter="HomePageView"/>
+                    <RadioButton Content="设备控制" Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavChangedCommand}" Visibility="Hidden"
+                                 CommandParameter="DeviceManagerView"/>
+                    <RadioButton Content="数据采集" Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavChangedCommand}" Visibility="Hidden"
+                                 CommandParameter="DataManagerView"/>
+                    <RadioButton Content="流程管理" Style="{StaticResource NavButtonStyle}" 
+                                 Command="{Binding NavChangedCommand}" Visibility="Hidden"
+                                 CommandParameter="TaskManagerView"/>
+                    <RadioButton Content="Ftp功能" Style="{StaticResource NavButtonStyle}"
+                                 Command="{Binding NavChangedCommand}" Visibility="Hidden"
+                                 CommandParameter="FtpClientManagerView"/>
+                    <RadioButton Content="Http服务器" Style="{StaticResource NavButtonStyle}"                                 
+                                 Command="{Binding NavChangedCommand}" Visibility="Hidden"
+                                 CommandParameter="HttpServerManagerView"/>
+                </StackPanel>
+
+                <!--主框架内容窗体-->
+                <ContentControl Grid.Row="2" Content="{Binding MainContent}"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

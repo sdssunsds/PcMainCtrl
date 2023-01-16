@@ -1,0 +1,249 @@
+﻿<UserControl x:Class="PcMainCtrl.View.DeviceRgvCtrlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PcMainCtrl.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <!--Cmd控制按钮-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--CmdButton的样式资源-->
+                <ResourceDictionary >
+                    <Style x:Key="CmdButtonStyle" TargetType="Button">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Blue" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="10,10,10,10"  FontSize="14"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Brown" CornerRadius="5" Margin="5,5" Name="CmdBorder">
+                                                <ContentControl Content="{TemplateBinding Content}"  Margin="10,10,10,10"  FontSize="14"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!--窗体布局划分-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!--监控显示面板-->
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="信息显示面板" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="18" Margin="30,0"/>
+        <Border Grid.RowSpan="2" Grid.Column="0" Background="White" CornerRadius="5" Margin="30">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!--信息面板1：服务器信息-->
+                <StackPanel Grid.Row="0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,5">
+                    <Label Content="[服务器信息:]" FontSize="14" Foreground="Brown"/>
+                    <Label Content="{Binding ModWorkMsg}"  FontSize="14" Width="Auto" Foreground="Brown"/>
+                </StackPanel>
+
+                <!--信息面板1：Rgv信息:状态、当前距离、当前速度-->
+                <Grid Grid.Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[当前状态   :]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentStat}"  FontSize="14" Width="Auto" Foreground="Brown"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[距离mm: ]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentRunDistacnce}" FontSize="14"  Width="Auto" Foreground="Brown"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[车速mm/s:]" FontSize="14" Foreground="Brown"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentRunSpeed}" FontSize="14"  Width="Auto" Foreground="Brown"/>
+                    </StackPanel>
+                </Grid>
+                
+                <!--信息面板2：Rgv状态属性信息-->
+                <Grid Grid.Row="2" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[手动/自动:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentMode}"  FontSize="14" Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[运动状态: ]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvIsStandby}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[是否异常: ]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvIsAlarm}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[是否停止:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvIsStandby}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>
+                </Grid>
+
+                <!--信息面板3：电池管理信息-->
+                <Grid Grid.Row="3" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[电池状态:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentPowerStat}"  FontSize="14" Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[电池电量: ]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentPowerElectricity}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[电池电流:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentPowerCurrent}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[电池温度:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentPowerTempture}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>                    
+                </Grid>
+
+                <!--信息面板1：命令或参数设置应答信息-->
+                <Grid Grid.Row="4" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[命令设置应答信息:]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentCmdSetStat}"  FontSize="14" Width="Auto"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="5,0">
+                        <Label Content="[参数设置应答信息: ]" FontSize="14" Foreground="DarkCyan"/>
+                        <Label Content="{Binding RgvParaInfo.RgvCurrentParaSetStat}" FontSize="14"  Width="Auto"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--按钮操作面板1：控制命令-->
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="命令控制面板" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="18" Margin="30,0"/>
+        <Border Grid.Row="0" Grid.Column="1" Background="White" CornerRadius="5" Margin="30">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <WrapPanel   Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5,5">
+                <Button Name="NetworkConnectBtn"  Content="打开Rgv连接"  FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvModConnectCmd}"/>
+                <Button Name="NetworkDisConnectBtn"  Content="关闭Rgv连接"  FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvModDisConnectCmd}"/>                
+                <Button Name="ForwardMotorBtn"  Content="正向运动"  FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvForwardMotorCmd}"/>
+                <Button Name="BackwardMotorBtn"  Content="反向运动" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvBackMotorCmd}"/>
+                <Button Name="NormalStopBtn"  Content="正常停止" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvNormalStopCmd}"/>
+                <Button Name="ClearAlarmBtn"  Content="清除报警" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvClearAlarmCmd}"/>
+                <Button Name="StartPowerChargeBtn"  Content="智能充电" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvStartIntelligentChargeCmd}"/>
+                <Button Name="StopPowerChargeBtn"  Content="停止充电" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvStopIntelligentChargeCmd}"/>                
+                <Button Name="DirectorMotorBtn"  Content="运动到指定位置" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvRunAppointDistanceCmd}"/> 
+            </WrapPanel>
+        </Border>
+
+        <!--按钮操作面板2:设置参数-->
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="参数设置面板" Foreground="#3F4C5D" VerticalAlignment="Top" FontSize="18" Margin="30,0"/>
+        <Border Grid.Row="1" Grid.Column="1" Background="White" CornerRadius="5" Margin="30">
+            <Border.Effect>
+                <DropShadowEffect Color="#F2F2F2" ShadowDepth="10" BlurRadius="105" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <!--设置参数：目标运行距离-->
+                <StackPanel Grid.Row="0"   Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10">
+                    <Label Content="[目标运行距离 mm:   ]"   VerticalAlignment="Center" FontSize="14" Foreground="DarkCyan"/>
+                    <TextBox Name="SetDistanceTextBlock" Margin="5,5" VerticalAlignment="Center" FontSize="14"
+                           Text="{Binding RgvParaInfo.RgvTargetRunDistance}" />
+                </StackPanel>
+                <Button Grid.Row="0" Name="SetCarDistanceBtn"  Content="设定目标距离" HorizontalAlignment="Right" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvSetTargetDistanceCmd}"
+                        CommandParameter="{Binding RgvParaInfo.RgvTargetRunDistance}"/>
+
+                <!--设置参数：目标运行速度-->
+                <StackPanel Grid.Row="1"  Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10">
+                    <Label Content="[目标运行速度 mm/s:]"   VerticalAlignment="Center" FontSize="14" Foreground="DarkCyan"/>
+                    <TextBox  Name="SetSpeedTextBlock" Margin="5,5" VerticalAlignment="Center" FontSize="14"
+                           Text="{Binding RgvParaInfo.RgvTargetRunSpeed}"  />
+                </StackPanel>
+                <Button Grid.Row="1" Name="SetCarSpeedBtn"  Content="设定目标速度" HorizontalAlignment="Right" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvSetTargetSpeedCmd}"
+                        CommandParameter="{Binding RgvParaInfo.RgvTargetRunSpeed}"/>
+
+                <!--设置参数：运动轨道长度-->
+                <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10">
+                    <Label Content="[运动轨道长度   mm:]"   VerticalAlignment="Center" FontSize="14" Foreground="DarkCyan"/>
+                    <TextBox Name="SetLengthTextBlock" Margin="5,5" VerticalAlignment="Center" FontSize="14"
+                           Text="{Binding RgvParaInfo.RgvTrackLength}"  />
+                </StackPanel>
+                <Button Grid.Row="2"  Content="设定轨道长度" HorizontalAlignment="Right" FontWeight="Bold" Style="{StaticResource CmdButtonStyle }"
+                        Command="{Binding RgvSetTrackLengthCmd}"
+                        CommandParameter="{Binding RgvParaInfo.RgvTrackLength}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
