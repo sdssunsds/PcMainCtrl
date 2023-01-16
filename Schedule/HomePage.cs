@@ -4158,6 +4158,7 @@ namespace PcMainCtrl.ViewModel
 #else
             light?.LightOn(Properties.Settings.Default.LightFrontHigh, robot == RobotName.Front);
 #endif
+            ThreadSleep(lightSleep);
         }
 
         private void LightOff(RobotName robot)
@@ -5895,12 +5896,13 @@ namespace PcMainCtrl.ViewModel
                         DoCameraCmdHandle_OneShot(model.Robot == RobotName.Front ? frontID : backID);
 #endif 
                     }
-                    LightOff(model.Robot);
                     if (ShotOutTime(model.Robot))
                     {
                         AddLog(s + "相机拍照超时", logType);
                         goto YwcShot;
                     }
+                    AddLog(s + "臂光源关闭", logType);
+                    LightOff(model.Robot);
                     WaitCmdHandle(s + "臂相机拍照完成", logType);
 #if plcModbus
                 Back:
@@ -5969,12 +5971,13 @@ namespace PcMainCtrl.ViewModel
                         DoCameraCmdHandle_OneShot(model.Robot == RobotName.Front ? frontID : backID);
 #endif 
                     }
-                    LightOff(model.Robot);
                     if (ShotOutTime(model.Robot))
                     {
                         AddLog(s + "相机拍照超时", logType);
                         goto MzShot;
                     }
+                    AddLog(s + "臂光源关闭", logType);
+                    LightOff(model.Robot);
                     AddLog(s + "臂相机拍照完成", logType);
                 }
                 #endregion
