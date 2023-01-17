@@ -106,6 +106,7 @@ namespace PcMainCtrl.Network
                             //添加session
                             lock (clientSockets)
                             {
+                                clientSockets.RemoveAll(c => !c.Connected);
                                 clientSockets.Add(acceptSocket);
                             }
 
