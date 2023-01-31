@@ -6187,6 +6187,33 @@ namespace PcMainCtrl.ViewModel
                     {
                         return 0;
                     }
+                    if (testForm.GetEnable(Form.EnableEnum.模拟流程))
+                    {
+                        savePath = string.Format(@"{0}\test_data\", Application.StartupPath);
+                        bool setName1 = false, setName2 = false;
+                        string[] files = Directory.GetFiles(savePath);
+                        foreach (string file in files)
+                        {
+                            if (file.Contains("red") && file.Contains("bmp"))
+                            {
+                                name1 = file.Substring(file.IndexOf("red"));
+                                setName1 = true;
+                            }
+                            if (file.Contains("depth") && file.Contains("png"))
+                            {
+                                name2 = file.Substring(file.IndexOf("depth"));
+                                setName2 = true;
+                            }
+                            if (setName1 && setName2)
+                            {
+                                break;
+                            }
+                        }
+                        if (!setName1 || !setName2)
+                        {
+                            return 0;
+                        }
+                    }
                     using (FileStream file = new FileStream(savePath + name1, FileMode.Open))
                     {
                         byte[] bytes = new byte[file.Length];
