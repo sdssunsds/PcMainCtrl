@@ -2224,6 +2224,7 @@ namespace PcMainCtrl.ViewModel
                 else if (camera.Name.ToLower().Contains("camera_front"))
                 {
                     frontPicCount++;
+                    shotFrontOutTime = -10000;
                 getFrontID:
                     string id =
                         testForm.GetEnable(Form.EnableEnum.异步) ?
@@ -2263,7 +2264,6 @@ namespace PcMainCtrl.ViewModel
 #if shotImageProcess
                     shotFrontID = "";
                     AddLog("完成接收前相机图片", 1);
-                    shotFrontOutTime = -10000;
 #endif
                 }
                 #endregion
@@ -2271,6 +2271,7 @@ namespace PcMainCtrl.ViewModel
                 else if (camera.Name.ToLower().Contains("camera_back"))
                 {
                     backPicCount++;
+                    shotBackOutTime = -10000;
                 getBackID:
                     string id =
                         testForm.GetEnable(Form.EnableEnum.异步) ?
@@ -2311,7 +2312,6 @@ namespace PcMainCtrl.ViewModel
 #if shotImageProcess
                     shotBackID = "";
                     AddLog("完成接收后相机图片", 2);
-                    shotBackOutTime = -10000;
 #endif
                 }
                 #endregion
@@ -6589,12 +6589,36 @@ namespace PcMainCtrl.ViewModel
         {
             if (testForm.GetEnable(Form.EnableEnum.超时))
             {
+                Action action = () =>
+                {
+                    DoOneKeyStopCmdHandle();
+                    ThreadSleep(1000);
+                    DoOneKeyStopCmdHandle();
+                    ThreadSleep(5000);
+#if newBasler
+                    AddLog("相机重新初始化");
+                    do
+                    {
+                        if (cameraManager != null)
+                        {
+                            for (int i = 0; i < cameraManager.Cameras.Count; i++)
+                            {
+                                cameraManager.Cameras[i].Close();
+                            }
+                            cameraManager.Close();
+                        }
+                        InitCameraMod();
+                        ThreadSleep(1000);
+                    } while (GetCameraState());
+                    CameraOpen();
+#endif
+                };
                 ThreadStart(() =>
                 {
-                    bool isStop = false;
-                    while ((xz ? xzOutTimeCount >= 0 && xzOutTimeCount < 50 : false) ||
-                    (leftXz ? xzLeftOutTimeCount >= 0 && xzLeftOutTimeCount < 50 : false) ||
-                    (rightXz ? xzRightOutTimeCount >= 0 && xzRightOutTimeCount < 50 : false))
+                    while (RunStat && !RunMz && (
+                            (xz ? xzOutTimeCount >= 0 && xzOutTimeCount < 50 : false) ||
+                            (leftXz ? xzLeftOutTimeCount >= 0 && xzLeftOutTimeCount < 50 : false) ||
+                            (rightXz ? xzRightOutTimeCount >= 0 && xzRightOutTimeCount < 50 : false)))
                     {
                         if (xz)
                         {
@@ -6602,7 +6626,7 @@ namespace PcMainCtrl.ViewModel
                             if (xzOutTimeCount >= 50)
                             {
                                 AddLog("线阵拍照超时");
-                                isStop = true;
+                                action();
                                 break;
                             }
                         }
@@ -6612,7 +6636,7 @@ namespace PcMainCtrl.ViewModel
                             if (xzLeftOutTimeCount >= 50)
                             {
                                 AddLog("左线阵拍照超时");
-                                isStop = true;
+                                action();
                                 break;
                             }
                         }
@@ -6622,35 +6646,11 @@ namespace PcMainCtrl.ViewModel
                             if (xzRightOutTimeCount >= 50)
                             {
                                 AddLog("右线阵拍照超时");
-                                isStop = true;
+                                action();
                                 break;
                             }
                         }
                         ThreadSleep(100);
-                    }
-                    if (isStop)
-                    {
-                        DoOneKeyStopCmdHandle();
-                        ThreadSleep(1000);
-                        DoOneKeyStopCmdHandle();
-                        ThreadSleep(5000);
-#if newBasler
-                        AddLog("相机重新初始化");
-                        do
-                        {
-                            if (cameraManager != null)
-                            {
-                                for (int i = 0; i < cameraManager.Cameras.Count; i++)
-                                {
-                                    cameraManager.Cameras[i].Close();
-                                }
-                                cameraManager.Close();
-                            }
-                            InitCameraMod();
-                            ThreadSleep(1000);
-                        } while (GetCameraState());
-                        CameraOpen();
-#endif
                     }
                 }); 
             }
