@@ -241,7 +241,7 @@ namespace PcMainCtrl.ViewModel
                 try
                 {
                     string time = DateTime.Now.ToString("MM-dd HH:mm:ss");
-                    if (type != 4 && type != 5)
+                    if (type != 4 && type != 5 && type != 7)
                     {
                         StreamWriter writer = new StreamWriter(logPath + @"\log.txt", true);
                         writer.WriteLine(time + "\t" + (type < 0 ? "ERROR【" + logI + "】" : "") + log);
@@ -5535,12 +5535,14 @@ namespace PcMainCtrl.ViewModel
                         axis = frontAxis;
                         axisBackID = 0;
                         mzDistance = frontDistance;
+                        AddLog($"保留前面阵轴数据[{axisFrontID}, {axisBackID}], 位置: {mzDistance}, 轴位置: {axis}");
                     }
                     else
                     {
                         axis = backAxis;
                         axisFrontID = 0;
                         mzDistance = backDistance;
+                        AddLog($"保留后面阵轴数据[{axisFrontID}, {axisBackID}], 位置: {mzDistance}, 轴位置: {axis}");
                     }
                     if (mzDistance > 0)
                     {
@@ -5583,6 +5585,21 @@ namespace PcMainCtrl.ViewModel
                                         {
                                             c += Properties.Settings.Default.RobotPointXZ;
                                         }
+                                        reLocation = false;
+                                    }
+                                }
+                                else
+                                {
+                                    if (!axisDict.ContainsKey(axisFrontID))
+                                    {
+                                        AddLog("轴数据缺失：" + axisFrontID);
+                                        axisDict.Add(axisFrontID, 0);
+                                        reLocation = false;
+                                    }
+                                    if (!axisDict.ContainsKey(axisBackID))
+                                    {
+                                        AddLog("轴数据缺失：" + axisBackID);
+                                        axisDict.Add(axisBackID, 0);
                                         reLocation = false;
                                     }
                                 }
