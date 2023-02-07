@@ -187,7 +187,7 @@ namespace PcMainCtrl.ViewModel
             int logI = 0;
             AddLogEvent += new AddLogs((string log, int type) =>
             {
-                if (type >= 0 && type != 4 && type != 5)
+                if (type >= 0 && type != 4 && type != 5 && type != 7)
                 {
                     #region 语音
 #if false
@@ -281,6 +281,12 @@ namespace PcMainCtrl.ViewModel
                     else if (type == 5)
                     {
                         StreamWriter sw = new StreamWriter(logPath + @"\depthLog.txt", true);
+                        sw.WriteLine(time + "\t" + log);
+                        sw.Close();
+                    }
+                    else if (type == 7)
+                    {
+                        StreamWriter sw = new StreamWriter(logPath + @"\lightLog.txt", true);
                         sw.WriteLine(time + "\t" + log);
                         sw.Close();
                     }
@@ -676,12 +682,14 @@ namespace PcMainCtrl.ViewModel
                                 ThreadSleep(1000);
                                 if (showGread)
                                 {
+                                    AddLog("报警灯：关闭绿灯", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Green, 0);
                                     ThreadSleep(500);
                                     showGread = false;
                                 }
                                 if (!showRed)
                                 {
+                                    AddLog("报警灯：打开红灯", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Red, 1);
                                     showRed = true; 
                                 }
@@ -690,24 +698,30 @@ namespace PcMainCtrl.ViewModel
                             {
                                 if (showGread)
                                 {
+                                    AddLog("任务灯：关闭绿灯", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Green, 0);
                                     ThreadSleep(500);
                                     showGread = false;
                                 }
                                 if (showRed)
                                 {
+                                    AddLog("任务灯：关闭红灯", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Red, 0);
                                     ThreadSleep(500);
                                     showRed = false;
                                 }
                                 ThreadSleep(500);
+                                AddLog("任务灯：打开黄灯", 7);
                                 ModbusTCP.SetAddress13(Address13Type.Yellow, 1);
                                 if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed > 0)
                                 {
+                                    AddLog("任务灯：打开蜂鸣", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Buzzer, 1); 
                                 }
                                 ThreadSleep(500);
+                                AddLog("任务灯：关闭黄灯", 7);
                                 ModbusTCP.SetAddress13(Address13Type.Yellow, 0);
+                                AddLog("任务灯：关闭蜂鸣", 7);
                                 ModbusTCP.SetAddress13(Address13Type.Buzzer, 0);
                             }
                             else if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce > 4990 && RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce < 5010)
@@ -715,11 +729,13 @@ namespace PcMainCtrl.ViewModel
                                 ThreadSleep(1000);
                                 if (showRed)
                                 {
+                                    AddLog("等待灯：关闭红灯", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Red, 0);
                                     showRed = false;
                                 }
                                 if (!showGread)
                                 {
+                                    AddLog("等待灯：打开绿灯", 7);
                                     ModbusTCP.SetAddress13(Address13Type.Green, 1);
                                     showGread = true; 
                                 }
