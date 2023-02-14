@@ -23,13 +23,11 @@ mono_crash.*
 [Rr]eleases/
 x64/
 x86/
-[Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
 [Oo]bj/
-[Oo]ut/
 [Ll]og/
 [Ll]ogs/
 
@@ -62,9 +60,6 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
 
 # StyleCop
 StyleCopReport.xml
@@ -141,11 +136,6 @@ _TeamCity*
 # AxoCover is a Code Coverage Tool
 .axoCover/*
 !.axoCover/settings.json
-
-# Coverlet is a free, cross platform Code Coverage Tool
-coverage*.json
-coverage*.xml
-coverage*.info
 
 # Visual Studio code coverage results
 *.coverage
@@ -358,6 +348,38 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-
-# Fody - auto-generated XML schema
-FodyWeavers.xsd
+/DLL/opencv_world340d.dll
+/DLL/opencv_world340.dll
+/DLL/nvparsers.lib
+/DLL/nvparsers.dll
+/DLL/nvonnxparser.lib
+/DLL/nvonnxparser.dll
+/DLL/nvinfer_plugin.lib
+/DLL/nvinfer_plugin.dll
+/DLL/nvinfer_builder_resource.dll
+/DLL/nvinfer.lib
+/DLL/nvinfer.dll
+/DLL/cutimg.engine
+/DLL/cudnn_ops_train64_8.lib
+/DLL/cudnn_ops_train64_8.dll
+/DLL/cudnn_ops_train.lib
+/DLL/cudnn_ops_infer64_8.lib
+/DLL/cudnn_ops_infer64_8.dll
+/DLL/cudnn_ops_infer.lib
+/DLL/cudnn_cnn_train64_8.lib
+/DLL/cudnn_cnn_train64_8.dll
+/DLL/cudnn_cnn_train.lib
+/DLL/cudnn_cnn_infer64_8.lib
+/DLL/cudnn_cnn_infer64_8.dll
+/DLL/cudnn_cnn_infer.lib
+/DLL/cudnn_adv_train64_8.lib
+/DLL/cudnn_adv_train64_8.dll
+/DLL/cudnn_adv_train.lib
+/DLL/cudnn_adv_infer64_8.lib
+/DLL/cudnn_adv_infer64_8.dll
+/DLL/cudnn_adv_infer.lib
+/DLL/cudnn64_8.lib
+/DLL/cudnn64_8.dll
+/DLL/cudnn.lib
+/DLL/CppLibDll.h
+/.svn

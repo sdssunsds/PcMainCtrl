@@ -3322,12 +3322,20 @@ namespace PcMainCtrl.ViewModel
             catch (WebException ex)
             {
                 response = ex.Response as HttpWebResponse;
+                AddLog(ex.Message, logType);
             }
-            Stream s = response.GetResponseStream();
-            StreamReader sRead = new StreamReader(s);
-            string postContent = sRead.ReadToEnd();
-            sRead.Close();
-            AddLog("HTTP返回：" + postContent, logType);
+            if (response != null)
+            {
+                Stream s = response.GetResponseStream();
+                StreamReader sRead = new StreamReader(s);
+                string postContent = sRead.ReadToEnd();
+                sRead.Close();
+                AddLog("HTTP返回：" + postContent, logType); 
+            }
+            else
+            {
+                AddLog("获取服务响应失败", logType);
+            }
         }
         private bool Upload3dData(string parsID, int robot, string value)
         {
