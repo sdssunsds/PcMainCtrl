@@ -463,94 +463,6 @@ namespace PcMainCtrl.ViewModel
 #endif
             TaskRun(() =>
             {
-                testForm = new Form.TestForm()
-                {
-                    InitAct = () =>
-                    {
-                        light = null;
-                        pLC3DCamera = null;
-                        RgvModCtrlHelper.GetInstance().RgvModInfoEvent -= MyRgvModInfoEvent;
-                        Stm32ModCtrlHelper.GetInstance().Stm32ModInfoEvent -= MyStm32ModInfoEvent;
-                        RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;
-#if !plcModbus
-                        RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;
-                        NetworkRelayCtrlHelper.GetInstance().NetworkRelayModInfoEvent -= MyNetworkRelayModInfoEvent;
-#endif
-                        Init();
-                    },
-                    SpeedCorrect = RgvSpeedCorrect,
-                    Run = DoOneKeyStartCmdHandle,
-                    Stop = DoOneKeyStopCmdHandle,
-                    Inspect = this.Inspect,
-                    GetSpeed = () => { return rgvUpSpeed; },
-                    GetState = (int i) =>
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                return RgvModCtrlHelper.GetInstance().IsLink;
-                            case 1:
-                                return Stm32ModCtrlHelper.GetInstance().IsLink;
-                            case 2:
-                                return ModbusTCP.IsLink;
-                            case 3:
-                                return RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.FrontRobotConnStat;
-                            case 4:
-                                return RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.BackRobotConnStat;
-                            case 5:
-#if controlSocket
-                                return socketConnect; 
-#else
-                                return true;
-#endif
-                            case 6:
-#if ping
-                                return pingResult.ContainsKey(uploadServerKey) ? pingResult[uploadServerKey] : true;
-#else
-                                return true;
-#endif
-                            case 7:
-#if ping
-                                return pingResult.ContainsKey(Properties.Settings.Default.UploadDataServer) ? pingResult[Properties.Settings.Default.UploadDataServer] : true;
-#else
-                                return true;
-#endif
-                            case 8:
-                                return xzID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > xzID && cameraManager.Cameras[xzID].Opened;
-                            case 9:
-                                return frontID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > frontID && cameraManager.Cameras[frontID].Opened;
-                            case 10:
-                                return backID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > backID && cameraManager.Cameras[backID].Opened;
-                            case 11:
-                                return _3dInitComplete;
-                            case 12:
-#if lidarCsharp
-                                if (lidar == null)
-                                {
-                                    LidarType lidarType = LidarType.A2;
-                                    try
-                                    {
-                                        lidarType = (LidarType)Enum.Parse(typeof(LidarType), Properties.Settings.Default.LidarType);
-                                        lidar = Lidar.Instance(lidarType, logInit: AddLog);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        AddLog("雷达类型异常：" + e.Message, -1);
-                                    }
-                                }
-                                return lidar?.IsLink ?? false;
-#else
-                                return false;
-#endif
-                            case 13:
-                                return xzLeftID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > xzLeftID && cameraManager.Cameras[xzLeftID].Opened;
-                            case 14:
-                                return xzRightID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > xzRightID && cameraManager.Cameras[xzRightID].Opened;
-                            default:
-                                return false;
-                        }
-                    }
-                };
                 testForm.Shown += (object sender, EventArgs e) =>
                 {
                     if (trainHeadLocation > 0)
@@ -8781,7 +8693,109 @@ namespace PcMainCtrl.ViewModel
             });
         }
 
-        private Form.TestForm testForm = null;
+        private object testFormLock = new object();
+        private Form.TestForm _testForm = null;
+        private Form.TestForm testForm
+        {
+            get
+            {
+                lock (testFormLock)
+                {
+                    if (_testForm == null)
+                    {
+                        _testForm = new Form.TestForm()
+                        {
+                            InitAct = () =>
+                            {
+                                light = null;
+                                pLC3DCamera = null;
+                                RgvModCtrlHelper.GetInstance().RgvModInfoEvent -= MyRgvModInfoEvent;
+                                Stm32ModCtrlHelper.GetInstance().Stm32ModInfoEvent -= MyStm32ModInfoEvent;
+                                RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;
+#if !plcModbus
+                                RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;
+                                NetworkRelayCtrlHelper.GetInstance().NetworkRelayModInfoEvent -= MyNetworkRelayModInfoEvent;
+#endif
+                                Init();
+                            },
+                            SpeedCorrect = RgvSpeedCorrect,
+                            Run = DoOneKeyStartCmdHandle,
+                            Stop = DoOneKeyStopCmdHandle,
+                            Inspect = this.Inspect,
+                            GetSpeed = () => { return rgvUpSpeed; },
+                            GetState = (int i) =>
+                            {
+                                switch (i)
+                                {
+                                    case 0:
+                                        return RgvModCtrlHelper.GetInstance().IsLink;
+                                    case 1:
+                                        return Stm32ModCtrlHelper.GetInstance().IsLink;
+                                    case 2:
+                                        return ModbusTCP.IsLink;
+                                    case 3:
+                                        return RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.FrontRobotConnStat;
+                                    case 4:
+                                        return RobotModCtrlHelper.GetInstance().myRobotGlobalInfo.BackRobotConnStat;
+                                    case 5:
+#if controlSocket
+                                        return socketConnect;
+#else
+                                        return true;
+#endif
+                                    case 6:
+#if ping
+                                        return pingResult.ContainsKey(uploadServerKey) ? pingResult[uploadServerKey] : true;
+#else
+                                        return true;
+#endif
+                                    case 7:
+#if ping
+                                        return pingResult.ContainsKey(Properties.Settings.Default.UploadDataServer) ? pingResult[Properties.Settings.Default.UploadDataServer] : true;
+#else
+                                        return true;
+#endif
+                                    case 8:
+                                        return xzID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > xzID && cameraManager.Cameras[xzID].Opened;
+                                    case 9:
+                                        return frontID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > frontID && cameraManager.Cameras[frontID].Opened;
+                                    case 10:
+                                        return backID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > backID && cameraManager.Cameras[backID].Opened;
+                                    case 11:
+                                        return _3dInitComplete;
+                                    case 12:
+#if lidarCsharp
+                                        if (lidar == null)
+                                        {
+                                            LidarType lidarType = LidarType.A2;
+                                            try
+                                            {
+                                                lidarType = (LidarType)Enum.Parse(typeof(LidarType), Properties.Settings.Default.LidarType);
+                                                lidar = Lidar.Instance(lidarType, logInit: AddLog);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                AddLog("雷达类型异常：" + e.Message, -1);
+                                            }
+                                        }
+                                        return lidar?.IsLink ?? false;
+#else
+                                        return false;
+#endif
+                                    case 13:
+                                        return xzLeftID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > xzLeftID && cameraManager.Cameras[xzLeftID].Opened;
+                                    case 14:
+                                        return xzRightID >= 0 && cameraManager != null && cameraManager.Cameras != null && cameraManager.Cameras.Count > xzRightID && cameraManager.Cameras[xzRightID].Opened;
+                                    default:
+                                        return false;
+                                }
+                            }
+                        };
+                    } 
+                }
+                return _testForm;
+            }
+        }
 
         public void TestForm()
         {
