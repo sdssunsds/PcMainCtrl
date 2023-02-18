@@ -65,6 +65,21 @@ namespace PcMainCtrl.Form
         private Dictionary<string, List<string>> modeSn = new Dictionary<string, List<string>>(); 
         #endregion
 
+        public Dictionary<string, bool> OpenProperty
+        {
+            get
+            {
+                Dictionary<string, bool> openProperty = new Dictionary<string, bool>();
+                Array array = Enum.GetValues(typeof(EnableEnum));
+                foreach (int item in array)
+                {
+                    EnableEnum ee = (EnableEnum)item;
+                    openProperty.Add(ee.ToString(), GetEnable(ee));
+                }
+                return openProperty;
+            }
+        }
+
         public Action InitAct { private get; set; }
         public Action SpeedCorrect { private get; set; }
         public Action<object, Action> Run { private get; set; }

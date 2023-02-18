@@ -1238,6 +1238,7 @@ namespace PcMainCtrl.ViewModel
 #if lidarCsharp
                     upCheckHead = 0;
 #endif
+                    AddLog(JsonConvert.SerializeObject(testForm.OpenProperty));
                     #endregion
 
                     #region  线阵流程
