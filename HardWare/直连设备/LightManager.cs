@@ -8,6 +8,8 @@ namespace PcMainCtrl.HardWare
 {
     /// <summary>
     /// 光源控制
+    /// 开前灯：5A 53 64 b7 5B；开后灯：5A 63 64 c7 5B （亮度100）
+    /// 关前灯：5A 53 00 53 5B；关后灯：5A 63 00 63 5B
     /// </summary>
     public class LightManager : IPower
     {
