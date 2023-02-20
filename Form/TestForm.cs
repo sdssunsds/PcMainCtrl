@@ -324,6 +324,10 @@ namespace PcMainCtrl.Form
         public void SetConfig()
         {
             string path = Application.StartupPath + "\\json\\";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             string[] dirs = Directory.GetDirectories(path);
             if (dirs != null && dirs.Length > 0)
             {

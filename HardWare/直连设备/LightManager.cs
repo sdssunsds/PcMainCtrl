@@ -27,6 +27,8 @@ namespace PcMainCtrl.HardWare
 
         public Func<bool> LinkLight { private get; set; }
 
+        public LightManager() { }
+
         public LightManager(string com, int baudRate = 9600, Parity parity = Parity.None, int dataBits = 8, StopBits stopBits = StopBits.One)
         {
             try
