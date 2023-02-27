@@ -18,6 +18,7 @@
 #define initRobot  // 初始化机械臂
 #define initPointCamera  // 初始化点云相机
 #define controlLightPower  // 用通断电源的方式控制光源
+#define onOffLightForMove  // 根据RGV运动后开关光源
 
 #if newBasler
 using Basler;
@@ -83,6 +84,7 @@ namespace PcMainCtrl.ViewModel
         private bool isBackProcess = false;
         private bool isContinuousShot = false;
         private bool isInitApplication = false;
+        private bool isPointCamaerError = false;
         private bool robotAxisError = false;
         private bool showGread = false;
         private bool showRed = false;
@@ -589,7 +591,7 @@ namespace PcMainCtrl.ViewModel
                     {
                         if (testForm.GetEnable(Form.EnableEnum.PLC))
                         {
-                            if (isWait || IsBackRelinkShot || IsFrontRelinkShot || IsFrontPLCAlarm || IsBackPLCAlarm)
+                            if (isWait || IsBackRelinkShot || IsFrontRelinkShot || IsFrontPLCAlarm || IsBackPLCAlarm || isPointCamaerError)
                             {
                                 ThreadSleep(1000);
                                 if (showGread)
@@ -931,7 +933,7 @@ namespace PcMainCtrl.ViewModel
                     AddLog("重新初始化点云相机");
                     goto InitDeptCamera;
                 }
-                AddLog("初始化点云相机完成");
+                AddLog("初始化点云相机完成  " + DkamHelper.Instance.GetVersion());
             }
             catch (Exception e)
             {
@@ -5218,6 +5220,10 @@ namespace PcMainCtrl.ViewModel
                     WaitCmdHandle(JsonConvert.SerializeObject(model), 1);
                     if (frontDistance > model.Distance)
                     {
+#if onOffLightForMove
+                        WaitCmdHandle("前臂光源关闭", 1);
+                        LightOff(RobotName.Front); 
+#endif
                         frontRobotMove = false;
                         frontAxis = 0;
                         if (testForm.GetEnable(Form.EnableEnum.轴定位))
@@ -5244,6 +5250,10 @@ namespace PcMainCtrl.ViewModel
                     {
                         ThreadSleep(1000);
                     }
+#if onOffLightForMove
+                    WaitCmdHandle("前臂光源开启", 1);
+                    LightOn(RobotName.Front); 
+#endif
                     AddLog($"当前RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce} 前点位位置：{frontDistance}", 1);
                     bool robotMove = true, _2d = true, _3d = true, ywc = true, si = true, shot = true;
                     if (!testForm.GetEnable(Form.EnableEnum.面阵相机))
@@ -5303,6 +5313,10 @@ namespace PcMainCtrl.ViewModel
                     MzRun(model, robotMove, _3d, ywc, _2d, si, shot);
                     frontMzIndex = i;
                 }
+#if onOffLightForMove
+                WaitCmdHandle("前臂光源关闭", 1);
+                LightOff(RobotName.Front); 
+#endif
                 frontComplete = true;
             });
             #endregion
@@ -5350,6 +5364,10 @@ namespace PcMainCtrl.ViewModel
                     WaitCmdHandle(JsonConvert.SerializeObject(model), 2);
                     if (backDistance > model.Distance)
                     {
+#if onOffLightForMove
+                        WaitCmdHandle("后臂光源关闭", 2);
+                        LightOff(RobotName.Back);
+#endif
                         backRobotMove = false;
                         backAxis = 0;
                         if (testForm.GetEnable(Form.EnableEnum.轴定位))
@@ -5376,6 +5394,10 @@ namespace PcMainCtrl.ViewModel
                     {
                         ThreadSleep(1000);
                     }
+#if onOffLightForMove
+                    WaitCmdHandle("后臂光源开启", 2);
+                    LightOn(RobotName.Back);
+#endif
                     AddLog($"当前RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce} 后点位位置：{backDistance}",2);
                     bool robotMove = true, _2d = true, _3d = true, ywc = true, si = true, shot = true;
                     if (!testForm.GetEnable(Form.EnableEnum.面阵相机))
@@ -5435,6 +5457,10 @@ namespace PcMainCtrl.ViewModel
                     MzRun(model, robotMove, _3d, ywc, _2d, si, shot);
                     backMzIndex = i;
                 }
+#if onOffLightForMove
+                WaitCmdHandle("后臂光源关闭", 2);
+                LightOff(RobotName.Back);
+#endif
                 backComplete = true;
             });
             #endregion
@@ -5872,7 +5898,10 @@ namespace PcMainCtrl.ViewModel
                     }
                     ThreadSleep(1000);
                     SetOutTimeZero(model.Robot);
-                    LightOn(model.Robot);
+#if !onOffLightForMove
+                    AddLog(s + "臂光源开启", logType);
+                    LightOn(model.Robot); 
+#endif
                     if (shot)
                     {
 #if newBasler
@@ -5884,8 +5913,10 @@ namespace PcMainCtrl.ViewModel
                         AddLog(s + "相机拍照超时", logType);
                         goto YwcShot;
                     }
+#if !onOffLightForMove
                     AddLog(s + "臂光源关闭", logType);
-                    LightOff(model.Robot);
+                    LightOff(model.Robot); 
+#endif
                     WaitCmdHandle(s + "臂相机拍照完成", logType);
 #if plcModbus
                 Back:
@@ -5937,8 +5968,10 @@ namespace PcMainCtrl.ViewModel
                             break;
                     }
                     ThreadSleep(1000);
+#if !onOffLightForMove
                     WaitCmdHandle(s + "臂光源开启", logType);
-                    LightOn(model.Robot);
+                    LightOn(model.Robot); 
+#endif
                     switch (model.Robot)
                     {
                         case RobotName.Front:
@@ -5959,8 +5992,10 @@ namespace PcMainCtrl.ViewModel
                         AddLog(s + "相机拍照超时", logType);
                         goto MzShot;
                     }
+#if !onOffLightForMove
                     AddLog(s + "臂光源关闭", logType);
-                    LightOff(model.Robot);
+                    LightOff(model.Robot); 
+#endif
                     AddLog(s + "臂相机拍照完成", logType);
                 }
                 #endregion
@@ -6066,6 +6101,7 @@ namespace PcMainCtrl.ViewModel
             {
                 if (!pingServer && testForm.GetEnable(Form.EnableEnum.传图服务))
                 {
+                    isPointCamaerError = true;
                     if (socketRunStart)
                     {
                         robotAxisError = true;
@@ -6075,22 +6111,26 @@ namespace PcMainCtrl.ViewModel
                         {
                             if (!RunStat)
                             {
+                                isPointCamaerError = false;
                                 return 0;
                             }
                             ThreadSleep(1000);
                         } while (robotAxisError);
                         AddLog("Socket继续定轴（忽略服务异常）...");
 #endif 
+                        isPointCamaerError = false;
                     }
                     else
                     {
                         if (MessageBox.Show("定轴服务异常，是否继续？", "重定位", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             AddLog("继续定轴...");
+                            isPointCamaerError = false;
                         }
                         else
                         {
                             AddLog("定轴失败，终止任务");
+                            isPointCamaerError = false;
                             DoOneKeyStopCmdHandle();
                             return 0;
                         }
@@ -6208,6 +6248,7 @@ namespace PcMainCtrl.ViewModel
                         }
                         if (loc == -10000)
                         {
+                            isPointCamaerError = true;
                             if (socketRunStart)
                             {
                                 robotAxisError = true;
@@ -6217,11 +6258,13 @@ namespace PcMainCtrl.ViewModel
                                 {
                                     if (!RunStat)
                                     {
+                                        isPointCamaerError = false;
                                         return 0;
                                     }
                                     ThreadSleep(1000);
                                 } while (robotAxisError);
                                 AddLog("Socket重新定轴...");
+                                isPointCamaerError = false;
                                 goto Location;
 #endif
                             }
@@ -6230,11 +6273,13 @@ namespace PcMainCtrl.ViewModel
                                 if (MessageBox.Show("是否重新定轴？", "重定位", MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
                                     AddLog("重新定轴...");
+                                    isPointCamaerError = false;
                                     goto Location;
                                 }
                                 else
                                 {
                                     AddLog("定轴失败，终止任务");
+                                    isPointCamaerError = false;
                                     DoOneKeyStopCmdHandle();
                                     return 0;
                                 } 
@@ -6255,6 +6300,7 @@ namespace PcMainCtrl.ViewModel
                     catch (Exception e)
                     {
                         AddLog(">> [8] 定轴异常：" + e.Message, -1);
+                        isPointCamaerError = true;
                         if (socketRunStart)
                         {
                             robotAxisError = true;
@@ -6264,11 +6310,13 @@ namespace PcMainCtrl.ViewModel
                             {
                                 if (!RunStat)
                                 {
+                                    isPointCamaerError = false;
                                     return 0;
                                 }
                                 ThreadSleep(1000);
                             } while (robotAxisError);
                             AddLog("Socket重新定轴...");
+                            isPointCamaerError = false;
                             goto Location;
 #endif
                         }
@@ -6277,11 +6325,13 @@ namespace PcMainCtrl.ViewModel
                             if (MessageBox.Show("是否重新定轴？", "重定位", MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 AddLog("重新定轴...");
+                                isPointCamaerError = false;
                                 goto Location;
                             }
                             else
                             {
                                 AddLog("定轴失败，终止任务");
+                                isPointCamaerError = false;
                                 DoOneKeyStopCmdHandle();
                                 return 0;
                             }
@@ -6314,6 +6364,7 @@ namespace PcMainCtrl.ViewModel
 #if ping
             if (!pingResult[uploadServerKey])
             {
+                isPointCamaerError = true;
                 if (socketRunStart)
                 {
                     robotAxisError = true;
@@ -6323,22 +6374,25 @@ namespace PcMainCtrl.ViewModel
                     {
                         if (!RunStat)
                         {
-                            return false;
+                            return isPointCamaerError = false;
                         }
                         ThreadSleep(1000);
                     } while (robotAxisError);
                     AddLog("Socket继续定轴（忽略服务异常）...");
 #endif
+                    isPointCamaerError = false;
                 }
                 else
                 {
                     if (MessageBox.Show("定轴服务异常，是否继续？", "重定位", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         AddLog("继续定轴...");
+                        isPointCamaerError = false;
                     }
                     else
                     {
                         AddLog("定轴失败，终止任务");
+                        isPointCamaerError = false;
                         DoOneKeyStopCmdHandle();
                         return false;
                     }
@@ -6387,6 +6441,7 @@ namespace PcMainCtrl.ViewModel
         private bool DepthRelinkFaid()
         {
             axisOutTimeAlarm = true;
+            isPointCamaerError = true;
 #if controlSocket
             SokcetExeWrite(SocketCmd.robot_axis_outtime_alarm, Properties.Settings.Default.RobotID);
 #endif
@@ -6396,7 +6451,7 @@ namespace PcMainCtrl.ViewModel
                 {
                     if (!RunStat)
                     {
-                        return false;
+                        return isPointCamaerError = false;
                     }
                     ThreadSleep(1000);
                 }
@@ -6413,7 +6468,7 @@ namespace PcMainCtrl.ViewModel
                     return true;
                 }
             }
-            return false;
+            return isPointCamaerError = false;
         }
 
         private void DepthReStart()
@@ -6430,8 +6485,9 @@ namespace PcMainCtrl.ViewModel
                 DkamHelper.Instance.Close();
                 DkamHelper.Instance.FindCamera();
                 DkamHelper.Instance.Init(Properties.Settings.Default.PointCamera, true, true);
-            } 
+            }
 #endif
+            isPointCamaerError = false;
         }
 
         private bool ShotOutTime(RobotName name, int addOutTime = 0)

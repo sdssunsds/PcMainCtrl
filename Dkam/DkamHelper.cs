@@ -55,6 +55,30 @@ namespace PcMainCtrl.HardWare
             DkamSDK_CSharp.SetLogLevel(1, 0, 0, 0);
         }
         /// <summary>
+        /// 关闭相机
+        /// </summary>
+        public void Close()
+        {
+            int streamoff = 0, streamoffpoint = 0, streamoffRGB = 0, dis = 0;
+            try
+            {
+                DkamSDK_CSharp.AcquisitionStop(camera_obj);
+                streamoff = DkamSDK_CSharp.StreamOff(camera_obj, 0);
+                Addlog("StreamOff Gray = " + streamoff, 5);
+                streamoffpoint = DkamSDK_CSharp.StreamOff(camera_obj, 1);
+                Addlog("StreamOff Point = " + streamoffpoint, 5);
+                streamoffRGB = DkamSDK_CSharp.StreamOff(camera_obj, 2);
+                Addlog("StreamOff RGB = " + streamoffRGB, 5);
+                dis = DkamSDK_CSharp.CameraDisconnect(camera_obj);
+                Addlog("CameraDisconnect = " + dis, 5);
+                DkamSDK_CSharp.DestroyCamera(camera_obj);
+            }
+            catch (Exception e)
+            {
+                Addlog("关闭点云相机时异常：" + e.Message, -1);
+            }
+        }
+        /// <summary>
         /// 驱动初始化
         /// </summary>
         public bool Init()
@@ -280,6 +304,13 @@ namespace PcMainCtrl.HardWare
             return kk;
         }
         /// <summary>
+        /// 获取SDK版本号
+        /// </summary>
+        public string GetVersion()
+        {
+            return DkamSDK_CSharp.SDKVersion(camera_obj);
+        }
+        /// <summary>
         /// 连接相机
         /// </summary>
         /// <param name="ip">相机地址</param>
@@ -401,30 +432,6 @@ namespace PcMainCtrl.HardWare
         public void RefreshRGB()
         {
             DkamSDK_CSharp.FlushBuffer(camera_obj, 2);
-        }
-        /// <summary>
-        /// 关闭相机
-        /// </summary>
-        public void Close()
-        {
-            int streamoff = 0, streamoffpoint = 0, streamoffRGB = 0, dis = 0;
-            try
-            {
-                DkamSDK_CSharp.AcquisitionStop(camera_obj);
-                streamoff = DkamSDK_CSharp.StreamOff(camera_obj, 0);
-                Addlog("StreamOff Gray = " + streamoff, 5);
-                streamoffpoint = DkamSDK_CSharp.StreamOff(camera_obj, 1);
-                Addlog("StreamOff Point = " + streamoffpoint, 5);
-                streamoffRGB = DkamSDK_CSharp.StreamOff(camera_obj, 2);
-                Addlog("StreamOff RGB = " + streamoffRGB, 5);
-                dis = DkamSDK_CSharp.CameraDisconnect(camera_obj);
-                Addlog("CameraDisconnect = " + dis, 5);
-                DkamSDK_CSharp.DestroyCamera(camera_obj);
-            }
-            catch (Exception e)
-            {
-                Addlog("关闭点云相机时异常：" + e.Message, -1);
-            }
         }
 
         private bool CheckShot(Func<int> func, int maxNum)
