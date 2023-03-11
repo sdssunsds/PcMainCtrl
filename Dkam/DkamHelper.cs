@@ -46,6 +46,7 @@ namespace PcMainCtrl.HardWare
         {
             get { return isInit; }
         }
+        public Action RePower { private get; set; }
         public Action<string, int> Addlog { private get; set; }
         public Func<bool> ReLinkCameraFaid { private get; set; }
         private DkamHelper()
@@ -90,13 +91,12 @@ namespace PcMainCtrl.HardWare
                 Addlog("DkamStatus: " + data[0], 5);
                 DkamSDK_CSharp.SaveXmlToLocal(camera_obj, Application.StartupPath + "\\");
                 #region 设置曝光模式
-                int SetAutoExposureRGB = DkamSDK_CSharp.SetAutoExposure(camera_obj, 1, 1);
+                int SetAutoExposureRGB = DkamSDK_CSharp.SetAutoExposure(camera_obj, 0, 1);
                 Addlog("SetAutoExposureRGB = " + SetAutoExposureRGB, 5);
                 int SetAutoExposure = DkamSDK_CSharp.SetAutoExposure(camera_obj, 1, 0);
                 Addlog("SetAutoExposure = " + SetAutoExposure, 5);
                 #endregion
                 #region 设置曝光等级(当前只对RGB有效)
-                SetAutoExposureRGB = DkamSDK_CSharp.SetAutoExposure(camera_obj, 1, 1);
                 int setExposureGainLevel = DkamSDK_CSharp.SetCamExposureGainLevel(camera_obj, 1, 3);
                 Addlog("Set CamExposureGainLevel = " + setExposureGainLevel, 5);
                 #endregion
@@ -217,6 +217,7 @@ namespace PcMainCtrl.HardWare
                 }
 
                 int streamgray = DkamSDK_CSharp.StreamOn(camera_obj, 0);
+                Addlog("Stream On Gray = " + streamgray, 5);
                 return streamgray == 0;
             }
             catch (Exception)
@@ -238,6 +239,10 @@ namespace PcMainCtrl.HardWare
                 if (i < 0)
                 {
                     Addlog("点云相机StreamOn时出现错误码：" + i, -1);
+                }
+                else
+                {
+                    Addlog("Stream On PointCloud = " + i, 5); 
                 }
                 return i == 0;
             }
@@ -267,7 +272,9 @@ namespace PcMainCtrl.HardWare
                 int setexposureTimeRGB = DkamSDK_CSharp.SetExposureTime(camera_obj, exposure_rgb, 1);
                 Addlog("Set ExposureTime RGB = " + setexposureTimeRGB, 5);
 
-                return DkamSDK_CSharp.StreamOn(camera_obj, 2) == 0;
+                int streamrgb = DkamSDK_CSharp.StreamOn(camera_obj, 2);
+                Addlog("Stream On RGB = " + streamrgb, 5);
+                return streamrgb == 0;
             }
             catch (Exception)
             {
@@ -314,7 +321,7 @@ namespace PcMainCtrl.HardWare
         /// 连接相机
         /// </summary>
         /// <param name="ip">相机地址</param>
-        public bool LinkCamera(string ip)
+        public bool LinkCamera(string ip, bool isCCP = true)
         {
             string ips = "";
             foreach (string item in cameraIPs)
@@ -333,6 +340,23 @@ namespace PcMainCtrl.HardWare
                 linkIPs.Add(ip); 
             }
             camera_obj = DkamSDK_CSharp.CreateCamera(i);
+            int[] data = new int[1];
+            DkamSDK_CSharp.GetCameraCCPStatus(camera_obj, data);
+            Addlog("Get Camera CCP Status: " + data[0], 5);
+            if (data[0] != 0)
+            {
+                if (isCCP)
+                {
+                    RePower();
+                    Close();
+                    FindCamera();
+                    return LinkCamera(ip, false); 
+                }
+                else
+                {
+                    return false;
+                }
+            }
             i = DkamSDK_CSharp.CameraConnect(camera_obj);
             if (i < 0)
             {
@@ -355,7 +379,7 @@ namespace PcMainCtrl.HardWare
             {
                 return false;
             }
-
+            //DkamSDK_CSharp.TimeoutCaptureCSharp(camera_obj, 0, gray_data, gray_pixel, graysize, 100000);
             int capturegray = DkamSDK_CSharp.CaptureCSharp(camera_obj, 0, gray_data, gray_pixel, graysize);
             Addlog("Capture Gray = " + capturegray, 5);
 
@@ -437,6 +461,7 @@ namespace PcMainCtrl.HardWare
         private bool CheckShot(Func<int> func, int maxNum)
         {
             bool relinked = false;
+            bool connection = false;
             Thread thread = new Thread(new ThreadStart(() =>
             {
                 lock (reLinkLock)
@@ -449,14 +474,16 @@ namespace PcMainCtrl.HardWare
                             case -11:
                                 Addlog("尝试第" + i + "次重新连接点云相机...", 0);
                                 Close();
+                                FindCamera();
                                 foreach (string ip in linkIPs)
                                 {
                                     Addlog("初始化点云相机：" + ip, 5);
-                                    Init(ip, true, true);
+                                    connection = Init(ip, true, true);
                                 }
                                 break;
                             default:
                                 i = maxNum + 1;
+                                connection = true;
                                 break;
                         }
                     }
@@ -481,7 +508,7 @@ namespace PcMainCtrl.HardWare
                     return CheckShot(func, maxNum);
                 }
             }
-            return true;
+            return connection;
         }
     }
 }

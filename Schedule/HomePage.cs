@@ -120,6 +120,9 @@ namespace PcMainCtrl.ViewModel
         private string uploadID = "";
         private object _3dScanLock = new object();
         private object lockObj = new object();
+        private object lockXz = new object();
+        private object lockLeftXz = new object();
+        private object lockRightXz = new object();
         private IService picService = new ServiceClient();
         private CognexLib.Manager cognexManager = new CognexLib.Manager();
         private SerialPortManager serialPortManager = null;
@@ -923,6 +926,7 @@ namespace PcMainCtrl.ViewModel
             try
             {
                 AddLog("初始化点云相机");
+                DkamHelper.Instance.RePower = DepthRePower;
                 DkamHelper.Instance.Addlog = AddLog;
                 DkamHelper.Instance.ReLinkCameraFaid = DepthRelinkFaid;
             InitDeptCamera:
@@ -1977,6 +1981,7 @@ namespace PcMainCtrl.ViewModel
                 BaslerCamera camera = sender as BaslerCamera;
                 if (e.Image.Bitmap == null)
                 {
+                    AddLog("图片丢失");
                     return;
                 }
                 Bitmap bitmap = e.Image.Bitmap;
@@ -1992,7 +1997,13 @@ namespace PcMainCtrl.ViewModel
                         AddLog("TimeOut: 线阵超时后收到图片");
                     }
                     CameraCtrlHelper.GetInstance().myCameraGlobalInfo.XzCameraRunStatMonitor = eCAMERAMODRUNSTAT.CAMERAMODRUNSTAT_STOP;
-                    string fileIndex = taskScheduleHandleInfo.xzCameraPicDataListCount.ToString("10000");
+                    int xzPicIndex = 0;
+                    lock (lockXz)
+                    {
+                        xzPicIndex = 10000 + taskScheduleHandleInfo.xzCameraPicDataListCount;
+                        taskScheduleHandleInfo.xzCameraPicDataListCount++;
+                    }
+                    string fileIndex = xzPicIndex.ToString();
                     string strfile = Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + GetExtend();
                     tryIndex = 1;
                     if (testForm.GetEnable(Form.EnableEnum.返回线阵))
@@ -2016,7 +2027,7 @@ namespace PcMainCtrl.ViewModel
                         rgvSpeedEndIndex = rgvSpeedList.Count - 1;
                     }
                     tryIndex = 2;
-                    UploadImage(bitmap, 10000 + taskScheduleHandleInfo.xzCameraPicDataListCount);
+                    UploadImage(bitmap, xzPicIndex);
                     tryIndex = 3;
                     if (testForm.GetEnable(Form.EnableEnum.拉伸速度图片))
                     {
@@ -2032,7 +2043,6 @@ namespace PcMainCtrl.ViewModel
                     SaveBitmapIntoFile(bitmap, Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + ".bmp", JoinMode.Vertical, Properties.Settings.Default.OrcImageProportion); 
                     AddLog("备份线阵图片：" + Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + ".bmp");
 #endif
-                    taskScheduleHandleInfo.xzCameraPicDataListCount++;
                     ThreadSleep(1500);
                     GrabImg = strfile;
                 }
@@ -2049,7 +2059,12 @@ namespace PcMainCtrl.ViewModel
                         AddLog("TimeOut: 左线阵超时后收到图片");
                     }
                     CameraCtrlHelper.GetInstance().myCameraGlobalInfo.XzLeftCameraRunStatMonitor = eCAMERAMODRUNSTAT.CAMERAMODRUNSTAT_STOP;
-                    string fileIndex = taskScheduleHandleInfo.xzLeftPicDataListCount.ToString("10000") + "L";
+                    string fileIndex = "";
+                    lock (lockLeftXz)
+                    {
+                        fileIndex = taskScheduleHandleInfo.xzLeftPicDataListCount.ToString("10000") + "L";
+                        taskScheduleHandleInfo.xzLeftPicDataListCount++; 
+                    }
                     string strfile = Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + GetExtend();
                     tryIndex = 11;
                     if (testForm.GetEnable(Form.EnableEnum.返回线阵))
@@ -2089,7 +2104,6 @@ namespace PcMainCtrl.ViewModel
                     SaveBitmapIntoFile(bitmap, Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + ".bmp", JoinMode.Vertical, Properties.Settings.Default.OrcImageProportion); 
                     AddLog("备份线阵图片：" + Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + ".bmp");
 #endif
-                    taskScheduleHandleInfo.xzLeftPicDataListCount++;
                     ThreadSleep(1500);
                     XzLeftShot?.Invoke(bitmap);
                 }
@@ -2106,7 +2120,12 @@ namespace PcMainCtrl.ViewModel
                         AddLog("TimeOut: 右线阵超时后收到图片");
                     }
                     CameraCtrlHelper.GetInstance().myCameraGlobalInfo.XzRightCameraRunStatMonitor = eCAMERAMODRUNSTAT.CAMERAMODRUNSTAT_STOP;
-                    string fileIndex = taskScheduleHandleInfo.xzRightPicDataListCount.ToString("10000") + "R";
+                    string fileIndex = "";
+                    lock (lockRightXz)
+                    {
+                        fileIndex = taskScheduleHandleInfo.xzRightPicDataListCount.ToString("10000") + "R";
+                        taskScheduleHandleInfo.xzRightPicDataListCount++; 
+                    }
                     string strfile = Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + GetExtend();
                     tryIndex = 14;
                     if (testForm.GetEnable(Form.EnableEnum.返回线阵))
@@ -2146,7 +2165,6 @@ namespace PcMainCtrl.ViewModel
                     SaveBitmapIntoFile(bitmap, Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + ".bmp", JoinMode.Vertical, Properties.Settings.Default.OrcImageProportion); 
                     AddLog("备份线阵图片：" + Application.StartupPath + @"\task_data\xz_camera\" + fileIndex + ".bmp");
 #endif
-                    taskScheduleHandleInfo.xzRightPicDataListCount++;
                     ThreadSleep(1500);
                     XzRightShot?.Invoke(bitmap);
                 }
@@ -5218,12 +5236,15 @@ namespace PcMainCtrl.ViewModel
 #endif
                     front3dID = model.ID_3D;
                     WaitCmdHandle(JsonConvert.SerializeObject(model), 1);
+#if onOffLightForMove
+                    if (Math.Abs(frontDistance - model.Distance) > 15)
+                    {
+                        WaitCmdHandle("前臂光源关闭", 1);
+                        LightOff(RobotName.Front);
+                    }
+#endif
                     if (frontDistance > model.Distance)
                     {
-#if onOffLightForMove
-                        WaitCmdHandle("前臂光源关闭", 1);
-                        LightOff(RobotName.Front); 
-#endif
                         frontRobotMove = false;
                         frontAxis = 0;
                         if (testForm.GetEnable(Form.EnableEnum.轴定位))
@@ -5254,7 +5275,7 @@ namespace PcMainCtrl.ViewModel
                     WaitCmdHandle("前臂光源开启", 1);
                     LightOn(RobotName.Front); 
 #endif
-                    AddLog($"当前RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce} 前点位位置：{frontDistance}", 1);
+                    AddLog($"当前RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce} 前点位位置：{frontDistance} 车头位置：{TrainCurrentHeadDistance}", 1);
                     bool robotMove = true, _2d = true, _3d = true, ywc = true, si = true, shot = true;
                     if (!testForm.GetEnable(Form.EnableEnum.面阵相机))
                     {
@@ -5362,12 +5383,15 @@ namespace PcMainCtrl.ViewModel
 #endif
                     back3dID = model.ID_3D;
                     WaitCmdHandle(JsonConvert.SerializeObject(model), 2);
-                    if (backDistance > model.Distance)
-                    {
 #if onOffLightForMove
+                    if (Math.Abs(backDistance - model.Distance) > 15)
+                    {
                         WaitCmdHandle("后臂光源关闭", 2);
                         LightOff(RobotName.Back);
+                    }
 #endif
+                    if (backDistance > model.Distance)
+                    {
                         backRobotMove = false;
                         backAxis = 0;
                         if (testForm.GetEnable(Form.EnableEnum.轴定位))
@@ -5398,7 +5422,7 @@ namespace PcMainCtrl.ViewModel
                     WaitCmdHandle("后臂光源开启", 2);
                     LightOn(RobotName.Back);
 #endif
-                    AddLog($"当前RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce} 后点位位置：{backDistance}",2);
+                    AddLog($"当前RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce} 后点位位置：{backDistance} 车头位置：{TrainCurrentHeadDistance}",2);
                     bool robotMove = true, _2d = true, _3d = true, ywc = true, si = true, shot = true;
                     if (!testForm.GetEnable(Form.EnableEnum.面阵相机))
                     {
@@ -5482,14 +5506,12 @@ namespace PcMainCtrl.ViewModel
                         axis = frontAxis;
                         axisBackID = 0;
                         mzDistance = frontDistance;
-                        AddLog($"保留前面阵轴数据[{axisFrontID}, {axisBackID}], 位置: {mzDistance}, 轴位置: {axis}");
                     }
                     else
                     {
                         axis = backAxis;
                         axisFrontID = 0;
                         mzDistance = backDistance;
-                        AddLog($"保留后面阵轴数据[{axisFrontID}, {axisBackID}], 位置: {mzDistance}, 轴位置: {axis}");
                     }
                     if (mzDistance > 0)
                     {
@@ -6414,6 +6436,7 @@ namespace PcMainCtrl.ViewModel
                     ThreadSleep(10000);  
                 }
 #endif
+                DkamHelper.Instance.RePower = DepthRePower;
                 DkamHelper.Instance.Addlog = AddLog;
                 DkamHelper.Instance.ReLinkCameraFaid = DepthRelinkFaid;
                 DkamHelper.Instance.FindCamera();
@@ -6471,7 +6494,7 @@ namespace PcMainCtrl.ViewModel
             return isPointCamaerError = false;
         }
 
-        private void DepthReStart()
+        private void DepthRePower()
         {
 #if plcModbus
             if (testForm.GetEnable(Form.EnableEnum.PLC))
@@ -6480,13 +6503,18 @@ namespace PcMainCtrl.ViewModel
                 AddLog("点云相机断电中，等待3秒");
                 ThreadSleep(3000);
                 ModbusTCP.SetAddress13(Address13Type._3D, 1);
-                AddLog("点云相机上电中，等待10秒");
-                ThreadSleep(10000);
-                DkamHelper.Instance.Close();
-                DkamHelper.Instance.FindCamera();
-                DkamHelper.Instance.Init(Properties.Settings.Default.PointCamera, true, true);
+                AddLog("点云相机上电中，等待15秒");
+                ThreadSleep(15000);
             }
 #endif
+        }
+
+        private void DepthReStart()
+        {
+            DkamHelper.Instance.Close();
+            DepthRePower();
+            DkamHelper.Instance.FindCamera();
+            DkamHelper.Instance.Init(Properties.Settings.Default.PointCamera, true, true);
             isPointCamaerError = false;
         }
 
