@@ -141,6 +141,7 @@ namespace PcMainCtrl.ViewModel
 #endif
 #if plcModbus
         private bool canMovePlan = true;
+        private int type13 = -1;
         private PLC3DCamera pLC3DCamera = null;
 #endif
 #if newBasler
@@ -606,9 +607,16 @@ namespace PcMainCtrl.ViewModel
                                 }
                                 if (!showRed)
                                 {
-                                    AddLog("报警灯：打开红灯", 7);
+                                    if (type13 != -1)
+                                    {
+                                        AddLog("报警灯：打开红灯", 7); 
+                                    }
                                     ModbusTCP.SetAddress13(Address13Type.Red, 1);
                                     showRed = true; 
+                                }
+                                if (type13 != -1)
+                                {
+                                    type13 = -1;
                                 }
                             }
                             else if (RunStat || RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce > 5010)
@@ -628,18 +636,34 @@ namespace PcMainCtrl.ViewModel
                                     showRed = false;
                                 }
                                 ThreadSleep(500);
-                                AddLog("任务灯：打开黄灯", 7);
+                                if (type13 != 1)
+                                {
+                                    AddLog("任务灯：打开黄灯", 7); 
+                                }
                                 ModbusTCP.SetAddress13(Address13Type.Yellow, 1);
                                 if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed > 0)
                                 {
-                                    AddLog("任务灯：打开蜂鸣", 7);
+                                    if (type13 != 1)
+                                    {
+                                        AddLog("任务灯：打开蜂鸣", 7); 
+                                    }
                                     ModbusTCP.SetAddress13(Address13Type.Buzzer, 1); 
                                 }
                                 ThreadSleep(500);
-                                AddLog("任务灯：关闭黄灯", 7);
+                                if (type13 != 1)
+                                {
+                                    AddLog("任务灯：关闭黄灯", 7); 
+                                }
                                 ModbusTCP.SetAddress13(Address13Type.Yellow, 0);
-                                AddLog("任务灯：关闭蜂鸣", 7);
+                                if (type13 != 1)
+                                {
+                                    AddLog("任务灯：关闭蜂鸣", 7); 
+                                }
                                 ModbusTCP.SetAddress13(Address13Type.Buzzer, 0);
+                                if (type13 != 1)
+                                {
+                                    type13 = 1;
+                                }
                             }
                             else if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce > 4990 && RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce < 5010)
                             {
@@ -652,9 +676,16 @@ namespace PcMainCtrl.ViewModel
                                 }
                                 if (!showGread)
                                 {
-                                    AddLog("等待灯：打开绿灯", 7);
+                                    if (type13 != 0)
+                                    {
+                                        AddLog("等待灯：打开绿灯", 7); 
+                                    }
                                     ModbusTCP.SetAddress13(Address13Type.Green, 1);
                                     showGread = true; 
+                                }
+                                if (type13 != 0)
+                                {
+                                    type13 = 0;
                                 }
                             }
                         }
@@ -5521,7 +5552,7 @@ namespace PcMainCtrl.ViewModel
                         }
                         else if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor == eRGVMODRUNSTAT.RGVMODRUNSTAT_STOP && RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed == 0)
                         {
-                            AddLog("RGV已停车");
+                            AddLog("RGV已停车，当前位置：" + RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce + "，目标位置：" + RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvTargetRunDistance);
 #if plcModbus
                             if (testForm.GetEnable(Form.EnableEnum.PLC))
                             {
@@ -5582,9 +5613,9 @@ namespace PcMainCtrl.ViewModel
                                 AddLog("任务强制中止！");
                                 return;
                             }
+                            AddLog("位置差：" + c);
                             if (c > 10 || c < -10)
                             {
-                                AddLog("位置差：" + c);
                                 int loctaion = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce + c;
                                 DoRgvSetTargetDistanceCmdHandle(loctaion);
                                 WaitCmdHandle(string.Format("Rgv运动到指定位置: {0}", loctaion));
