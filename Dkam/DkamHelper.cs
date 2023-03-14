@@ -63,7 +63,12 @@ namespace PcMainCtrl.HardWare
             int streamoff = 0, streamoffpoint = 0, streamoffRGB = 0, dis = 0;
             try
             {
+                Addlog("关闭点云相机", 0);
+                int[] data = new int[1];
+                DkamSDK_CSharp.GetCameraCCPStatus(camera_obj, data);
+                Addlog("DkamStatus: " + data[0], 5);
                 DkamSDK_CSharp.AcquisitionStop(camera_obj);
+                Addlog("CloseCamera", 5);
                 streamoff = DkamSDK_CSharp.StreamOff(camera_obj, 0);
                 Addlog("StreamOff Gray = " + streamoff, 5);
                 streamoffpoint = DkamSDK_CSharp.StreamOff(camera_obj, 1);
