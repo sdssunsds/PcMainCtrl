@@ -29,6 +29,11 @@ namespace PcMainCtrl.View
             HomePageView.model.MzTestForm();
         }
 
+        private void BtnComparison_Click(object sender, RoutedEventArgs e)
+        {
+            HomePageView.model.DataComparison();
+        }
+
         private void BtnSet_Click(object sender, RoutedEventArgs e)
         {
             new LogView().Show();

@@ -8934,6 +8934,11 @@ namespace PcMainCtrl.ViewModel
                 }
             }.ShowDialog();
         }
+
+        public void DataComparison()
+        {
+            new Form.DataComparisonForm().ShowDialog();
+        }
         #endregion
 
         #region socket对象

@@ -22,7 +22,7 @@ namespace PcMainCtrl.DataAccess
 #endif
 
         private static LocalDataBase instance;
-        private LocalDataBase() { }
+        public LocalDataBase() { }
 
         public static LocalDataBase GetInstance()
         {

@@ -53,6 +53,7 @@
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
                 <Button Style="{StaticResource WindowControlButtonStyle}" Content="开关" Click="BtnTest_Click"/>
                 <Button Style="{StaticResource WindowControlButtonStyle}" Content="面阵" Click="BtnCreate_Click"/>
+                <Button Style="{StaticResource WindowControlButtonStyle}" Content="比对" Click="BtnComparison_Click"/>
                 <Button Style="{StaticResource WindowControlButtonStyle}" Content="LOG" Click="BtnSet_Click"/>
                 <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xe7e6;" Click="BtnMin_Click"/>
                 <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xe694;" Click="BtnMax_Click"/>
