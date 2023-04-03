@@ -19,6 +19,7 @@
 #define initPointCamera  // 初始化点云相机
 #define controlLightPower  // 用通断电源的方式控制光源
 #define onOffLightForMove  // 根据RGV运动后开关光源
+#define ioNewCheckHead  // 传感器检测车头（新协议）
 
 #if newBasler
 using Basler;
@@ -751,6 +752,7 @@ namespace PcMainCtrl.ViewModel
                 });
             }
 #endif
+#if !test
             AddLog("初始化相机...");
             do
             {
@@ -778,7 +780,7 @@ namespace PcMainCtrl.ViewModel
             ThreadSleep(2000); 
 #endif
             CameraOpen();
-            AddLog("相机初始化完成");
+            AddLog("相机初始化完成"); 
 
             AddLog("初始化光源...");
             light = new LightManager(Properties.Settings.Default.Light)
@@ -793,6 +795,7 @@ namespace PcMainCtrl.ViewModel
             light.LightOn(Properties.Settings.Default.LightFrontHigh, true);
             ThreadSleep(500);
             light.LightOn(Properties.Settings.Default.LightFrontHigh, false);
+#endif
 #endif
 #if plcModbus
             if (testForm.GetEnable(Form.EnableEnum.PLC))
@@ -4267,7 +4270,11 @@ namespace PcMainCtrl.ViewModel
                 }
                 else if (testForm.GetEnable(Form.EnableEnum.传感器测车头))
                 {
+#if ioNewCheckHead
+                    isHead = ModbusTCP.GetAddress2Value(Address2Type.Sensor_IO_1) == 1 || ModbusTCP.GetAddress2Value(Address2Type.Sensor_IO_2) == 1;
+#else
                     isHead = ModbusTCP.GetIO(15);
+#endif
                 }
                 else if (testForm.GetEnable(Form.EnableEnum.雷达测车头))
                 {
@@ -7921,14 +7928,22 @@ namespace PcMainCtrl.ViewModel
             return;
 #endif
             #endregion
+
 #if ping
-            pingResult.Add(uploadServerKey, false);
-            pingResult.Add(Properties.Settings.Default.UploadDataServer, true);
+            if (!pingResult.ContainsKey(uploadServerKey))
+            {
+                pingResult.Add(uploadServerKey, false);
+            }
+            if (!pingResult.ContainsKey(Properties.Settings.Default.UploadDataServer))
+            {
+                pingResult.Add(Properties.Settings.Default.UploadDataServer, true);
+            } 
 #endif
+
             if (Test_Dir)
             {
                 #region 核对图片与数据数量，查找丢图
-#if true
+#if false
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
@@ -8568,6 +8583,38 @@ namespace PcMainCtrl.ViewModel
 #endif
 #endif
                 #endregion
+                #region 光敏车头定位测试
+#if true
+                AddLog("车头定位测试开始");
+                if (!RgvModCtrlHelper.GetInstance().IsLink)
+                {
+                    AddLog(">> 初始化Rgv...");
+                    RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
+                    InitRgvMod();
+                    AddLog(">> Rgv初始化完成"); 
+                }
+
+                DoRgvStopIntelligentChargeCmdHandle();
+                AddLog(">> 等待3秒后启动车头定位测试");
+                ThreadSleep(3000);
+                AddLog(">> RGV前进");
+                DoRgvForwardMotorCmdHandle(null);
+
+                int d = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
+                int v = 0;
+                while (v == 0)
+                {
+                    v = ModbusTCP.GetAddress2Value(Address2Type.Sensor_IO_1);
+                    d = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
+                    ThreadSleep(50);
+                }
+
+                AddLog(">> 车头定位位置" + d);
+                AddLog(">> " + d);
+                AddLog(">> RGV停车");
+                DoRgvNormalStopCmdHandle(null);
+#endif
+                #endregion
                 #region 轴定位测试
 #if false
                 GetPositionDifference(state: new int[] { 0, 1 });
@@ -8804,7 +8851,7 @@ namespace PcMainCtrl.ViewModel
                     //AddLog("光源已关闭");
                     ThreadSleep(3000);
                 }
-#endif 
+#endif
                 #endregion
             });
         }
@@ -8824,7 +8871,9 @@ namespace PcMainCtrl.ViewModel
                             InitAct = () =>
                             {
                                 light = null;
-                                pLC3DCamera = null;
+#if plcModbus
+                                pLC3DCamera = null; 
+#endif
                                 RgvModCtrlHelper.GetInstance().RgvModInfoEvent -= MyRgvModInfoEvent;
                                 Stm32ModCtrlHelper.GetInstance().Stm32ModInfoEvent -= MyStm32ModInfoEvent;
                                 RobotModCtrlHelper.GetInstance().RobotModInfoEvent -= MyRobotModInfoEvent;

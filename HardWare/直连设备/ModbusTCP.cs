@@ -75,6 +75,25 @@ namespace PcMainCtrl.HardWare
             return bytestring[i] == '1';
         }
 
+        public static int GetAddress2Value(Address2Type type)
+        {
+            short? s = mb?.ShortValue;
+            if (s != null)
+            {
+                string bytestring = Convert.ToString(s.Value, 2);
+                switch (type)
+                {
+                    case Address2Type.Sensor_IO_1:
+                        return int.Parse(bytestring[bytestring.Length - 1].ToString());
+                    case Address2Type.Sensor_IO_2:
+                        return int.Parse(bytestring[bytestring.Length - 2].ToString());
+                    default:
+                        return -1;
+                }
+            }
+            return -1;
+        }
+
         public static void SetAddress12(Address12Type type, int val)
         {
             try
@@ -180,6 +199,12 @@ namespace PcMainCtrl.HardWare
             }
             catch (Exception) { }
         }
+    }
+
+    public enum Address2Type
+    {
+        Sensor_IO_1,
+        Sensor_IO_2
     }
 
     public enum Address12Type
