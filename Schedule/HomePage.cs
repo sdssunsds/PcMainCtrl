@@ -4280,9 +4280,13 @@ namespace PcMainCtrl.ViewModel
                 {
                     isHead = TrainCurrentHeadDistance + 5000 < RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
                 }
-                testForm.SetHead(TrainCurrentHeadDistance + Properties.Settings.Default.RobotPointXZ);
                 if (isHead)
                 {
+                    if (trainHeadLocation == 0 && !testForm.GetEnable(Form.EnableEnum.雷达测车头))
+                    {
+                        TrainCurrentHeadDistance = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
+                    }
+                    testForm.SetHead(TrainCurrentHeadDistance + Properties.Settings.Default.RobotPointXZ);
                     if (testForm.GetEnable(Form.EnableEnum.激光慢速测车头))
                     {
                         DoRgvNormalStopCmdHandle(null);
@@ -4308,7 +4312,7 @@ namespace PcMainCtrl.ViewModel
                         TrainCurrentHeadDistance = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
                     }
                     TrainHeadDistance = (TrainCurrentHeadDistance + Properties.Settings.Default.RobotPointXZ) + " mm";
-                    AddLog("记录车头位置：" + (TrainCurrentHeadDistance + Properties.Settings.Default.RobotPointXZ));
+                    AddLog("记录车头位置：" + TrainHeadDistance);
                     if (testForm.GetEnable(Form.EnableEnum.执行线阵))
                     {
                         AddLog("开始相机线扫***");
@@ -7894,6 +7898,7 @@ namespace PcMainCtrl.ViewModel
         #region 测试
         const bool Test_Dir = false;
         const bool Test_File = false;
+        static object Test_lock = new object();
         private void TestStart(object obj)
         {
             #region 相机初始化测试
@@ -8266,593 +8271,596 @@ namespace PcMainCtrl.ViewModel
 
             TaskRun(() =>
             {
-                #region 日志清理测试
-#if false
-                if (testForm.GetEnable(Form.EnableEnum.清理日志))
+                lock (Test_lock)
                 {
-                    DateTime now = DateTime.Now;
-                    if (now.Hour > 5)
+                    #region 日志清理测试
+#if false
+                    if (testForm.GetEnable(Form.EnableEnum.清理日志))
                     {
-                        DateTime date = DateTime.Parse(FileSystem.ReadIniFile("日志", "最后一次记录日期", now.ToString("yyyy-MM-dd"), iniPath));
-                        if (date.Day < now.Day || date.Month < now.Month || date.Year < now.Year)
+                        DateTime now = DateTime.Now;
+                        if (now.Hour > 5)
                         {
-                            string[] logs = Directory.GetFiles(Application.StartupPath + "\\log");
-                            foreach (string log in logs)
+                            DateTime date = DateTime.Parse(FileSystem.ReadIniFile("日志", "最后一次记录日期", now.ToString("yyyy-MM-dd"), iniPath));
+                            if (date.Day < now.Day || date.Month < now.Month || date.Year < now.Year)
+                            {
+                                string[] logs = Directory.GetFiles(Application.StartupPath + "\\log");
+                                foreach (string log in logs)
+                                {
+                                    try
+                                    {
+                                        File.Delete(log);
+                                    }
+                                    catch (Exception) { }
+                                }
+                            }
+                            FileSystem.WriteIniFile("日志", "最后一次记录日期", now.ToString("yyyy-MM-dd"), iniPath);
+                        }
+                    }
+#endif
+                    #endregion
+                    #region 仅滑台测试
+#if false
+                    pLC3DCamera.SetZero(RobotName.Front);
+                    AddLog("滑台归原点");
+                    do
+                    {
+                        ThreadSleep(plcSleep);
+                        pLC3DCamera.GetState(RobotName.Front);
+                        if (SlidingOutTime(RobotName.Front))
+                        {
+                            AddLog("滑台超时", (int)RobotName.Front);
+                            return;
+                        }
+                    } while (!pLC3DCamera.FrontModbus.Home_Complete);
+
+                    pLC3DCamera.SetForward(RobotName.Front);
+                    AddLog("滑台前进");
+                    do
+                    {
+                        ThreadSleep(plcSleep);
+                        pLC3DCamera.GetState(RobotName.Front);
+                        if (SlidingOutTime(RobotName.Front))
+                        {
+                            AddLog("滑台超时", (int)RobotName.Front);
+                            return;
+                        }
+                    } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
+
+                    pLC3DCamera.SetBackoff(RobotName.Front);
+                    AddLog("滑台返回");
+                    do
+                    {
+                        ThreadSleep(plcSleep);
+                        pLC3DCamera.GetState(RobotName.Front);
+                        if (SlidingOutTime(RobotName.Front))
+                        {
+                            AddLog("滑台超时", (int)RobotName.Front);
+                            return;
+                        }
+                    } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
+                    AddLog("滑台完成");
+
+                    pLC3DCamera.SetZero(RobotName.Back);
+                    AddLog("滑台归原点");
+                    do
+                    {
+                        ThreadSleep(plcSleep);
+                        pLC3DCamera.GetState(RobotName.Back);
+                        if (SlidingOutTime(RobotName.Back))
+                        {
+                            AddLog("滑台超时", (int)RobotName.Back);
+                            return;
+                        }
+                    } while (!pLC3DCamera.BackModbus.Home_Complete);
+
+                    pLC3DCamera.SetForward(RobotName.Back);
+                    AddLog("滑台前进");
+                    do
+                    {
+                        ThreadSleep(plcSleep);
+                        pLC3DCamera.GetState(RobotName.Back);
+                        if (SlidingOutTime(RobotName.Back))
+                        {
+                            AddLog("滑台超时", (int)RobotName.Back);
+                            return;
+                        }
+                    } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
+
+                    pLC3DCamera.SetBackoff(RobotName.Back);
+                    AddLog("滑台返回");
+                    do
+                    {
+                        ThreadSleep(plcSleep);
+                        pLC3DCamera.GetState(RobotName.Back);
+                        if (SlidingOutTime(RobotName.Back))
+                        {
+                            AddLog("滑台超时", (int)RobotName.Back);
+                            return;
+                        }
+                    } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
+                    AddLog("滑台完成");
+                    return;
+#endif
+                    #endregion
+                    #region 仅光源测试
+#if false
+                    AddLog("初始化光源...");
+                    light = new LightManager(Properties.Settings.Default.Light)
+                    {
+                        LinkLight = () =>
+                        {
+                            return true;
+                        }
+                    };
+#if controlLightPower
+                    ThreadSleep(500);
+                    light?.LightOn(Properties.Settings.Default.LightFrontHigh, true);
+                    ThreadSleep(500);
+                    light?.LightOn(Properties.Settings.Default.LightFrontHigh, false);
+#endif
+                    Random ram = new Random();
+                    TaskRun(() =>
+                    {
+                        for (int i = 0; i < 500; i++)
+                        {
+                            AddLog("打开前光源", 1);
+                            light.LightOn(Properties.Settings.Default.LightFrontHigh, true);
+                            ThreadSleep(ram.Next(100, 1000));
+                            AddLog("关闭前光源", 1);
+                            light.LightOff(true);
+                        }
+                    });
+                    TaskRun(() =>
+                    {
+                        for (int i = 0; i < 500; i++)
+                        {
+                            AddLog("打开后光源", 2);
+                            light.LightOn(Properties.Settings.Default.LightFrontHigh, false);
+                            ThreadSleep(ram.Next(100, 1000));
+                            AddLog("关闭后光源", 2);
+                            light.LightOff(false);
+                        }
+                    });
+#endif
+                    #endregion
+                    #region 3D扫描仪与滑台测试
+#if false
+                    pLC3DCamera = new PLC3DCamera();
+                    for (int i = 0; i < 2; i++)
+                    {
+                        bool _3DRun = false;
+                        bool[] bs = new bool[2];
+                        if (i == 0 || i == 2)
+                        {
+                            TaskRun(() =>
+                            {
+#if true
+                                pLC3DCamera.FrontModbus.Home_Complete = false;
+                                pLC3DCamera.SetZero(RobotName.Front);
+                                AddLog("滑台归原点");
+                                do
+                                {
+                                    ThreadSleep(plcSleep);
+                                    pLC3DCamera.GetState(RobotName.Front);
+                                } while (!pLC3DCamera.FrontModbus.Home_Complete);
+
+                                pLC3DCamera.FrontModbus.MoveAbsolute_Complete = false;
+                                pLC3DCamera.SetForward(RobotName.Front);
+                                AddLog("滑台前进");
+                                do
+                                {
+                                    ThreadSleep(plcSleep);
+                                    pLC3DCamera.GetState(RobotName.Front);
+                                } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
+                                if (!_3DRun)
+                                {
+                                    _3DRun = true;
+                                    AddLog("3D扫描仪启动");
+                                    cognexManager.Run(i, (int)RobotName.Front);
+                                }
+                                pLC3DCamera.FrontModbus.MoveAbsolute_Complete = false;
+                                pLC3DCamera.SetBackoff(RobotName.Front);
+                                AddLog("滑台返回");
+                                do
+                                {
+                                    ThreadSleep(plcSleep);
+                                    pLC3DCamera.GetState(RobotName.Front);
+                                } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
+                                AddLog("前滑台完成"); 
+#endif
+                                bs[0] = true;
+                            });
+                        }
+                        else
+                        {
+                            bs[0] = true;
+                        }
+
+                        if (i > 0)
+                        {
+                            TaskRun(() =>
+                            {
+#if false
+                                pLC3DCamera.BackModbus.Home_Complete = false;
+                                pLC3DCamera.SetZero(RobotName.Back);
+                                AddLog("滑台归原点");
+                                do
+                                {
+                                    ThreadSleep(plcSleep);
+                                    pLC3DCamera.GetState(RobotName.Back);
+                                } while (!pLC3DCamera.BackModbus.Home_Complete);
+
+                                pLC3DCamera.BackModbus.MoveAbsolute_Complete = false;
+                                pLC3DCamera.SetForward(RobotName.Back);
+                                AddLog("滑台前进");
+                                do
+                                {
+                                    ThreadSleep(plcSleep);
+                                    pLC3DCamera.GetState(RobotName.Back);
+                                } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
+                                if (!_3DRun)
+                                {
+                                    _3DRun = true;
+                                    AddLog("3D扫描仪启动");
+                                    cognexManager.Run(new int[] { 6, 6 });
+                                }
+                                pLC3DCamera.BackModbus.MoveAbsolute_Complete = false;
+                                pLC3DCamera.SetBackoff(RobotName.Back);
+                                AddLog("滑台返回");
+                                do
+                                {
+                                    ThreadSleep(plcSleep);
+                                    pLC3DCamera.GetState(RobotName.Back);
+                                } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
+                                AddLog("后滑台完成"); 
+#endif
+                                bs[1] = true;
+                            });
+                        }
+                        else
+                        {
+                            bs[1] = true;
+                        }
+                        while (!bs[0] || !bs[1])
+                        {
+                            ThreadSleep(50);
+                        }
+                        AddLog("拍照完成");
+                        cognexManager.Stop();
+                    }
+#endif
+                    #endregion
+                    #region 异步原地控制流程
+#if false
+                    if (obj != null)
+                    {
+                        train_para = obj as AppRemoteCtrl_TrainPara;
+                        Properties.Settings.Default.TrainMode = train_para.train_mode;
+                        Properties.Settings.Default.TrainSn = train_para.train_sn;
+                        LocalDataBase.GetInstance().jsonPath = Application.StartupPath + "/json/" + train_para.train_mode + "_" + train_para.train_sn + "/";
+                        mzCameraDataList = LocalDataBase.GetInstance().MzCameraDataListQurey();
+                        xzCameraDataList = LocalDataBase.GetInstance().XzCameraDataListQurey();
+                    }
+                    AddLog("动车参数：" + JsonConvert.SerializeObject(train_para));
+                    RunStat = true;
+                    frontMzIndex = backMzIndex = mzDistance = 0;
+                    frontData.Clear();
+                    backData.Clear();
+                    for (int i = 0; i < mzCameraDataList.Count; i++)
+                    {
+                        Model.DataMzCameraLineModel model = mzCameraDataList[i];
+                        MzDataExtent front = new MzDataExtent(model, RobotName.Front);
+                        MzDataExtent back = new MzDataExtent(model, RobotName.Back);
+                        frontData.Add(front);
+                        backData.Add(back);
+                    }
+                    MzRun(false);
+                    return;
+#endif
+                    #endregion
+                    #region 激光雷达定位测试
+#if false
+#if lidarLocation
+                    int moveLocation = (int)(GetLidarLoc("380AL_2572", "0_1", "z1") * 1000);
+#if lidarCsharp
+                    moveLocation /= 1000;
+#endif
+                    if (moveLocation != 0)
+                    {
+                        int movePoint = Properties.Settings.Default.RobotPointXZ + moveLocation;
+                        DoRgvSetTargetDistanceCmdHandle(movePoint);
+                        AddLog("Rgv运动到指定位置: " + movePoint);
+                        while (true)
+                        {
+                            if (!RunStat)
+                            {
+                                AddLog("任务强制中止！");
+                                return;
+                            }
+                            if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor != eRGVMODRUNSTAT.RGVMODRUNSTAT_MOVE)
+                            {
+                                AddLog("Rgv停止");
+                                break;
+                            }
+                            ThreadSleep(50);
+                        }
+                    }
+                    Console.WriteLine();
+                    return;
+#endif
+#endif
+                    #endregion
+                    #region 光敏车头定位测试
+#if true
+                    AddLog("车头定位测试开始");
+                    if (!RgvModCtrlHelper.GetInstance().IsLink)
+                    {
+                        AddLog(">> 初始化Rgv...");
+                        RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
+                        InitRgvMod();
+                        AddLog(">> Rgv初始化完成");
+                    }
+
+                    DoRgvStopIntelligentChargeCmdHandle();
+                    AddLog(">> 等待3秒后启动车头定位测试");
+                    ThreadSleep(3000);
+                    AddLog(">> RGV前进");
+                    DoRgvForwardMotorCmdHandle(null);
+
+                    int d = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
+                    int v = 0;
+                    while (v == 0)
+                    {
+                        v = ModbusTCP.GetAddress2Value(Address2Type.Sensor_IO_1);
+                        d = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
+                        ThreadSleep(50);
+                    }
+
+                    AddLog(">> 车头定位位置" + d);
+                    AddLog(">> " + d);
+                    AddLog(">> RGV停车");
+                    DoRgvNormalStopCmdHandle(null);
+#endif
+                    #endregion
+                    #region 轴定位测试
+#if false
+                    GetPositionDifference(state: new int[] { 0, 1 });
+#endif
+#if false
+                    AddLog("初始化Rgv...");
+                    RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
+                    InitRgvMod();
+                    AddLog("Rgv初始化完成");
+                    DoRgvStopIntelligentChargeCmdHandle();
+                    ThreadSleep(5000);
+                    LocalDataBase.GetInstance().jsonPath = Application.StartupPath + "/json/380AL_2589/";
+                    AxisList = LocalDataBase.GetInstance().AxesDataListQurey();
+                    uploadID = "testDepth" + DateTime.Now.ToString("_yyyy_MM_dd_HH_mm");
+                    axisFrontID = axisBackID = 0;
+                    for (int i = 4; i < AxisList.Count; i++)
+                    {
+                        int c = -200;
+                        for (int j = 0; j < 21; j++)
+                        {
+                            c += 20;
+                            axisFrontID = AxisList[i].ID * 100 + j;
+                            int location = AxisList[i].Distance + c + trainHeadLocation;
+                            AddLog("RGV运动到" + location);
+                            DoRgvSetTargetDistanceCmdHandle(location);
+                            do
+                            {
+                                ThreadSleep(1000);
+                            } while (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor != eRGVMODRUNSTAT.RGVMODRUNSTAT_STOP || RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed != 0);
+
+                            AddLog("点云相机拍照");
+                            string name1, name2, path;
+                            if (PointShot(out path, out name1, out name2))
                             {
                                 try
                                 {
-                                    File.Delete(log);
+                                    using (FileStream file = new FileStream(path + name1, FileMode.Open))
+                                    {
+                                        byte[] bytes = new byte[file.Length];
+                                        file.Read(bytes, 0, bytes.Length);
+                                        UploadImage(bytes, name1);
+                                        AddLog("上传红外图片完成");
+                                    }
+                                    using (FileStream file = new FileStream(path + name2, FileMode.Open))
+                                    {
+                                        byte[] bytes = new byte[file.Length];
+                                        file.Read(bytes, 0, bytes.Length);
+                                        UploadImage(bytes, name2);
+                                        AddLog("上传深度图片完成");
+                                    }
                                 }
-                                catch (Exception) { }
+                                catch (Exception e)
+                                {
+                                    AddLog(e.Message, -1);
+                                    return;
+                                }
                             }
                         }
-                        FileSystem.WriteIniFile("日志", "最后一次记录日期", now.ToString("yyyy-MM-dd"), iniPath);
                     }
-                }
 #endif
-                #endregion
-                #region 仅滑台测试
+                    #endregion
+                    #region Socket伪流程
 #if false
-                pLC3DCamera.SetZero(RobotName.Front);
-                AddLog("滑台归原点");
-                do
-                {
-                    ThreadSleep(plcSleep);
-                    pLC3DCamera.GetState(RobotName.Front);
-                    if (SlidingOutTime(RobotName.Front))
+                    //RgvState = "运行中";
+                    //RgvElectricity = "99%";
+                    //TrainHeadDistance = "12168 mm";
+                    //GrabImg = @"F:\task_data\xz_camera\10016.jpg";
+                    AddLog("<---任务开始--->");
+                    RunStat = true;
+                    IsEndEnable = true;
+                    Random ram = new Random();
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerTempture = 17;
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity = 99;
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerCurrent = 40;
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce = 15000;
+                    Job = "任务准备中";
+                    RunMz = true;
+                    isWait = false;
+                    xzIndex = -1;
+                    train_para = new AppRemoteCtrl_TrainPara();
+                    if (obj != null)
                     {
-                        AddLog("滑台超时", (int)RobotName.Front);
-                        return;
+                        train_para = obj as AppRemoteCtrl_TrainPara;
+                        Properties.Settings.Default.TrainMode = train_para.train_mode;
+                        Properties.Settings.Default.TrainSn = train_para.train_sn;
+                        LocalDataBase.GetInstance().jsonPath = Application.StartupPath + "/json/" + train_para.train_mode + "_" + train_para.train_sn + "/";
+                        mzCameraDataList = LocalDataBase.GetInstance().MzCameraDataListQurey();
+                        xzCameraDataList = LocalDataBase.GetInstance().XzCameraDataListQurey();
                     }
-                } while (!pLC3DCamera.FrontModbus.Home_Complete);
+                    AddLog("动车参数：" + JsonConvert.SerializeObject(train_para));
+                    uploadID = Properties.Settings.Default.TrainMode + "_" + Properties.Settings.Default.TrainSn + "_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm");
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvTrackLength = 300000;
 
-                pLC3DCamera.SetForward(RobotName.Front);
-                AddLog("滑台前进");
-                do
-                {
-                    ThreadSleep(plcSleep);
-                    pLC3DCamera.GetState(RobotName.Front);
-                    if (SlidingOutTime(RobotName.Front))
+                    AddLog("开始清理缓存图片");
+                    string task = Application.StartupPath + "/task_data";
+                    string test = Application.StartupPath + "/test_data";
+                    string work = Application.StartupPath + "/work_data";
+                    var deleteFiles = new Action<DirectoryInfo>((DirectoryInfo dir) => { });
+                    deleteFiles = new Action<DirectoryInfo>((DirectoryInfo dir) =>
                     {
-                        AddLog("滑台超时", (int)RobotName.Front);
-                        return;
-                    }
-                } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
-
-                pLC3DCamera.SetBackoff(RobotName.Front);
-                AddLog("滑台返回");
-                do
-                {
-                    ThreadSleep(plcSleep);
-                    pLC3DCamera.GetState(RobotName.Front);
-                    if (SlidingOutTime(RobotName.Front))
-                    {
-                        AddLog("滑台超时", (int)RobotName.Front);
-                        return;
-                    }
-                } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
-                AddLog("滑台完成");
-
-                pLC3DCamera.SetZero(RobotName.Back);
-                AddLog("滑台归原点");
-                do
-                {
-                    ThreadSleep(plcSleep);
-                    pLC3DCamera.GetState(RobotName.Back);
-                    if (SlidingOutTime(RobotName.Back))
-                    {
-                        AddLog("滑台超时", (int)RobotName.Back);
-                        return;
-                    }
-                } while (!pLC3DCamera.BackModbus.Home_Complete);
-
-                pLC3DCamera.SetForward(RobotName.Back);
-                AddLog("滑台前进");
-                do
-                {
-                    ThreadSleep(plcSleep);
-                    pLC3DCamera.GetState(RobotName.Back);
-                    if (SlidingOutTime(RobotName.Back))
-                    {
-                        AddLog("滑台超时", (int)RobotName.Back);
-                        return;
-                    }
-                } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
-
-                pLC3DCamera.SetBackoff(RobotName.Back);
-                AddLog("滑台返回");
-                do
-                {
-                    ThreadSleep(plcSleep);
-                    pLC3DCamera.GetState(RobotName.Back);
-                    if (SlidingOutTime(RobotName.Back))
-                    {
-                        AddLog("滑台超时", (int)RobotName.Back);
-                        return;
-                    }
-                } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
-                AddLog("滑台完成");
-                return;
-#endif
-                #endregion
-                #region 仅光源测试
-#if false
-                AddLog("初始化光源...");
-                light = new LightManager(Properties.Settings.Default.Light)
-                {
-                    LinkLight = () =>
-                    {
-                        return true;
-                    }
-                };
-#if controlLightPower
-                ThreadSleep(500);
-                light?.LightOn(Properties.Settings.Default.LightFrontHigh, true);
-                ThreadSleep(500);
-                light?.LightOn(Properties.Settings.Default.LightFrontHigh, false);
-#endif
-                Random ram = new Random();
-                TaskRun(() =>
-                {
-                    for (int i = 0; i < 500; i++)
-                    {
-                        AddLog("打开前光源", 1);
-                        light.LightOn(Properties.Settings.Default.LightFrontHigh, true);
-                        ThreadSleep(ram.Next(100, 1000));
-                        AddLog("关闭前光源", 1);
-                        light.LightOff(true);
-                    }
-                });
-                TaskRun(() =>
-                {
-                    for (int i = 0; i < 500; i++)
-                    {
-                        AddLog("打开后光源", 2);
-                        light.LightOn(Properties.Settings.Default.LightFrontHigh, false);
-                        ThreadSleep(ram.Next(100, 1000));
-                        AddLog("关闭后光源", 2);
-                        light.LightOff(false);
-                    }
-                });
-#endif
-                #endregion
-                #region 3D扫描仪与滑台测试
-#if false
-                pLC3DCamera = new PLC3DCamera();
-                for (int i = 0; i < 2; i++)
-                {
-                    bool _3DRun = false;
-                    bool[] bs = new bool[2];
-                    if (i == 0 || i == 2)
-                    {
-                        TaskRun(() =>
-                        {
-#if true
-                            pLC3DCamera.FrontModbus.Home_Complete = false;
-                            pLC3DCamera.SetZero(RobotName.Front);
-                            AddLog("滑台归原点");
-                            do
-                            {
-                                ThreadSleep(plcSleep);
-                                pLC3DCamera.GetState(RobotName.Front);
-                            } while (!pLC3DCamera.FrontModbus.Home_Complete);
-
-                            pLC3DCamera.FrontModbus.MoveAbsolute_Complete = false;
-                            pLC3DCamera.SetForward(RobotName.Front);
-                            AddLog("滑台前进");
-                            do
-                            {
-                                ThreadSleep(plcSleep);
-                                pLC3DCamera.GetState(RobotName.Front);
-                            } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
-                            if (!_3DRun)
-                            {
-                                _3DRun = true;
-                                AddLog("3D扫描仪启动");
-                                cognexManager.Run(i, (int)RobotName.Front);
-                            }
-                            pLC3DCamera.FrontModbus.MoveAbsolute_Complete = false;
-                            pLC3DCamera.SetBackoff(RobotName.Front);
-                            AddLog("滑台返回");
-                            do
-                            {
-                                ThreadSleep(plcSleep);
-                                pLC3DCamera.GetState(RobotName.Front);
-                            } while (!pLC3DCamera.FrontModbus.MoveAbsolute_Complete);
-                            AddLog("前滑台完成"); 
-#endif
-                            bs[0] = true;
-                        });
-                    }
-                    else
-                    {
-                        bs[0] = true;
-                    }
-
-                    if (i > 0)
-                    {
-                        TaskRun(() =>
-                        {
-#if false
-                            pLC3DCamera.BackModbus.Home_Complete = false;
-                            pLC3DCamera.SetZero(RobotName.Back);
-                            AddLog("滑台归原点");
-                            do
-                            {
-                                ThreadSleep(plcSleep);
-                                pLC3DCamera.GetState(RobotName.Back);
-                            } while (!pLC3DCamera.BackModbus.Home_Complete);
-
-                            pLC3DCamera.BackModbus.MoveAbsolute_Complete = false;
-                            pLC3DCamera.SetForward(RobotName.Back);
-                            AddLog("滑台前进");
-                            do
-                            {
-                                ThreadSleep(plcSleep);
-                                pLC3DCamera.GetState(RobotName.Back);
-                            } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
-                            if (!_3DRun)
-                            {
-                                _3DRun = true;
-                                AddLog("3D扫描仪启动");
-                                cognexManager.Run(new int[] { 6, 6 });
-                            }
-                            pLC3DCamera.BackModbus.MoveAbsolute_Complete = false;
-                            pLC3DCamera.SetBackoff(RobotName.Back);
-                            AddLog("滑台返回");
-                            do
-                            {
-                                ThreadSleep(plcSleep);
-                                pLC3DCamera.GetState(RobotName.Back);
-                            } while (!pLC3DCamera.BackModbus.MoveAbsolute_Complete);
-                            AddLog("后滑台完成"); 
-#endif
-                            bs[1] = true;
-                        });
-                    }
-                    else
-                    {
-                        bs[1] = true;
-                    }
-                    while (!bs[0] || !bs[1])
-                    {
-                        ThreadSleep(50);
-                    }
-                    AddLog("拍照完成");
-                    cognexManager.Stop();
-                }
-#endif
-                #endregion
-                #region 异步原地控制流程
-#if false
-                if (obj != null)
-                {
-                    train_para = obj as AppRemoteCtrl_TrainPara;
-                    Properties.Settings.Default.TrainMode = train_para.train_mode;
-                    Properties.Settings.Default.TrainSn = train_para.train_sn;
-                    LocalDataBase.GetInstance().jsonPath = Application.StartupPath + "/json/" + train_para.train_mode + "_" + train_para.train_sn + "/";
-                    mzCameraDataList = LocalDataBase.GetInstance().MzCameraDataListQurey();
-                    xzCameraDataList = LocalDataBase.GetInstance().XzCameraDataListQurey();
-                }
-                AddLog("动车参数：" + JsonConvert.SerializeObject(train_para));
-                RunStat = true;
-                frontMzIndex = backMzIndex = mzDistance = 0;
-                frontData.Clear();
-                backData.Clear();
-                for (int i = 0; i < mzCameraDataList.Count; i++)
-                {
-                    Model.DataMzCameraLineModel model = mzCameraDataList[i];
-                    MzDataExtent front = new MzDataExtent(model, RobotName.Front);
-                    MzDataExtent back = new MzDataExtent(model, RobotName.Back);
-                    frontData.Add(front);
-                    backData.Add(back);
-                }
-                MzRun(false);
-                return;
-#endif
-                #endregion
-                #region 激光雷达定位测试
-#if false
-#if lidarLocation
-                int moveLocation = (int)(GetLidarLoc("380AL_2572", "0_1", "z1") * 1000);
-#if lidarCsharp
-                moveLocation /= 1000;
-#endif
-                if (moveLocation != 0)
-                {
-                    int movePoint = Properties.Settings.Default.RobotPointXZ + moveLocation;
-                    DoRgvSetTargetDistanceCmdHandle(movePoint);
-                    AddLog("Rgv运动到指定位置: " + movePoint);
-                    while (true)
-                    {
-                        if (!RunStat)
-                        {
-                            AddLog("任务强制中止！");
-                            return;
-                        }
-                        if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor != eRGVMODRUNSTAT.RGVMODRUNSTAT_MOVE)
-                        {
-                            AddLog("Rgv停止");
-                            break;
-                        }
-                        ThreadSleep(50);
-                    }
-                }
-                Console.WriteLine();
-                return;
-#endif
-#endif
-                #endregion
-                #region 光敏车头定位测试
-#if true
-                AddLog("车头定位测试开始");
-                if (!RgvModCtrlHelper.GetInstance().IsLink)
-                {
-                    AddLog(">> 初始化Rgv...");
-                    RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
-                    InitRgvMod();
-                    AddLog(">> Rgv初始化完成"); 
-                }
-
-                DoRgvStopIntelligentChargeCmdHandle();
-                AddLog(">> 等待3秒后启动车头定位测试");
-                ThreadSleep(3000);
-                AddLog(">> RGV前进");
-                DoRgvForwardMotorCmdHandle(null);
-
-                int d = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
-                int v = 0;
-                while (v == 0)
-                {
-                    v = ModbusTCP.GetAddress2Value(Address2Type.Sensor_IO_1);
-                    d = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce;
-                    ThreadSleep(50);
-                }
-
-                AddLog(">> 车头定位位置" + d);
-                AddLog(">> " + d);
-                AddLog(">> RGV停车");
-                DoRgvNormalStopCmdHandle(null);
-#endif
-                #endregion
-                #region 轴定位测试
-#if false
-                GetPositionDifference(state: new int[] { 0, 1 });
-#endif
-#if false
-                AddLog("初始化Rgv...");
-                RgvModCtrlHelper.GetInstance().RgvModInfoEvent += MyRgvModInfoEvent;
-                InitRgvMod();
-                AddLog("Rgv初始化完成");
-                DoRgvStopIntelligentChargeCmdHandle();
-                ThreadSleep(5000);
-                LocalDataBase.GetInstance().jsonPath = Application.StartupPath + "/json/380AL_2589/";
-                AxisList = LocalDataBase.GetInstance().AxesDataListQurey();
-                uploadID = "testDepth" + DateTime.Now.ToString("_yyyy_MM_dd_HH_mm");
-                axisFrontID = axisBackID = 0;
-                for (int i = 4; i < AxisList.Count; i++)
-                {
-                    int c = -200;
-                    for (int j = 0; j < 21; j++)
-                    {
-                        c += 20;
-                        axisFrontID = AxisList[i].ID * 100 + j;
-                        int location = AxisList[i].Distance + c + trainHeadLocation;
-                        AddLog("RGV运动到" + location);
-                        DoRgvSetTargetDistanceCmdHandle(location);
-                        do
-                        {
-                            ThreadSleep(1000);
-                        } while (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor != eRGVMODRUNSTAT.RGVMODRUNSTAT_STOP || RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed != 0);
-
-                        AddLog("点云相机拍照");
-                        string name1, name2, path;
-                        if (PointShot(out path, out name1, out name2))
+                        foreach (FileInfo item in dir.GetFiles())
                         {
                             try
                             {
-                                using (FileStream file = new FileStream(path + name1, FileMode.Open))
-                                {
-                                    byte[] bytes = new byte[file.Length];
-                                    file.Read(bytes, 0, bytes.Length);
-                                    UploadImage(bytes, name1);
-                                    AddLog("上传红外图片完成");
-                                }
-                                using (FileStream file = new FileStream(path + name2, FileMode.Open))
-                                {
-                                    byte[] bytes = new byte[file.Length];
-                                    file.Read(bytes, 0, bytes.Length);
-                                    UploadImage(bytes, name2);
-                                    AddLog("上传深度图片完成");
-                                }
+                                File.Delete(item.FullName);
                             }
-                            catch (Exception e)
-                            {
-                                AddLog(e.Message, -1);
-                                return;
-                            }
+                            catch (Exception) { }
                         }
-                    }
-                }
-#endif
-                #endregion
-                #region Socket伪流程
-#if false
-                //RgvState = "运行中";
-                //RgvElectricity = "99%";
-                //TrainHeadDistance = "12168 mm";
-                //GrabImg = @"F:\task_data\xz_camera\10016.jpg";
-                AddLog("<---任务开始--->");
-                RunStat = true;
-                IsEndEnable = true;
-                Random ram = new Random();
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerTempture = 17;
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity = 99;
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerCurrent = 40;
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce = 15000;
-                Job = "任务准备中";
-                RunMz = true;
-                isWait = false;
-                xzIndex = -1;
-                train_para = new AppRemoteCtrl_TrainPara();
-                if (obj != null)
-                {
-                    train_para = obj as AppRemoteCtrl_TrainPara;
-                    Properties.Settings.Default.TrainMode = train_para.train_mode;
-                    Properties.Settings.Default.TrainSn = train_para.train_sn;
-                    LocalDataBase.GetInstance().jsonPath = Application.StartupPath + "/json/" + train_para.train_mode + "_" + train_para.train_sn + "/";
-                    mzCameraDataList = LocalDataBase.GetInstance().MzCameraDataListQurey();
-                    xzCameraDataList = LocalDataBase.GetInstance().XzCameraDataListQurey();
-                }
-                AddLog("动车参数：" + JsonConvert.SerializeObject(train_para));
-                uploadID = Properties.Settings.Default.TrainMode + "_" + Properties.Settings.Default.TrainSn + "_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm");
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvTrackLength = 300000;
-
-                AddLog("开始清理缓存图片");
-                string task = Application.StartupPath + "/task_data";
-                string test = Application.StartupPath + "/test_data";
-                string work = Application.StartupPath + "/work_data";
-                var deleteFiles = new Action<DirectoryInfo>((DirectoryInfo dir) => { });
-                deleteFiles = new Action<DirectoryInfo>((DirectoryInfo dir) =>
-                {
-                    foreach (FileInfo item in dir.GetFiles())
-                    {
-                        try
+                        foreach (DirectoryInfo item in dir.GetDirectories())
                         {
-                            File.Delete(item.FullName);
+                            deleteFiles(item);
                         }
-                        catch (Exception) { }
-                    }
-                    foreach (DirectoryInfo item in dir.GetDirectories())
+                    });
+                    var deleteFile = new Action<string>((string path) =>
                     {
-                        deleteFiles(item);
-                    }
-                });
-                var deleteFile = new Action<string>((string path) =>
-                {
-                    DirectoryInfo directory = new DirectoryInfo(path);
-                    deleteFiles(directory);
-                });
-                AddLog(">>清理task_data文件夹下的缓存图片");
-                deleteFile(task);
+                        DirectoryInfo directory = new DirectoryInfo(path);
+                        deleteFiles(directory);
+                    });
+                    AddLog(">>清理task_data文件夹下的缓存图片");
+                    deleteFile(task);
 
-                UserInfo.myDeviceStat = UserEntity.key_DEVICE_BUSY;
-                AddLog("设备状态：" + UserInfo.myDeviceStat);
-                AddLog("停止充电");
+                    UserInfo.myDeviceStat = UserEntity.key_DEVICE_BUSY;
+                    AddLog("设备状态：" + UserInfo.myDeviceStat);
+                    AddLog("停止充电");
 
-                TaskRun(() =>
-                {
-                    do
+                    TaskRun(() =>
                     {
-                        RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed = ram.Next(790, 810);
-                        RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce += RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed;
-                        RgvSpeed = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed + " mm/s";
-                        RgvDistacnce = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce + " mm";
+                        do
+                        {
+                            RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed = ram.Next(790, 810);
+                            RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce += RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed;
+                            RgvSpeed = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed + " mm/s";
+                            RgvDistacnce = RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce + " mm";
 
-                        //if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce > 30000)
-                        //{
-                        //    IsFrontPLCAlarm = IsBackPLCAlarm = true;
-                        //    break;
-                        //}
-                        ThreadSleep(1000);
-                    } while (true);
-                });
+                            //if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce > 30000)
+                            //{
+                            //    IsFrontPLCAlarm = IsBackPLCAlarm = true;
+                            //    break;
+                            //}
+                            ThreadSleep(1000);
+                        } while (true);
+                    });
 #if controlSocket
 #if socketExe
-                Job = "线阵任务执行中";
-                AddLog("开始线阵流程");
-                AddLog("执行Rgv任务...");
-                RunMz = false;
-                AddLog("Rgv运动到指定位置...");
-                AddLog("开始车头检测...");
-                AddLog("记录车头位置：" + (TrainCurrentHeadDistance));
-                AddLog("开始相机线扫***");
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor = eRGVMODRUNSTAT.RGVMODRUNSTAT_MOVE;
-                for (int i = 0; i < xzCameraDataList.Count; i++)
-                {
-                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity--;
-                    xzIndex = i;
-                    Model.DataXzCameraLineModel item = xzCameraDataList[i];
-                    for (int j = 0; j < item.CurrentDetectMaxHeight; j++)
+                    Job = "线阵任务执行中";
+                    AddLog("开始线阵流程");
+                    AddLog("执行Rgv任务...");
+                    RunMz = false;
+                    AddLog("Rgv运动到指定位置...");
+                    AddLog("开始车头检测...");
+                    AddLog("记录车头位置：" + (TrainCurrentHeadDistance));
+                    AddLog("开始相机线扫***");
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor = eRGVMODRUNSTAT.RGVMODRUNSTAT_MOVE;
+                    for (int i = 0; i < xzCameraDataList.Count; i++)
                     {
-                        RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed = ram.Next(790, 811);
-                        string fileIndex = taskScheduleHandleInfo.xzCameraPicDataListCount.ToString("10000");
-                        string imgPath = string.Format(@"{0}\test_data\xz_camera\{1}{2}", Application.StartupPath, fileIndex, GetExtend());
-                        Bitmap bitmap;
-                        if (File.Exists(imgPath))
+                        RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity--;
+                        xzIndex = i;
+                        Model.DataXzCameraLineModel item = xzCameraDataList[i];
+                        for (int j = 0; j < item.CurrentDetectMaxHeight; j++)
                         {
-                            AddLog("加载线阵图片：" + imgPath);
-                            bitmap = (Bitmap)Bitmap.FromFile(imgPath);
-                            RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce += 1000;
-                            AddLog("当前车辆位置：" + RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce);
-                            UploadImage(bitmap, 10000 + taskScheduleHandleInfo.xzCameraPicDataListCount);
-                            taskScheduleHandleInfo.xzCameraPicDataListCount++;
-                            ThreadSleep(1000);
-                            GrabImg = imgPath;
+                            RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed = ram.Next(790, 811);
+                            string fileIndex = taskScheduleHandleInfo.xzCameraPicDataListCount.ToString("10000");
+                            string imgPath = string.Format(@"{0}\test_data\xz_camera\{1}{2}", Application.StartupPath, fileIndex, GetExtend());
+                            Bitmap bitmap;
+                            if (File.Exists(imgPath))
+                            {
+                                AddLog("加载线阵图片：" + imgPath);
+                                bitmap = (Bitmap)Bitmap.FromFile(imgPath);
+                                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce += 1000;
+                                AddLog("当前车辆位置：" + RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce);
+                                UploadImage(bitmap, 10000 + taskScheduleHandleInfo.xzCameraPicDataListCount);
+                                taskScheduleHandleInfo.xzCameraPicDataListCount++;
+                                ThreadSleep(1000);
+                                GrabImg = imgPath;
+                            }
                         }
+                        AddLog("已完成第" + (i + 1) + "节");
                     }
-                    AddLog("已完成第" + (i + 1) + "节");
-                }
 
-                AddLog("扫图结束");
-                UploadComplete();
+                    AddLog("扫图结束");
+                    UploadComplete();
 
-                Job = "面阵任务执行中";
-                AddLog("开始执行面阵流程");
-                string[] backFiles = Directory.GetFiles(test + "/back_camera");
-                string[] frontFiles = Directory.GetFiles(test + "/front_camera");
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity--;
-                foreach (string file in backFiles)
-                {
-                    AddLog("上传后臂图片：" + file);
-                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce -= 1000;
-                    string name = file.Substring(file.LastIndexOf('\\') + 1).Replace(".jpg", "");
-                    UploadImage(Image.FromFile(file), name, (int)RobotName.Back);
-                    ThreadSleep(1000);
-                }
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity--;
-                foreach (string file in frontFiles)
-                {
-                    AddLog("上传前臂图片：" + file);
-                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce -= 1000;
-                    string name = file.Substring(file.LastIndexOf('\\') + 1).Replace(".jpg", "");
-                    UploadImage(Image.FromFile(file), name, (int)RobotName.Front);
-                    ThreadSleep(1000);
-                }
+                    Job = "面阵任务执行中";
+                    AddLog("开始执行面阵流程");
+                    string[] backFiles = Directory.GetFiles(test + "/back_camera");
+                    string[] frontFiles = Directory.GetFiles(test + "/front_camera");
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity--;
+                    foreach (string file in backFiles)
+                    {
+                        AddLog("上传后臂图片：" + file);
+                        RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce -= 1000;
+                        string name = file.Substring(file.LastIndexOf('\\') + 1).Replace(".jpg", "");
+                        UploadImage(Image.FromFile(file), name, (int)RobotName.Back);
+                        ThreadSleep(1000);
+                    }
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentPowerElectricity--;
+                    foreach (string file in frontFiles)
+                    {
+                        AddLog("上传前臂图片：" + file);
+                        RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce -= 1000;
+                        string name = file.Substring(file.LastIndexOf('\\') + 1).Replace(".jpg", "");
+                        UploadImage(Image.FromFile(file), name, (int)RobotName.Front);
+                        ThreadSleep(1000);
+                    }
 
-                UserInfo.myDeviceStat = UserEntity.key_DEVICE_INIT;
-                RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor = eRGVMODRUNSTAT.RGVMODRUNSTAT_STOP;
-                RunStat = false;
-                AddLog("<---任务结束--->");
-                Job = "上位机等待任务中";
+                    UserInfo.myDeviceStat = UserEntity.key_DEVICE_INIT;
+                    RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvRunStatMonitor = eRGVMODRUNSTAT.RGVMODRUNSTAT_STOP;
+                    RunStat = false;
+                    AddLog("<---任务结束--->");
+                    Job = "上位机等待任务中";
 #endif
 #endif
 #endif
-                #endregion
-                #region 相机测试
+                    #endregion
+                    #region 相机测试
 #if false
-                //AddLog("初始化光源...");
-                //light = new LightManager(Properties.Settings.Default.Light)
-                //{
-                //    LinkLight = () =>
-                //    {
-                //        return true;
-                //    }
-                //};
-                for (int i = 0; i < 500; i++)
-                {
-                    AddLog("拍照");
-                    shotFrontID = i.ToString();
-                    //light.LightOn(Properties.Settings.Default.LightFrontHigh, true);
-                    //AddLog("光源已打开");
-                    DoCameraCmdHandle_OneShot(frontID);
-                    //ThreadSleep(lightSleep);
-                    //light.LightOff(true);
-                    //AddLog("光源已关闭");
-                    ThreadSleep(3000);
-                }
+                    //AddLog("初始化光源...");
+                    //light = new LightManager(Properties.Settings.Default.Light)
+                    //{
+                    //    LinkLight = () =>
+                    //    {
+                    //        return true;
+                    //    }
+                    //};
+                    for (int i = 0; i < 500; i++)
+                    {
+                        AddLog("拍照");
+                        shotFrontID = i.ToString();
+                        //light.LightOn(Properties.Settings.Default.LightFrontHigh, true);
+                        //AddLog("光源已打开");
+                        DoCameraCmdHandle_OneShot(frontID);
+                        //ThreadSleep(lightSleep);
+                        //light.LightOff(true);
+                        //AddLog("光源已关闭");
+                        ThreadSleep(3000);
+                    }
 #endif
-                #endregion
+                    #endregion
+                }
             });
         }
 

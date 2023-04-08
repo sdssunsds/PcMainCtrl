@@ -81,6 +81,7 @@ namespace PcMainCtrl.HardWare
             if (s != null)
             {
                 string bytestring = Convert.ToString(s.Value, 2);
+                bytestring = (int.Parse(bytestring)).ToString("0000000000000000");
                 switch (type)
                 {
                     case Address2Type.Sensor_IO_1:
