@@ -50,6 +50,8 @@ namespace PcMainCtrl.HardWare
                 address13 = PLCManager.GetModbusTcp();
                 address13.Address = "13";
             }
+
+            address13Values[2] = 1;
         }
 
         public static PLCManager.PLC_Parent GetMB()
