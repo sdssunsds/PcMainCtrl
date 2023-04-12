@@ -275,13 +275,16 @@ namespace PcMainCtrl.HardWare
     public enum Address13Type
     {
         /// <summary>
-        /// 点云开关
+        /// 点云开关（初始化及定位异常时开启供电，默认值 0）
         /// </summary>
         _3D,
         /// <summary>
-        /// 激光
+        /// 激光（二次定位时开启供电，默认值 0）
         /// </summary>
         Laser,
+        /// <summary>
+        /// 雷达或光敏电源控制（设备上电即供电，默认值 1）
+        /// </summary>
         Custom,
         /// <summary>
         /// 红灯（报警时）
