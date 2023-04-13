@@ -134,7 +134,7 @@ namespace PcMainCtrl.Form
                     error_i = 2;
                     for (int i = 1; i < excelModel[0].RowCount; i++)
                     {
-                        error_i = 2000 + i;
+                        error_i = 20000 + i;
                         error_i *= 10;
                         Model.DataMzCameraLineModelEx model = new Model.DataMzCameraLineModelEx();
                         model.DataLine_Index = int.Parse(excelModel[0][i][0].Value);
@@ -296,10 +296,13 @@ namespace PcMainCtrl.Form
                     AxesList = new List<Model.Axis>();
                     for (int i = 1; i < excelModel[1].RowCount; i++)
                     {
-                        error_i = 400 + i;
+                        error_i = 40000 + i;
+                        error_i *= 10;
                         Model.Axis item = new Model.Axis();
                         item.ID = int.Parse(excelModel[1][i][0].Value);
+                        error_i++;
                         item.Name = excelModel[1][i][1].Value;
+                        error_i++;
                         item.Distance = int.Parse(excelModel[1][i][2].Value);
                         AxesList.Add(item);
                     }
@@ -307,7 +310,64 @@ namespace PcMainCtrl.Form
             }
             catch (Exception ex)
             {
-                MessageBox.Show("["+ error_i + "]" + ex.Message);
+                string estr = error_i.ToString();
+                string msg = "";
+                if (estr.Length > 1)
+                {
+                    string row = estr.Substring(1, 4);
+                    char t = estr[5];
+                    if (estr[0] == '2')
+                    {
+                        msg = "解析时：";
+                        msg += (int.Parse(row) + 1) + "行 -- ";
+                        switch (t)
+                        {
+                            case '0':
+                                msg += "A列（序号）";
+                                break;
+                            case '1':
+                                msg += "B列（动车型号）";
+                                break;
+                            case '2':
+                                msg += "C列（动车编号）";
+                                break;
+                            case '3':
+                                msg += "D列或G列（车厢号、区域编号）";
+                                break;
+                            case '4':
+                                msg += "J列（偏离车头距离）";
+                                break;
+                            case '5':
+                                msg += "L列（机械臂动作顺序）";
+                                break;
+                            case '6':
+                                msg += "AE列（定位轴号）";
+                                break;
+                            case '7':
+                                msg += "AF列（偏离车轴/电机位置）";
+                                break;
+                        }
+                    }
+                    else if (estr[0] == '4')
+                    {
+                        msg = "轴数据：";
+                        msg += (int.Parse(row) + 1) + "行 -- ";
+                        switch (t)
+                        {
+                            case '0':
+                                msg += "A列（轴编号）";
+                                break;
+                            case '1':
+                                msg += "B列（轴名称）";
+                                break;
+                            case '2':
+                                msg += "C列（偏离车头距离）";
+                                break;
+                        }
+                    }
+                }
+                msg += "\r\n[" + error_i + "]" + ex.Message;
+                MessageBox.Show(msg, "异常");
             }
         }
 
