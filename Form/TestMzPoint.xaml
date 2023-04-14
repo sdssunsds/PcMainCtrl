@@ -13,7 +13,7 @@
         <Popup x:Name="popup1" AllowsTransparency="True" IsHitTestVisible="False" Placement="RelativePoint" PlacementTarget="{Binding ElementName=dataGrid1}">
             <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Text="Dragging..." />
         </Popup>
-        <DataGrid x:Name="dataGrid1" local:DragDropRowBehavior.Enabled="True" local:DragDropRowBehavior.PopupControl="{Binding ElementName=popup1}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="372" Margin="10,38,0,0" VerticalAlignment="Top" Width="948">
+        <DataGrid x:Name="dataGrid1" local:DragDropRowBehavior.Enabled="True" local:DragDropRowBehavior.PopupControl="{Binding ElementName=popup1}" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="auto" Margin="10,38,0,10" VerticalAlignment="Top" Width="auto">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding TrainModel}" Header="车型"/>
                 <DataGridTextColumn Binding="{Binding TrainSn}" Header="车号"/>
