@@ -65,6 +65,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\PylonC.NET.dll</HintPath>
     </Reference>
+    <Reference Include="RobotCtrlLib">
+      <HintPath>..\Dll\RobotCtrlLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />

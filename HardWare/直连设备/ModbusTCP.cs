@@ -1,4 +1,6 @@
-﻿using PLC;
+﻿#define newCode
+
+using PLC;
 using System;
 
 namespace PcMainCtrl.HardWare
@@ -12,8 +14,13 @@ namespace PcMainCtrl.HardWare
         private static PLCManager.PLC_Parent mb = null;
         private static PLCManager.PLC_Parent address12 = null;
         private static PLCManager.PLC_Parent address13 = null;
+#if newCode
+        private static ushort address12Value = 0;
+        private static ushort address13Value = 4;
+#else
         private static int[] address12Values = new int[16];
-        private static int[] address13Values = new int[16];
+        private static int[] address13Values = new int[16]; 
+#endif
 
         public static bool IsLink
         {
@@ -50,8 +57,9 @@ namespace PcMainCtrl.HardWare
                 address13 = PLCManager.GetModbusTcp();
                 address13.Address = "13";
             }
-
-            address13Values[2] = 1;
+#if !newCode
+            address13Values[2] = 1; 
+#endif
         }
 
         public static PLCManager.PLC_Parent GetMB()
@@ -79,11 +87,16 @@ namespace PcMainCtrl.HardWare
 
         public static int GetAddress2Value(Address2Type type)
         {
-            short? s = mb?.ShortValue;
+            ushort? s = mb?.UShortValue;
             if (s != null)
             {
+#if newCode
+                address12Value = s.Value;
+                string bytestring = Convert.ToString(address12Value, 2).PadLeft(16, '0');
+#else
                 string bytestring = Convert.ToString(s.Value, 2);
                 bytestring = (int.Parse(bytestring)).ToString("0000000000000000");
+#endif
                 switch (type)
                 {
                     case Address2Type.Sensor_IO_1:
@@ -101,60 +114,66 @@ namespace PcMainCtrl.HardWare
         {
             try
             {
+                int ix = 0;
                 switch (type)
                 {
                     case Address12Type.RobotMzLedPower:
-                        address12Values[15] = val; // 15是协议第一位
+                        ix = 15; // 15是协议第一位
                         break;
                     case Address12Type.RobotFrontMzPower:
-                        address12Values[14] = val;
+                        ix = 14;
                         break;
                     case Address12Type.RobotXzLedPower:
-                        address12Values[13] = val; // 13是协议第三位
+                        ix = 13; // 13是协议第三位
                         break;
                     case Address12Type.RobotBackMzPower:
-                        address12Values[12] = val;
+                        ix = 12;
                         break;
                     case Address12Type.FrontRobotStepMotorPower:
-                        address12Values[11] = val;
+                        ix = 11;
                         break;
                     case Address12Type.RobotXZPower:
-                        address12Values[10] = val;
+                        ix = 10;
                         break;
                     case Address12Type.BackRobotStepMotorPower:
-                        address12Values[9] = val;
+                        ix = 9;
                         break;
                     case Address12Type.FrontRobotStart:
-                        address12Values[7] = val;
+                        ix = 7;
                         break;
                     case Address12Type.FrontRobotStop:
-                        address12Values[6] = val;
+                        ix = 6;
                         break;
                     case Address12Type.FrontRobotEMGRst:
-                        address12Values[5] = val;
+                        ix = 5;
                         break;
                     case Address12Type.FrontRobotAlmClear:
-                        address12Values[4] = val;
+                        ix = 4;
                         break;
                     case Address12Type.BackRobotStart:
-                        address12Values[3] = val;
+                        ix = 3;
                         break;
                     case Address12Type.BackRobotStop:
-                        address12Values[2] = val;
+                        ix = 2;
                         break;
                     case Address12Type.BackRobotEMGRst:
-                        address12Values[1] = val;
+                        ix = 1;
                         break;
                     case Address12Type.BackRobotAlmClear:
-                        address12Values[0] = val;
+                        ix = 0;
                         break;
                 }
+#if newCode
+                address12.UShortValue = address12Value = (ushort)(address12Value | (val << ix));
+#else
+                address12Values[ix] = val;
                 string s = "";
                 for (int i = 0; i < address12Values.Length; i++)
                 {
                     s += address12Values[i];
                 }
                 address12.ShortValue = Convert.ToInt16(s, 2);
+#endif
             }
             catch (Exception) { }
         }
@@ -163,42 +182,48 @@ namespace PcMainCtrl.HardWare
         {
             try
             {
+                int ix = 0;
                 switch (type)
                 {
                     case Address13Type._3D:
-                        address13Values[0] = val;
+                        ix = 0;
                         break;
                     case Address13Type.Laser:
-                        address13Values[1] = val;
+                        ix = 1;
                         break;
                     case Address13Type.Custom:
-                        address13Values[2] = val;
+                        ix = 2;
                         break;
                     case Address13Type.Red:
-                        address13Values[8] = val;
+                        ix = 8;
                         break;
                     case Address13Type.Green:
-                        address13Values[9] = val;
+                        ix = 9;
                         break;
                     case Address13Type.Yellow:
-                        address13Values[10] = val;
+                        ix = 10;
                         break;
                     case Address13Type.Buzzer:
-                        address13Values[11] = val;
+                        ix = 11;
                         break;
                     case Address13Type.Front_Robot_Mz_LED:
-                        address13Values[12] = val;
+                        ix = 12;
                         break;
                     case Address13Type.Back_Robot_Mz_LED:
-                        address13Values[13] = val;
+                        ix = 13;
                         break;
                 }
+#if newCode
+                address13.UShortValue = address13Value = (ushort)(address13Value | (val << ix));
+#else
+                address13Values[ix] = val;
                 string s = "";
                 for (int i = address13Values.Length - 1; i >= 0; i--)
                 {
                     s += address13Values[i];
                 }
                 address13.ShortValue = Convert.ToInt16(s, 2);
+#endif
             }
             catch (Exception) { }
         }

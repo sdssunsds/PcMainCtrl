@@ -384,14 +384,15 @@ namespace Basler
         #region Metholds      
         public BaslerCamera()
         {
+            RobotCtrl.Lib.Manager.Init();
         }
 
-        public BaslerCamera(uint index)
+        public BaslerCamera(uint index) : this()
         {
             _baslerID = index;
         }
 
-        public BaslerCamera(ICamera device)
+        public BaslerCamera(ICamera device) : this()
         {
             
         }

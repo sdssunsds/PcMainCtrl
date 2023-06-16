@@ -11,7 +11,10 @@
 #define controlSocket  // 远程控制服务，socket模式(192.168.0.101:10010)或(192.168.0.102:10010)
 #define socketExe  // 独立进程进行Socket连接
 #define ping  // 使用ping检测设备连接
+//#define longPing  // 长ping模式
 //#define bakImage  // 备份图片
+//#define wcfQueue  // 传图服务队列模式
+//#define autoRelink  // 传图服务自动重连
 #define shotImageProcess  // 拍照图片流程
 #define init3dCamera  // 初始化3D扫描仪
 #define initRGV  // 初始化RGV
@@ -175,6 +178,16 @@ namespace PcMainCtrl.ViewModel
         private bool socketConnect = false;
 #endif
 #if ping
+#if longPing
+        private bool runLongPing = false;
+#endif
+#if wcfQueue
+        private object serviceLock = new object(); 
+#endif
+#if autoRelink
+        private int relinkCount = 0;
+        private int relinkMax = 1;
+#endif
         private List<int> xzNotLoad = new List<int>();
         private List<string> xzLNotLoad = new List<string>();
         private List<string> xzRNotLoad = new List<string>();
@@ -228,7 +241,14 @@ namespace PcMainCtrl.ViewModel
                     {
                         try
                         {
-                            picService.AddLog(log, type);
+#if wcfQueue
+                            lock (serviceLock)
+                            { 
+#endif
+                                picService.AddLog(log, type);
+#if wcfQueue
+                            }
+#endif
                         }
                         catch (Exception e)
                         {
@@ -1045,6 +1065,22 @@ namespace PcMainCtrl.ViewModel
             frontCamera.Show();
             backCamera.Show();
             return;
+#endif
+#if longPing
+            if (!runLongPing)
+            {
+                TaskRun(() =>
+                {
+                    runLongPing = true;
+                    Dictionary<string, string> hostDict = new Dictionary<string, string>()
+                    {{ uploadServerKey, Properties.Settings.Default.FtpIP }};
+                    while (runLongPing)
+                    {
+                        Pings(hostDict);
+                        ThreadSleep(1000);
+                    }
+                });
+            }
 #endif
             if (!isInitApplication)
             {
@@ -6159,10 +6195,29 @@ namespace PcMainCtrl.ViewModel
             }
             bool pingServer = true;
 #if ping
+#if autoRelink
+        checkPing: 
+#endif
             pingServer = pingResult[uploadServerKey];
 #endif
             if (testForm.GetEnable(Form.EnableEnum.轴定位))
             {
+#if autoRelink
+                if (!pingServer)
+                {
+                    if (relinkCount < relinkMax)
+                    {
+                        relinkCount++;
+                        pingResult[uploadServerKey] = true;
+                        goto checkPing;
+                    }
+                    else
+                    {
+                        relinkCount = 0;
+                        return 0;
+                    } 
+                }
+#endif
                 if (!pingServer && testForm.GetEnable(Form.EnableEnum.传图服务))
                 {
                     isPointCamaerError = true;
@@ -6179,7 +6234,10 @@ namespace PcMainCtrl.ViewModel
                                 return 0;
                             }
                             ThreadSleep(1000);
-                        } while (robotAxisError);
+                        } while (robotAxisError); 
+#if ping
+                        pingResult[uploadServerKey] = true;
+#endif
                         AddLog("Socket继续定轴（忽略服务异常）...");
 #endif 
                         isPointCamaerError = false;
@@ -6231,7 +6289,14 @@ namespace PcMainCtrl.ViewModel
                 {
                     try
                     {
-                        picService.UploadParameter(DkamHelper.Instance.Getkc(), DkamHelper.Instance.Getkk(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                        lock (serviceLock)
+                        { 
+#endif
+                            picService.UploadParameter(DkamHelper.Instance.Getkc(), DkamHelper.Instance.Getkk(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                        }
+#endif
                         AddLog("上传点云相机内参成功");
                     }
                     catch (Exception)
@@ -6239,11 +6304,18 @@ namespace PcMainCtrl.ViewModel
                         AddLog("上传点云相机内参失败");
 #if ping
                         pingResult[uploadServerKey] = false;
+#if autoRelink
+                        goto checkPing;
+#endif
 #endif
                     }
                     if (!CheckServer())
                     {
+#if autoRelink
+                        goto checkPing;
+#else
                         return 0;
+#endif
                     }
                     if (testForm.GetEnable(Form.EnableEnum.模拟流程))
                     {
@@ -6281,7 +6353,11 @@ namespace PcMainCtrl.ViewModel
                     }
                     if (!CheckServer())
                     {
+#if autoRelink
+                        goto checkPing;
+#else
                         return 0;
+#endif
                     }
                     using (FileStream file = new FileStream(savePath + name2, FileMode.Open))
                     {
@@ -6292,7 +6368,11 @@ namespace PcMainCtrl.ViewModel
                     }
                     if (!CheckServer())
                     {
+#if autoRelink
+                        goto checkPing;
+#else
                         return 0;
+#endif
                     }
                     try
                     {
@@ -6443,6 +6523,9 @@ namespace PcMainCtrl.ViewModel
                         ThreadSleep(1000);
                     } while (robotAxisError);
                     AddLog("Socket继续定轴（忽略服务异常）...");
+#endif
+#if ping
+                    pingResult[uploadServerKey] = true; 
 #endif
                     isPointCamaerError = false;
                 }
@@ -6884,7 +6967,14 @@ namespace PcMainCtrl.ViewModel
                             }
                             try
                             {
-                                picService.UploadImage(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                                lock (serviceLock)
+                                { 
+#endif
+                                    picService.UploadImage(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                                }
+#endif
                                 exp = true;
                             }
                             catch (Exception e)
@@ -6958,7 +7048,14 @@ namespace PcMainCtrl.ViewModel
                             }
                             try
                             {
-                                picService.UploadImage2(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                                lock (serviceLock)
+                                { 
+#endif
+                                    picService.UploadImage2(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                                }
+#endif
                                 exp = true;
                             }
                             catch (Exception e)
@@ -7007,7 +7104,14 @@ namespace PcMainCtrl.ViewModel
             {
                 try
                 {
-                    picService.UploadComplete(uploadID, Properties.Settings.Default.RobotID, xzStart);
+#if wcfQueue
+                    lock (serviceLock)
+                    { 
+#endif
+                        picService.UploadComplete(uploadID, Properties.Settings.Default.RobotID, xzStart);
+#if wcfQueue
+                    }
+#endif
                 }
                 catch (Exception e)
                 {
@@ -7062,7 +7166,14 @@ namespace PcMainCtrl.ViewModel
                             }
                             try
                             {
-                                path = picService.UploadPictrue(parsIndex, robot, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                                lock (serviceLock)
+                                { 
+#endif
+                                    path = picService.UploadPictrue(parsIndex, robot, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                                }
+#endif
                                 exp = true;
                             }
                             catch (Exception e)
@@ -7108,12 +7219,19 @@ namespace PcMainCtrl.ViewModel
 #endif
                     try
                     {
+#if wcfQueue
+                        lock (serviceLock)
+                        { 
+#endif
                             picService.Upload3DData(parsIndex, robot, data, uploadID, Properties.Settings.Default.RobotID);
+#if wcfQueue
                         }
-                        catch (Exception e)
-                        {
-                            AddLog(">> [1] " + e.Message, -1);
-                        }
+#endif
+                    }
+                    catch (Exception e)
+                    {
+                        AddLog(">> [1] " + e.Message, -1);
+                    }
 #if ping
                 } 
 #endif
@@ -7144,7 +7262,14 @@ namespace PcMainCtrl.ViewModel
                     }
                     try
                     {
-                        picService.UploadImage3(picName, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                        lock (serviceLock)
+                        { 
+#endif
+                            picService.UploadImage3(picName, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                        }
+#endif
                     }
                     catch (Exception e)
                     {
@@ -7168,7 +7293,14 @@ namespace PcMainCtrl.ViewModel
             {
                 int state = s ?? (name1[3] == '1' ? 0 : 1);
                 AddLog(state == 0 ? "= 根据轴定位 =" : "·根据电机定位·");
-                return picService.GetLocation(uploadID, name1, name2, name3, Properties.Settings.Default.RobotID, state);
+#if wcfQueue
+                lock (serviceLock)
+                { 
+#endif
+                    return picService.GetLocation(uploadID, name1, name2, name3, Properties.Settings.Default.RobotID, state);
+#if wcfQueue
+                }
+#endif
             }
             catch (Exception e)
             {
