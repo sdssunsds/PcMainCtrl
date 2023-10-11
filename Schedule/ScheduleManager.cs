@@ -13,7 +13,7 @@ using static PcMainCtrl.HardWare.Robot.RobotModCtrlProtocol;
 namespace PcMainCtrl.Schedule
 {
     /// <summary>
-    /// 工作流管理
+    /// 工作流管理（已弃用）
     /// </summary>
     public class ScheduleManager
     {

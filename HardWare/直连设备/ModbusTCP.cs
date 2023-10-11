@@ -7,7 +7,7 @@ namespace PcMainCtrl.HardWare
 {
     /// <summary>
     /// PLC通信
-    /// 仅打开面阵相机、光源和机械臂：地址12：4363；地址13：12288
+    /// 用于打开面阵相机、滑台、雷达、光源和机械臂：地址12：4363；地址13：12288
     /// </summary>
     public class ModbusTCP
     {

@@ -133,6 +133,9 @@ namespace LidarLib
             return point.X;
         }
 
+        /// <summary>
+        /// 根据雷达半径绘制雷达图像
+        /// </summary>
         public Bitmap DrawImage(float r, int l, Color color, Bitmap bitmap)
         {
             Graphics g = null;

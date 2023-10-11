@@ -7,19 +7,19 @@
 #define lidarLocation  // 激光雷达定位
 #define lidarCsharp  // 使用C#代码进行雷达定位
 //#define lidarOneLoc  // 只进行一次雷达重定位
-#define controlServer  // 远程控制服务，PC服务
+#define controlServer  // 远程控制服务，PC服务（用于连接切图服务器）
 #define controlSocket  // 远程控制服务，socket模式(192.168.0.101:10010)或(192.168.0.102:10010)
-#define socketExe  // 独立进程进行Socket连接
+#define socketExe  // 独立进程进行Socket连接（独立进程用来与业务端连接）
 #define ping  // 使用ping检测设备连接
-//#define longPing  // 长ping模式
+//#define longPing  // 长ping检测，影响性能，易受网络波动影响
 //#define bakImage  // 备份图片
 //#define wcfQueue  // 传图服务队列模式
 //#define autoRelink  // 传图服务自动重连
 #define shotImageProcess  // 拍照图片流程
-#define init3dCamera  // 初始化3D扫描仪
-#define initRGV  // 初始化RGV
-#define initRobot  // 初始化机械臂
-#define initPointCamera  // 初始化点云相机
+#define init3dCamera  // 初始化3D扫描仪（本地测试无设备时注销）
+#define initRGV  // 初始化RGV（本地测试时注销）
+#define initRobot  // 初始化机械臂（本地测试时注销）
+#define initPointCamera  // 初始化点云相机（本地测试无设备时注销）
 #define controlLightPower  // 用通断电源的方式控制光源
 #define onOffLightForMove  // 根据RGV运动后开关光源
 #define ioNewCheckHead  // 传感器检测车头（新协议）
@@ -67,9 +67,15 @@ using static PcMainCtrl.Network.Network;
 using static PcMainCtrl.Common.GlobalValues;
 using static PcMainCtrl.Common.ThreadManager;
 using static PcMainCtrl.HardWare.BaslerCamera.CameraDataHelper;
-// error i = 8
+// error i = 8  已经使用的本类中的错误编号（从1开始）
 namespace PcMainCtrl.ViewModel
 {
+    /*
+     * 本类为核心控制流程类，包含多种控制流程的复合，通过预定义可以进行切换
+     * ：主业务区为控制流程入口，所有功能在此区域开始
+     * ：其它区内有车头定位逻辑，CheckHeadLocation
+     * ：测试区用于本地测试使用，配合预编译test
+     */
     public partial class HomePageViewModel
     {
         #region 全局变量
@@ -87,6 +93,9 @@ namespace PcMainCtrl.ViewModel
         private bool cameraOpened = false;
         private bool isBackProcess = false;
         private bool isContinuousShot = false;
+        /// <summary>
+        /// 软件是否初始化完成（未完成初始化时，开关窗口不能操作）
+        /// </summary>
         private bool isInitApplication = false;
         private bool isPointCamaerError = false;
         private bool robotAxisError = false;
@@ -685,6 +694,7 @@ namespace PcMainCtrl.ViewModel
                                 {
                                     type13 = 1;
                                 }
+                                AddLog($"作业状态：{RunStat}, RGV位置：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce}, RGV速度：{RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunSpeed}", 7);
                             }
                             else if (RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce > 4990 && RgvModCtrlHelper.GetInstance().myRgvGlobalInfo.RgvCurrentRunDistacnce < 5010)
                             {
@@ -1066,7 +1076,7 @@ namespace PcMainCtrl.ViewModel
             backCamera.Show();
             return;
 #endif
-#if longPing
+#if longPing  // 长ping检测，影响性能，易受网络波动影响
             if (!runLongPing)
             {
                 TaskRun(() =>
@@ -3232,25 +3242,21 @@ namespace PcMainCtrl.ViewModel
                 //开始任务
                 if (frame.cmd.StartsWith(AppRemoteCtrl_DeviceFrame.HostCmd_StartWork))
                 {
-                    //传递para
                     DoOneKeyStartCmdHandle(frame.para);
                 }
                 //结束任务
                 else if (frame.cmd.StartsWith(AppRemoteCtrl_DeviceFrame.HostCmd_StopWork))
                 {
-                    //传递para
                     DoOneKeyStopCmdHandle(null);
                 }
                 //紧急停止
                 else if (frame.cmd.StartsWith(AppRemoteCtrl_DeviceFrame.HostCmd_DeviceStop))
                 {
-                    //传递para
                     DoRgvEmergeStopCmdHandle();
                 }
                 //清除报警(车的报警)
                 else if (frame.cmd.StartsWith(AppRemoteCtrl_DeviceFrame.HostCmd_DeviceClearAlarm))
                 {
-                    //传递para
                     DoRgvClearAlarmCmdHandle(null);
                 }
                 //自动充电
@@ -6944,59 +6950,55 @@ namespace PcMainCtrl.ViewModel
             if (!testForm.GetEnable(Form.EnableEnum.拼图))
             {
                 byte[] bytes = ImageToBytes(image);
-                TaskRun(() =>
+                try
                 {
-                    try
+                    int remainder = bytes.Length % uploadSize;
+                    int length = bytes.Length / uploadSize + (remainder > 0 ? 1 : 0);
+                    for (int i = 0; i < length; i++)
                     {
-                        int remainder = bytes.Length % uploadSize;
-                        int length = bytes.Length / uploadSize + (remainder > 0 ? 1 : 0);
-                        for (int i = 0; i < length; i++)
+                        List<byte> rom = new List<byte>();
+                        for (int j = 0; j < uploadSize; j++)
                         {
-                            List<byte> rom = new List<byte>();
-                            for (int j = 0; j < uploadSize; j++)
+                            int index = i * uploadSize + j;
+                            if (index < bytes.Length)
                             {
-                                int index = i * uploadSize + j;
-                                if (index < bytes.Length)
-                                {
-                                    rom.Add(bytes[index]);
-                                }
-                                else
-                                {
-                                    break;
-                                }
+                                rom.Add(bytes[index]);
                             }
-                            try
+                            else
                             {
-#if wcfQueue
-                                lock (serviceLock)
-                                { 
-#endif
-                                    picService.UploadImage(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
-#if wcfQueue
-                                }
-#endif
-                                exp = true;
-                            }
-                            catch (Exception e)
-                            {
-                                AddLog(e.Message, -1);
-#if ping
-                                pingResult[uploadServerKey] = false;
-                                xzNotLoad.Add(picIndex);
-                                AddLog("未上传线阵图片：" + picIndex);
                                 break;
-#endif
                             }
                         }
-                        AddLog("上传完成: " + picIndex);
+                        try
+                        {
+#if wcfQueue
+                            lock (serviceLock)
+                            { 
+#endif
+                                picService.UploadImage(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                            }
+#endif
+                            exp = true;
+                            AddLog("上传完成: " + picIndex);
+                        }
+                        catch (Exception e)
+                        {
+                            AddLog(e.Message, -1);
+#if ping
+                            pingResult[uploadServerKey] = false;
+                            xzNotLoad.Add(picIndex);
+                            AddLog("未上传线阵图片：" + picIndex);
+                            break;
+#endif
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        AddLog(">> [0] " + e.Message, -1);
-                    }
-                }); 
+                }
+                catch (Exception e)
+                {
+                    AddLog(">> [0] " + e.Message, -1);
+                }
             }
-
             return exp;
         }
 
@@ -7025,66 +7027,62 @@ namespace PcMainCtrl.ViewModel
             if (!testForm.GetEnable(Form.EnableEnum.拼图))
             {
                 byte[] bytes = ImageToBytes(image);
-                TaskRun(() =>
+                try
                 {
-                    try
+                    int remainder = bytes.Length % uploadSize;
+                    int length = bytes.Length / uploadSize + (remainder > 0 ? 1 : 0);
+                    for (int i = 0; i < length; i++)
                     {
-                        int remainder = bytes.Length % uploadSize;
-                        int length = bytes.Length / uploadSize + (remainder > 0 ? 1 : 0);
-                        for (int i = 0; i < length; i++)
+                        List<byte> rom = new List<byte>();
+                        for (int j = 0; j < uploadSize; j++)
                         {
-                            List<byte> rom = new List<byte>();
-                            for (int j = 0; j < uploadSize; j++)
+                            int index = i * uploadSize + j;
+                            if (index < bytes.Length)
                             {
-                                int index = i * uploadSize + j;
-                                if (index < bytes.Length)
-                                {
-                                    rom.Add(bytes[index]);
-                                }
-                                else
-                                {
-                                    break;
-                                }
+                                rom.Add(bytes[index]);
                             }
-                            try
+                            else
                             {
-#if wcfQueue
-                                lock (serviceLock)
-                                { 
-#endif
-                                    picService.UploadImage2(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
-#if wcfQueue
-                                }
-#endif
-                                exp = true;
-                            }
-                            catch (Exception e)
-                            {
-                                AddLog(e.Message, -1);
-#if ping
-                                pingResult[uploadServerKey] = false;
-                                if (isLeft)
-                                {
-                                    xzLNotLoad.Add(picIndex);
-                                }
-                                else
-                                {
-                                    xzRNotLoad.Add(picIndex);
-                                }
-                                AddLog("未上传" + (isLeft ? "左" : "右") + "线阵图片：" + picIndex);
                                 break;
-#endif
                             }
                         }
-                        AddLog("上次完成: " + picIndex);
+                        try
+                        {
+#if wcfQueue
+                            lock (serviceLock)
+                            { 
+#endif
+                                picService.UploadImage2(picIndex, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                            }
+#endif
+                            exp = true;
+                        }
+                        catch (Exception e)
+                        {
+                            AddLog(e.Message, -1);
+#if ping
+                            pingResult[uploadServerKey] = false;
+                            if (isLeft)
+                            {
+                                xzLNotLoad.Add(picIndex);
+                            }
+                            else
+                            {
+                                xzRNotLoad.Add(picIndex);
+                            }
+                            AddLog("未上传" + (isLeft ? "左" : "右") + "线阵图片：" + picIndex);
+                            break;
+#endif
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        AddLog(">> [2] " + e.Message, -1);
-                    }
-                });
+                    AddLog("上次完成: " + picIndex);
+                }
+                catch (Exception e)
+                {
+                    AddLog(">> [2] " + e.Message, -1);
+                }
             }
-
             return exp;
         }
 
@@ -7142,43 +7140,41 @@ namespace PcMainCtrl.ViewModel
             if (!testForm.GetEnable(Form.EnableEnum.拼图))
             {
                 byte[] bytes = ImageToBytes(image);
-                TaskRun(() =>
+                try
                 {
-                    try
+                    int remainder = bytes.Length % uploadSize;
+                    int length = bytes.Length / uploadSize + (remainder > 0 ? 1 : 0);
+                    string path = "";
+                    for (int i = 0; i < length; i++)
                     {
-                        int remainder = bytes.Length % uploadSize;
-                        int length = bytes.Length / uploadSize + (remainder > 0 ? 1 : 0);
-                        string path = "";
-                        for (int i = 0; i < length; i++)
+                        List<byte> rom = new List<byte>();
+                        for (int j = 0; j < uploadSize; j++)
                         {
-                            List<byte> rom = new List<byte>();
-                            for (int j = 0; j < uploadSize; j++)
+                            int index = i * uploadSize + j;
+                            if (index < bytes.Length)
                             {
-                                int index = i * uploadSize + j;
-                                if (index < bytes.Length)
-                                {
-                                    rom.Add(bytes[index]);
-                                }
-                                else
-                                {
-                                    break;
-                                }
+                                rom.Add(bytes[index]);
                             }
-                            try
+                            else
                             {
-#if wcfQueue
-                                lock (serviceLock)
-                                { 
-#endif
-                                    path = picService.UploadPictrue(parsIndex, robot, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
-#if wcfQueue
-                                }
-#endif
-                                exp = true;
+                                break;
                             }
-                            catch (Exception e)
-                            {
-                                AddLog(e.Message, -1);
+                        }
+                        try
+                        {
+#if wcfQueue
+                            lock (serviceLock)
+                            { 
+#endif
+                                path = picService.UploadPictrue(parsIndex, robot, i, length, uploadID, rom.ToArray(), Properties.Settings.Default.RobotID);
+#if wcfQueue
+                            }
+#endif
+                            exp = true;
+                        }
+                        catch (Exception e)
+                        {
+                            AddLog(e.Message, -1);
 #if ping
                             pingResult[uploadServerKey] = false;
                             mzNotLoad.Add(parsIndex);
@@ -7186,22 +7182,20 @@ namespace PcMainCtrl.ViewModel
                             break;
 #endif
                         }
-                            AddLog("上传后保存的路径：" + path, logType);
-                        }
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            path = "http://192.168.0.102:20001/img/Upload/" + uploadID + "_" + Properties.Settings.Default.RobotID + "/" + (robot == 0 ? "Front" : "Back") + "/" + parsIndex + ".jpg";
-                            AddLog("代理路径：" + path, logType);
-                            UploadMzImage(parsIndex, robot, path);
-                        }
-                }
-                    catch (Exception e)
-                    {
-                        AddLog(">> [3] " + e.Message, -1);
+                        AddLog("上传后保存的路径：" + path, logType);
                     }
-                }); 
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        path = "http://192.168.0.102:20001/img/Upload/" + uploadID + "_" + Properties.Settings.Default.RobotID + "/" + (robot == 0 ? "Front" : "Back") + "/" + parsIndex + ".jpg";
+                        AddLog("代理路径：" + path, logType);
+                        UploadMzImage(parsIndex, robot, path);
+                    }
+                }
+                catch (Exception e)
+                {
+                    AddLog(">> [3] " + e.Message, -1);
+                }
             }
-
             return exp;
         }
 

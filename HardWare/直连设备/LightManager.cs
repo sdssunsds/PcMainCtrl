@@ -47,6 +47,11 @@ namespace PcMainCtrl.HardWare
             }
         }
 
+        /// <summary>
+        /// 打开光源
+        /// </summary>
+        /// <param name="lightValue">亮度值</param>
+        /// <param name="front">是否是前臂光源</param>
         public void LightOn(int lightValue, bool front)
         {
             if (LinkLight())
@@ -65,6 +70,10 @@ namespace PcMainCtrl.HardWare
             }
         }
 
+        /// <summary>
+        /// 关闭光源
+        /// </summary>
+        /// <param name="front">是否是前臂光源</param>
         public void LightOff(bool front)
         {
             if (LinkLight())
@@ -177,11 +186,17 @@ namespace PcMainCtrl.HardWare
             return buffer;
         }
 
+        /// <summary>
+        /// 打开光源电源
+        /// </summary>
         public void PowerOn()
         {
             ModbusTCP.SetAddress12(Address12Type.RobotMzLedPower, 1);
         }
 
+        /// <summary>
+        /// 关闭光源电源
+        /// </summary>
         public void PowerOff()
         {
             ModbusTCP.SetAddress12(Address12Type.RobotMzLedPower, 2);
